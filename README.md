@@ -68,16 +68,22 @@ The platform captures rich, structured volunteer profiles — including skills, 
 ## Repository Structure
 
 ```
-/docs
-  /prd                  ← Product Requirements Documents
-  /architecture         ← Architecture and design documents
-  /decisions            ← Architecture Decision Records (ADRs)
-/src                    ← Application source code
-/infra                  ← Azure infrastructure (Bicep)
+/.devcontainer          ← Dev container config for consistent local environments
 /.github
   /workflows            ← GitHub Actions CI/CD pipelines
-  /ISSUE_TEMPLATE       ← Issue templates
+/.vscode                ← Shared VS Code workspace settings
+/docs
+  /prd                  ← Product Requirements Documents
+  /architecture         ← Architecture design documents (coming soon)
+  /decisions            ← Architecture Decision Records - ADRs (coming soon)
+/infra                  ← Azure infrastructure as code (Bicep)
+/src
+  /api                  ← ASP.NET Core backend API
+  /web                  ← Frontend web application
+/tests                  ← Automated test projects
+azure.yaml              ← Azure Developer CLI configuration
 CONTRIBUTING.md
+LICENSE
 README.md
 ```
 
