@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Herit.Api/Herit.Api.csproj" />
+    <Project Path="src/Herit.Application/Herit.Application.csproj" />
+    <Project Path="src/Herit.Domain/Herit.Domain.csproj" />
+    <Project Path="src/Herit.Infrastructure/Herit.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Herit.Api.Tests/Herit.Api.Tests.csproj" />
+    <Project Path="tests/Herit.Application.Tests/Herit.Application.Tests.csproj" />
+    <Project Path="tests/Herit.Domain.Tests/Herit.Domain.Tests.csproj" />
+    <Project Path="tests/Herit.Infrastructure.Tests/Herit.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>
