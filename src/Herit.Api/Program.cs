@@ -13,12 +13,17 @@ builder.Services.AddInfrastructure(
     "Server=localhost;Database=Herit;Trusted_Connection=True;TrustServerCertificate=True;");
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Herit API", Version = "v1" }));
+
+var enableSwagger = builder.Configuration.GetValue<bool>("Features:EnableSwagger");
+if (enableSwagger)
+{
+    builder.Services.AddSwaggerGen(c =>
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Herit API", Version = "v1" }));
+}
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Herit API v1"));
