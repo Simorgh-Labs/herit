@@ -22,7 +22,7 @@ param appUserPassword string
 
 param tags object = {}
 
-var defaultDatabaseName = 'Todo'
+var defaultDatabaseName = 'Herit'
 var actualDatabaseName = !empty(sqlDatabaseName) ? sqlDatabaseName : defaultDatabaseName
 
 module sqlServer 'br/public:avm/res/sql/server:0.2.0' = {

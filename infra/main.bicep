@@ -79,7 +79,7 @@ module api './app/api-appservice-avm.bicep' = {
     appServicePlanId: appServicePlan.outputs.resourceId
     siteConfig: {
       alwaysOn: true
-      linuxFxVersion: 'dotnetcore|8.0'
+      linuxFxVersion: 'dotnetcore|10.0'
     }
     appSettings: {
       AZURE_KEY_VAULT_ENDPOINT: keyVault.outputs.uri
