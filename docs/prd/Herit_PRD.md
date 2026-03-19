@@ -1,104 +1,272 @@
-# Herit
-## *(working product title: DiasporaConnect)*
-### Diaspora Talent EOI Platform for the Public Sector
-**Product Requirements Document | v1.0**
+# Product Requirements Document: Herit
 
-| | |
+**Version:** 1.0  
+**Status:** Draft  
+**Last Updated:** March 2026
+
+---
+
+## 1. Overview
+
+### 1.1 Purpose
+
+This document defines the product requirements for **Herit**, a web application that connects diaspora members (expats) with their home country's government departments. It enables expats to submit voluntary proposals for government consideration and to find co-contributors from the wider diaspora community.
+
+### 1.2 Problem Statement
+
+Thousands of expats around the world possess valuable skills, expertise, and assets they are willing to offer their home country pro bono, out of patriotism. Some have concrete proposals and ideas; others simply want to contribute and are open to being matched with existing efforts. Currently, there is no structured mechanism for the diaspora to offer their services to their home government.
+
+### 1.3 Proposed Solution
+
+A web application that allows expats to:
+- Submit project proposals to government departments, either in response to a published Request For Proposal (RFP) or as an original idea.
+- Recruit other expat volunteers to support their proposals.
+
+And allows government staff to:
+- Publish RFPs and manage incoming proposals and Expressions of Interest (EOIs).
+
+---
+
+## 2. Goals and Non-Goals
+
+### 2.1 Goals
+
+- Provide a structured channel for the diaspora to submit proposals to government departments.
+- Enable proposal owners to recruit volunteer contributors via Calls for Expression of Interest (CFEOIs).
+- Allow government staff to manage RFPs, proposals, and EOIs efficiently.
+- Support a hierarchical organisational structure reflecting real-world government department hierarchies.
+
+### 2.2 Non-Goals
+
+- Project management and execution tracking (out of scope for the Herit platform).
+- Financial transactions or payment processing.
+- Real-time collaboration or document co-editing.
+
+---
+
+## 3. Users and Roles
+
+### 3.1 Super Admin
+
+The system owner. Responsible for initial setup of the organisational structure. Can:
+- Create, read, update, and delete (CRUD) the root organisation and any department hierarchy beneath it.
+- CRUD department admins for any department in the system.
+
+### 3.2 Department Admin
+
+Manages a specific department and its sub-departments. Can:
+- CRUD a hierarchy of sub-departments within their organisation.
+- CRUD admins for their sub-departments.
+- CRUD staff users and manage their access within their organisation.
+
+### 3.3 Staff User
+
+Government department employees. Can:
+- CRUD Requests For Proposals (RFPs).
+- Manage proposals: review, change status, and delete.
+- Manage EOIs: review, approve, and delete.
+- Publish CFEOIs under proposals.
+
+### 3.4 Expat User
+
+Diaspora members registering on the platform. Can:
+- Create a proposal from scratch or in response to an RFP.
+- Manage their proposal's visibility, content, and lifecycle (update, submit, withdraw, delete).
+- Publish a CFEOI under their own proposal to recruit contributors.
+- Manage EOIs received under their proposals (review, approve, reject).
+- Browse and review published RFPs, proposals, and CFEOIs.
+- Submit or withdraw an EOI in response to a CFEOI.
+- Manage the visibility of their submitted EOIs.
+
+---
+
+## 4. Organisational Structure
+
+The entire system is organised as a tree:
+
+- **Root Organisation:** The single root node of the tree, representing the home-country government body.
+- **Department:** Any node directly or indirectly under the root organisation.
+- **Organisation:** Any subtree under the root organisation, directly or indirectly.
+
+The super admin bootstraps the system with the root organisation. Admins at each level can create and manage sub-departments and staff beneath them, allowing the hierarchy to reflect any real-world government structure.
+
+---
+
+## 5. Core Entities
+
+### 5.1 RFP (Request For Proposal)
+
+Published by a staff user to solicit proposals from the expat community on a specific topic or need.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| Title | Short text | Required |
+| Short Description | Plain text | Required |
+| Authors | User reference(s) | Required |
+| Associated Department | Department reference | Required |
+| Long Description | Formatted (rich) text | Required |
+| Status | Enum | `draft` / `approved` / `published` |
+
+### 5.2 Proposal
+
+A volunteer project proposal submitted by an expat user. May be submitted independently or in response to an RFP.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| Title | Short text | Required |
+| Short Description | Plain text | Required |
+| Authors | User reference(s) | Required |
+| Associated Department | Department reference | Required |
+| Long Description | Formatted (rich) text | Required |
+| Status | Enum | See §5.2.1 |
+| Visibility | Enum | `private` / `shared` / `public` |
+| RFP Reference | RFP reference | Optional; populated if submitted in response to an RFP |
+
+#### 5.2.1 Proposal Statuses
+
+| Status | Description |
 |---|---|
-| **Code name** | Herit |
-| **Working title** | DiasporaConnect |
-| **Status** | Draft |
-| **Version** | 1.0 |
-| **Date** | 23 February 2026 |
-| **Audience** | Product, Engineering, Design, Stakeholders |
+| **Ideation** | The owner publishes a high-level idea and shares it with others to gather feedback and shape the proposal. |
+| **Resourcing** | The core aspects of the proposal (problem statement, solution, required resources) are defined. The owner calls for volunteers to provide human resources (via CFEOI) and/or non-human resources (infrastructure, real estate, equipment, financial support). |
+| **Submitted** | Required resources have been identified and the proposal is submitted to the department for review. |
+| **Under Review** | Department staff are reviewing the proposal internally. |
+| **Approved** | The department has approved the proposal and is ready to convert it into an active project. |
+
+### 5.3 CFEOI (Call For Expression Of Interest)
+
+Published by a proposal owner under a specific proposal to recruit contributors.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| Title | Short text | Required |
+| Description | Formatted text | Required |
+| Resource Type | Enum | `human` (skills/expertise) / `non-human` (infrastructure, real estate, assets, equipment, financial) |
+| Associated Proposal | Proposal reference | Required |
+| Status | Enum | `open` / `closed` |
+
+### 5.4 EOI (Expression Of Interest)
+
+A response submitted by an expat user to either a CFEOI or directly to a proposal.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| Submitted By | User reference | Required |
+| Message / Cover Note | Plain or formatted text | Required |
+| Associated CFEOI | CFEOI reference | Optional |
+| Associated Proposal | Proposal reference | Required |
+| Status | Enum | `pending` / `approved` / `rejected` |
 
 ---
 
-## 1. Purpose
+## 6. Use Cases
 
-DiasporaConnect is a web application that enables citizens living and working abroad — the diaspora — to offer their expertise, languages, and globally acquired skills in service of their home country's public sector. It provides a structured, searchable channel for volunteers and paid contributors alike to express their interest, and equips government recruiters with the tools to discover and engage the right people.
+### 6.1 Staff User Use Cases
+
+| # | Use Case | Description |
+|---|---|---|
+| S1 | Create RFP | Staff user creates a new RFP (initially in `draft` status). |
+| S2 | Edit RFP | Staff user updates the content of an existing RFP. |
+| S3 | Publish RFP | Staff user changes an approved RFP to `published`, making it visible to expats. |
+| S4 | Delete RFP | Staff user removes an RFP from the system. |
+| S5 | Review Proposal | Staff user reviews a submitted proposal and transitions it to `under review`. |
+| S6 | Approve Proposal | Staff user approves a proposal. |
+| S7 | Delete Proposal | Staff user removes a proposal. |
+| S8 | Publish CFEOI | Staff user publishes a CFEOI under a proposal. |
+| S9 | Manage EOIs | Staff user reviews, approves, or deletes EOIs submitted to proposals or CFEOIs. |
+
+### 6.2 Expat User Use Cases
+
+#### Manage Proposals
+
+| # | Use Case | Description |
+|---|---|---|
+| E1 | Create Proposal (from scratch) | Expat creates a new proposal not tied to any RFP. |
+| E2 | Create Proposal (under RFP) | Expat creates a proposal in response to a published RFP. |
+| E3 | Manage Proposal Visibility | Expat sets or updates the visibility of their proposal (`private` / `shared` / `public`). |
+| E4 | Publish CFEOI under Proposal | Expat publishes a Call For Expression Of Interest under one of their proposals to recruit contributors. |
+| E5 | Update / Delete Proposal | Expat edits the content of or deletes one of their proposals. |
+| E6 | Manage EOIs on Proposal | Expat reviews, approves, or rejects EOIs received under their proposals. |
+| E7 | Submit / Withdraw Proposal | Expat submits a ready proposal to the department for review, or withdraws a previously submitted proposal. |
+
+#### Review Content
+
+| # | Use Case | Description |
+|---|---|---|
+| E8 | Review RFPs | Expat browses and reads published RFPs. |
+| E9 | Review Proposals | Expat browses and reads proposals visible to them. |
+| E10 | Review CFEOIs | Expat browses and reads published CFEOIs. |
+
+#### Manage EOIs
+
+| # | Use Case | Description |
+|---|---|---|
+| E11 | Submit / Withdraw EOI (under CFEOI) | Expat submits an expression of interest in response to a CFEOI, or withdraws a previously submitted EOI. |
+| E12 | Manage EOI Visibility | Expat sets or updates the visibility of their submitted EOI. |
+
+### 6.3 Admin Use Cases
+
+| # | Use Case | Description |
+|---|---|---|
+| A1 | CRUD Departments | Admin manages the hierarchy of departments within their organisation. |
+| A2 | CRUD Sub-Admins | Admin manages administrators for their sub-departments. |
+| A3 | CRUD Staff Users | Admin manages staff accounts and access permissions within their organisation. |
 
 ---
 
-## 2. Problem
+## 7. Entity Relationships
 
-Diaspora communities represent a significant but largely untapped resource for governments. Individuals living abroad develop unique skills, multilingual capabilities, international networks, and cross-cultural perspectives that can be directly valuable to the public sector. Many are willing — even eager — to contribute to their home country, but there is no easy or systematic way for them to register that interest, and no efficient way for government to discover and engage them. The connection simply doesn't happen.
+```
+Root Organisation
+└── Department(s) [tree structure]
+    ├── Admin (manages department)
+    ├── Staff User(s)
+    │   ├── RFP (published by Staff)
+    │   └── Manages Proposals → Manages EOIs
+    └── ...
+
+Expat User
+├── Proposal (submitted under a Department, optionally linked to RFP)
+│   ├── CFEOI (published by proposal owner)
+│   │   └── EOI (submitted by Expat in response to CFEOI)
+│   └── EOI (submitted by Expat directly under proposal)
+```
 
 ---
 
-## 3. Solution Overview
+## 8. Visibility and Access Rules
 
-A two-sided web platform serving two user types:
-
-- **Volunteer:** Diaspora volunteers — individuals living abroad who submit an Expression of Interest (EOI) to contribute to their home country's public sector, either voluntarily or on a paid basis.
-- **Recruiter:** Government recruiters — public sector staff who search, filter, and report on the EOI database to identify and engage suitable contributors.
-
-The platform captures rich, structured profiles — including skills, languages, country of residence, availability, and compensation preferences — and provides recruiters with powerful query and reporting tools to match the right person to the right opportunity.
-
----
-
-## 4. User Stories
-
-### 4.1 Diaspora Volunteer
-
-| **ID** | **As a...** | **I want to...** | **So that...** |
+| Entity | Private | Shared | Public |
 |---|---|---|---|
-| **V-01** | Volunteer | Register and create a profile with my resume, professional background, and areas of expertise | recruiters can understand what I bring to the table |
-| **V-02** | Volunteer | Specify my country of residence and the languages I speak (including proficiency level) | recruiters know my geographic and linguistic context |
-| **V-03** | Volunteer | Select the sector(s) I am most interested in contributing to (e.g. health, education, trade, technology) | I am matched to relevant opportunities |
-| **V-04** | Volunteer | Indicate my availability (remote/on-site, full-time/part-time, start and end dates) | recruiters know when and how I can engage |
-| **V-05** | Volunteer | Specify whether I am offering my time voluntarily or seeking paid engagement | expectations are clear from the outset |
-| **V-06** | Volunteer | Optionally submit a specific proposal or idea for how I can contribute | I can proactively go beyond a resume submission |
-| **V-07** | Volunteer | Edit or withdraw my EOI at any time | my profile stays accurate and up to date |
-| **V-08** | Volunteer | Receive a confirmation when my EOI is submitted | I know my expression of interest was received |
+| Proposal (Ideation) | Visible to owner only | Visible to registered expat users | Visible to all (including unauthenticated) |
+| Proposal (Resourcing+) | — | Visible to registered expat users | Visible to all |
+| RFP (Published) | — | — | Visible to all registered users |
+| CFEOI | Follows parent proposal visibility | — | — |
+| EOI | Visible to submitter and relevant staff | — | — |
 
-### 4.2 Government Recruiter
-
-| **ID** | **As a...** | **I want to...** | **So that...** |
-|---|---|---|---|
-| **R-01** | Recruiter | Search the EOI database by skill, sector, language, country of residence, availability, and compensation type | I can quickly surface relevant candidates |
-| **R-02** | Recruiter | View a full volunteer profile including resume, languages, and any submitted proposals | I can assess suitability before reaching out |
-| **R-03** | Recruiter | Shortlist and save candidates against a specific opportunity or project | I can compare and revisit them easily |
-| **R-04** | Recruiter | Run reports on the EOI pool (e.g. by sector, language, country of residence, skill gaps) | I can plan diaspora engagement strategically |
-| **R-05** | Recruiter | Export search results to a standard format (CSV/PDF) | I can share findings with my team or management |
-| **R-06** | Recruiter | View a dashboard with pool statistics and recent submissions | I have a live overview of available diaspora talent |
+> Note: Detailed access control rules per role and per proposal status should be refined during the design phase.
 
 ---
 
-## 5. Non-Functional Requirements
+## 9. Out of Scope
 
-| **Category** | **Requirement** |
-|---|---|
-| **Security** | All personal data must be encrypted at rest and in transit (TLS 1.2+). Role-based access control (RBAC) must strictly separate volunteer and recruiter capabilities. Recruiter access requires authenticated government credentials. |
-| **Privacy** | The platform must comply with applicable privacy legislation in both the home country and, where feasible, major countries of volunteer residence (e.g. GDPR for EU-based diaspora). Volunteers must provide informed consent for how their data is stored and used, and must have the right to request deletion. |
-| **Performance** | Search queries must return results within 2 seconds under normal load. The platform must support up to 10,000 active EOI profiles without degradation. |
-| **Availability** | Target uptime of 99.5% excluding scheduled maintenance. Maintenance windows should occur outside business hours (home country time zone). |
-| **Accessibility** | The public-facing volunteer portal must meet WCAG 2.1 AA accessibility standards. |
-| **Internationalisation** | The volunteer-facing interface should support multiple languages to lower the barrier for diaspora members who primarily operate in their country of residence language. |
-| **Scalability** | The architecture must support horizontal scaling to accommodate growth in users and submission volume. |
-| **Auditability** | All recruiter search and profile access activity must be logged for compliance and accountability purposes. |
-| **Browser Support** | Must support the latest two versions of Chrome, Edge, Firefox, and Safari on desktop. Mobile-responsive layout is required, given the global and varied device contexts of diaspora users. |
+The following are explicitly out of scope for the Herit platform:
+
+- **Project management:** Once a proposal is approved, its conversion into a managed project is handled outside this platform.
+- **Payment or financial transactions:** Herit facilitates the expression of financial support but does not process funds.
+- **Real-time collaboration tools:** Document co-authoring, chat, or video features are not included.
 
 ---
 
-## 6. Out of Scope (v1)
+## 10. Open Questions
 
-The following are explicitly deferred to keep the initial scope focused:
-
-- In-platform messaging between recruiter and volunteer
-- AI-driven automatic matching or ranking of volunteers to opportunities
-- Integration with existing government HR or payroll systems
-- Full multi-language UI (internationalisation noted as an NFR to be scoped in detail)
-- Mobile native apps (iOS / Android)
-- Verification of volunteer credentials or professional qualifications
+1. **Authentication:** What identity provider will be used for expat and staff user authentication? Will social login (e.g. Google, LinkedIn) be supported?
+2. **Notification system:** Should users receive email or in-app notifications on status changes (e.g., proposal approved, EOI received)?
+3. **Proposal co-authorship:** Can multiple expat users be listed as co-authors on a single proposal from the outset, or only via the EOI/CFEOI process?
+4. **Visibility defaults:** What is the default visibility for a newly created proposal?
+5. **RFP approval workflow:** Is a separate RFP approval step required before a staff user can publish, or can any staff user publish directly?
+6. **Localisation:** Does the platform need to support multiple languages?
+7. **Moderation:** Is there a content moderation step for proposals and EOIs before they are visible to other users?
 
 ---
 
-## 7. Open Questions
-
-- Who verifies government recruiter identity — the platform itself, or an external identity provider (e.g. government SSO)?
-- Are volunteer profiles visible only to authenticated recruiters, or is there a public-facing directory?
-- What is the data retention policy for inactive or withdrawn EOIs, particularly given cross-border privacy obligations?
-- Is there a moderation or approval step before a volunteer profile becomes visible to recruiters?
-- Which home country privacy legislation applies, and does the platform need to address GDPR or equivalent frameworks for diaspora in the EU or other jurisdictions?
-- Will the platform support multiple home countries, or is it scoped to a single government?
+*End of Document*
