@@ -28,6 +28,9 @@ param connectionStringKey string = 'AZURE-SQL-CONNECTION-STRING'
 @description('Flag to use Azure API Management to mediate the calls between the Web frontend and the backend API')
 param useAPIM bool = false
 
+@description('Flag to enable Swagger UI on the API')
+param enableSwagger bool = false
+
 @description('API Management SKU to use if APIM is enabled')
 param apimSku string = 'Consumption'
 
@@ -88,6 +91,7 @@ module api './app/api-appservice-avm.bicep' = {
     }
     appInsightResourceId: monitoring.outputs.applicationInsightsResourceId
     allowedOrigins: [web.outputs.SERVICE_WEB_URI]
+    enableSwagger: enableSwagger
   }
 }
 
