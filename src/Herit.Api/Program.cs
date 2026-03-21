@@ -10,7 +10,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreateRfpCommand).Assembly));
 
 builder.Services.AddInfrastructure(
-    "Server=localhost;Database=Herit;Trusted_Connection=True;TrustServerCertificate=True;");
+    builder.Configuration.GetConnectionString("DefaultConnection")!);
 
 builder.Services.AddEndpointsApiExplorer();
 
