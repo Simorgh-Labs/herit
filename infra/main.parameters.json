@@ -22,9 +22,6 @@
     },
     "apimSku": {
       "value": "${APIM_SKU=Consumption}"
-    },
-    "enableSwagger": {
-      "value": true
     }
   }
 }

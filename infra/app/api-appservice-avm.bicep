@@ -10,7 +10,6 @@ param appServicePlanId string
 param appSettings object = {}
 param siteConfig object = {}
 param serviceName string = 'api'
-param enableSwagger bool = false
 
 @description('Required. Type of site to deploy.')
 param kind string
@@ -43,7 +42,7 @@ module api 'br/public:avm/res/web/site:0.6.0' = {
     })
     appSettingsKeyValuePairs: union(
       appSettings,
-      { ENABLE_ORYX_BUILD: true, ApplicationInsightsAgent_EXTENSION_VERSION: contains(kind, 'linux') ? '~3' : '~2', Features__EnableSwagger: enableSwagger }
+      { ENABLE_ORYX_BUILD: true, ApplicationInsightsAgent_EXTENSION_VERSION: contains(kind, 'linux') ? '~3' : '~2' }
     )
     logsConfiguration: {
       applicationLogs: { fileSystem: { level: 'Verbose' } }
