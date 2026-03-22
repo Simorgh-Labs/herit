@@ -16,7 +16,7 @@ public class EoiRepository : IEoiRepository
     public Task<Eoi?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
-    public Task<IEnumerable<Eoi>> ListByProposalAsync(Guid proposalId, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Eoi>> ListByCfeoiAsync(Guid cfeoiId, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
     public Task AddAsync(Eoi eoi, CancellationToken cancellationToken = default)

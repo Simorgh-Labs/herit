@@ -5,8 +5,7 @@ namespace Herit.Application.Features.Eoi.Commands.SubmitEoi;
 public record SubmitEoiCommand(
     Guid SubmittedById,
     string Message,
-    Guid ProposalId,
-    Guid? CfeoiId = null) : IRequest<Guid>;
+    Guid CfeoiId) : IRequest<Guid>;
 
 public class SubmitEoiCommandHandler : IRequestHandler<SubmitEoiCommand, Guid>
 {

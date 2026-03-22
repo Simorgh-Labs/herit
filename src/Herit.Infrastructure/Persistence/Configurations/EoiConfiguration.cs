@@ -18,11 +18,8 @@ public class EoiConfiguration : IEntityTypeConfiguration<Eoi>
         builder.Property(e => e.Message)
             .IsRequired();
 
-        builder.Property(e => e.ProposalId)
-            .IsRequired();
-
         builder.Property(e => e.CfeoiId)
-            .IsRequired(false);
+            .IsRequired();
 
         builder.Property(e => e.Status)
             .IsRequired()
@@ -32,15 +29,9 @@ public class EoiConfiguration : IEntityTypeConfiguration<Eoi>
             .IsRequired()
             .HasConversion<int>();
 
-        builder.HasOne<Proposal>()
-            .WithMany()
-            .HasForeignKey(e => e.ProposalId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasOne<Cfeoi>()
             .WithMany()
             .HasForeignKey(e => e.CfeoiId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
