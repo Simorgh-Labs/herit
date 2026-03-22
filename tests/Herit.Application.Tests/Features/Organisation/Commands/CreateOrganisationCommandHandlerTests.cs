@@ -56,4 +56,13 @@ public class CreateOrganisationCommandHandlerTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().AddAsync(Arg.Any<OrganisationEntity>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task Handle_CalledTwice_ReturnsDifferentIds()
+    {
+        var id1 = await _handler.Handle(new CreateOrganisationCommand("Org A"), CancellationToken.None);
+        var id2 = await _handler.Handle(new CreateOrganisationCommand("Org B"), CancellationToken.None);
+
+        Assert.NotEqual(id1, id2);
+    }
 }

@@ -40,4 +40,16 @@ public class DeleteOrganisationCommandHandlerTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task Handle_DeletesUsingCommandId()
+    {
+        var id = Guid.NewGuid();
+        var organisation = OrganisationEntity.Create(id, "Ministry of Finance");
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(organisation);
+
+        await _handler.Handle(new DeleteOrganisationCommand(id), CancellationToken.None);
+
+        await _repository.Received(1).DeleteAsync(id, Arg.Any<CancellationToken>());
+    }
 }

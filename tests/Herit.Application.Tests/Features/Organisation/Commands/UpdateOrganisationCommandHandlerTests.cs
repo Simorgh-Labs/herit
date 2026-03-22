@@ -41,4 +41,16 @@ public class UpdateOrganisationCommandHandlerTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<OrganisationEntity>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task Handle_LooksUpOrganisationByCommandId()
+    {
+        var id = Guid.NewGuid();
+        var organisation = OrganisationEntity.Create(id, "Old Name");
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(organisation);
+
+        await _handler.Handle(new UpdateOrganisationCommand(id, "New Name"), CancellationToken.None);
+
+        await _repository.Received(1).GetByIdAsync(id, Arg.Any<CancellationToken>());
+    }
 }
