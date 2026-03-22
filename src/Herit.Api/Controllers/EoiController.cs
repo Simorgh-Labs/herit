@@ -5,7 +5,7 @@ using Herit.Application.Features.Eoi.Commands.SetEoiVisibility;
 using Herit.Application.Features.Eoi.Commands.SubmitEoi;
 using Herit.Application.Features.Eoi.Commands.WithdrawEoi;
 using Herit.Application.Features.Eoi.Queries.GetEoiById;
-using Herit.Application.Features.Eoi.Queries.ListEoisByProposal;
+using Herit.Application.Features.Eoi.Queries.ListEoisByCfeoi;
 using Herit.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +21,8 @@ public class EoiController : ControllerBase
     public EoiController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    public async Task<IActionResult> ListByProposal([FromQuery] Guid proposalId, CancellationToken ct)
-        => Ok(await _mediator.Send(new ListEoisByProposalQuery(proposalId), ct));
+    public async Task<IActionResult> ListByCfeoi([FromQuery] Guid cfeoiId, CancellationToken ct)
+        => Ok(await _mediator.Send(new ListEoisByCfeoiQuery(cfeoiId), ct));
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
