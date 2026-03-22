@@ -39,4 +39,15 @@ public class GetOrganisationByIdQueryHandlerTests
 
         Assert.Null(result);
     }
+
+    [Fact]
+    public async Task Handle_QueriesRepositoryWithCorrectId()
+    {
+        var id = Guid.NewGuid();
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
+
+        await _handler.Handle(new GetOrganisationByIdQuery(id), CancellationToken.None);
+
+        await _repository.Received(1).GetByIdAsync(id, Arg.Any<CancellationToken>());
+    }
 }
