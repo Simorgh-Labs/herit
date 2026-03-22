@@ -1,5 +1,6 @@
 using Herit.Application.Features.Organisation.Commands.CreateDepartment;
 using Herit.Application.Features.Organisation.Commands.DeleteDepartment;
+using Herit.Application.Features.Organisation.Commands.DeleteOrganisation;
 using Herit.Application.Features.Organisation.Commands.UpdateDepartment;
 using Herit.Application.Features.Organisation.Commands.UpdateOrganisation;
 using Herit.Application.Features.Organisation.Queries.GetDepartmentById;
@@ -21,6 +22,13 @@ public class OrganisationController : ControllerBase
     public async Task<IActionResult> UpdateOrganisation(Guid id, [FromBody] UpdateOrganisationCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteOrganisation(Guid id, CancellationToken ct)
+    {
+        await _mediator.Send(new DeleteOrganisationCommand(id), ct);
         return NoContent();
     }
 
