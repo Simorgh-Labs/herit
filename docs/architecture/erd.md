@@ -52,7 +52,6 @@ erDiagram
         EoiStatus Status
         EoiVisibility Visibility
         Guid SubmittedById FK
-        Guid ProposalId FK
         Guid CfeoiId FK
     }
 
@@ -63,7 +62,6 @@ erDiagram
     Organisation ||--o{ Proposal : "department for"
     Rfp ||--o{ Proposal : "responded to by"
     Proposal ||--o{ Cfeoi : "has"
-    Proposal ||--o{ Eoi : "receives"
     User ||--o{ Eoi : "submits"
     Cfeoi ||--o{ Eoi : "targeted by"
 ```
