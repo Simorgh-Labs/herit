@@ -42,7 +42,7 @@ The platform supports a hierarchical organisational structure reflecting real-wo
 | **RFP** | A Request For Proposal published by a staff user to solicit proposals from the expat community |
 | **Proposal** | A volunteer project proposal submitted by an expat, independently or in response to an RFP |
 | **CFEOI** | A Call For Expression Of Interest published under a proposal to recruit contributors |
-| **EOI** | An Expression of Interest submitted by an expat in response to a CFEOI or directly to a proposal |
+| **EOI** | An Expression of Interest submitted by an expat in response to a CFEOI |
 | **Organisation** | A node in the government department hierarchy, from root organisation down to sub-departments |
 
 ---
@@ -70,7 +70,7 @@ The platform supports a hierarchical organisational structure reflecting real-wo
 **For Government Staff**
 - Publish and manage RFPs
 - Review, approve, and manage incoming proposals
-- Manage EOIs submitted to proposals and CFEOIs
+- Manage EOIs submitted to CFEOIs
 
 **For Admins**
 - Manage the government department hierarchy

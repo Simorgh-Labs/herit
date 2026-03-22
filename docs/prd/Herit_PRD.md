@@ -146,14 +146,13 @@ Published by a proposal owner under a specific proposal to recruit contributors.
 
 ### 5.4 EOI (Expression Of Interest)
 
-A response submitted by an expat user to either a CFEOI or directly to a proposal.
+A response submitted by an expat user to a CFEOI.
 
 | Attribute | Type | Notes |
 |---|---|---|
 | Submitted By | User reference | Required |
 | Message / Cover Note | Plain or formatted text | Required |
-| Associated CFEOI | CFEOI reference | Optional |
-| Associated Proposal | Proposal reference | Required |
+| Associated CFEOI | CFEOI reference | Required |
 | Status | Enum | `pending` / `approved` / `rejected` |
 
 ---
@@ -172,7 +171,7 @@ A response submitted by an expat user to either a CFEOI or directly to a proposa
 | S6 | Approve Proposal | Staff user approves a proposal. |
 | S7 | Delete Proposal | Staff user removes a proposal. |
 | S8 | Publish CFEOI | Staff user publishes a CFEOI under a proposal. |
-| S9 | Manage EOIs | Staff user reviews, approves, or deletes EOIs submitted to proposals or CFEOIs. |
+| S9 | Manage EOIs | Staff user reviews, approves, or deletes EOIs submitted to CFEOIs. |
 
 ### 6.2 Expat User Use Cases
 
@@ -226,9 +225,8 @@ Root Organisation
 
 Expat User
 ├── Proposal (submitted under a Department, optionally linked to RFP)
-│   ├── CFEOI (published by proposal owner)
-│   │   └── EOI (submitted by Expat in response to CFEOI)
-│   └── EOI (submitted by Expat directly under proposal)
+│   └── CFEOI (published by proposal owner)
+│       └── EOI (submitted by Expat in response to CFEOI)
 ```
 
 ---
