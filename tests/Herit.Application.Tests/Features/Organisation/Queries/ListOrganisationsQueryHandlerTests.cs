@@ -39,4 +39,20 @@ public class ListOrganisationsQueryHandlerTests
 
         Assert.Empty(result);
     }
+
+    [Fact]
+    public async Task Handle_ReturnsOrganisationsWithCorrectNames()
+    {
+        var organisations = new[]
+        {
+            OrganisationEntity.Create(Guid.NewGuid(), "Ministry of Finance"),
+            OrganisationEntity.Create(Guid.NewGuid(), "Ministry of Health")
+        };
+        _repository.ListAsync(Arg.Any<CancellationToken>()).Returns(organisations.AsEnumerable());
+
+        var result = (await _handler.Handle(new ListOrganisationsQuery(), CancellationToken.None)).ToList();
+
+        Assert.Contains(result, o => o.Name == "Ministry of Finance");
+        Assert.Contains(result, o => o.Name == "Ministry of Health");
+    }
 }
