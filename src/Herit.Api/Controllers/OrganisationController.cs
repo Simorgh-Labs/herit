@@ -6,6 +6,7 @@ using Herit.Application.Features.Organisation.Commands.UpdateOrganisation;
 using Herit.Application.Features.Organisation.Queries.GetDepartmentById;
 using Herit.Application.Features.Organisation.Queries.GetOrganisationById;
 using Herit.Application.Features.Organisation.Queries.ListDepartments;
+using Herit.Application.Features.Organisation.Queries.ListOrganisations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,10 @@ public class OrganisationController : ControllerBase
     private readonly IMediator _mediator;
 
     public OrganisationController(IMediator mediator) => _mediator = mediator;
+
+    [HttpGet]
+    public async Task<IActionResult> ListOrganisations(CancellationToken ct)
+        => Ok(await _mediator.Send(new ListOrganisationsQuery(), ct));
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetOrganisationById(Guid id, CancellationToken ct)
