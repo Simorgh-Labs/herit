@@ -101,4 +101,47 @@ public class OrganisationRepositoryTests : IDisposable
 
         Assert.Null(exception);
     }
+
+    [Fact]
+    public async Task ListAsync_WhenEmpty_ReturnsEmptyCollection()
+    {
+        var result = await _repository.ListAsync();
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task AddAsync_WithParentId_PersistsParentId()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = Organisation.Create(parentId, "Parent Org");
+        await _repository.AddAsync(parent);
+
+        var childId = Guid.NewGuid();
+        var child = Organisation.Create(childId, "Child Org", parentId);
+        await _repository.AddAsync(child);
+
+        var persisted = await _repository.GetByIdAsync(childId);
+        Assert.NotNull(persisted);
+        Assert.Equal(parentId, persisted.ParentId);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_PreservesParentId()
+    {
+        var parentId = Guid.NewGuid();
+        await _repository.AddAsync(Organisation.Create(parentId, "Parent"));
+
+        var childId = Guid.NewGuid();
+        var child = Organisation.Create(childId, "Child", parentId);
+        await _repository.AddAsync(child);
+
+        child.Update("Renamed Child");
+        await _repository.UpdateAsync(child);
+
+        var persisted = await _repository.GetByIdAsync(childId);
+        Assert.NotNull(persisted);
+        Assert.Equal("Renamed Child", persisted.Name);
+        Assert.Equal(parentId, persisted.ParentId);
+    }
 }
