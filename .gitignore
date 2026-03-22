@@ -1,4 +1,6 @@
 .azure
-.claude/
+.claude/*
+!.claude/commands/
+!.claude/commands/*
 **/bin/
 **/obj/
