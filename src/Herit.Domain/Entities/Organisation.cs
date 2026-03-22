@@ -17,4 +17,9 @@ public class Organisation
             ParentId = parentId
         };
     }
+
+    public void Update(string name)
+    {
+        Name = name;
+    }
 }
