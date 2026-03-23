@@ -8,17 +8,19 @@ public class User
     public string Email { get; private set; } = default!;
     public string FullName { get; private set; } = default!;
     public UserRole Role { get; private set; }
+    public Guid? OrganisationId { get; private set; }
 
     private User() { }
 
-    public static User Create(Guid id, string email, string fullName, UserRole role)
+    public static User Create(Guid id, string email, string fullName, UserRole role, Guid? organisationId = null)
     {
         return new User
         {
             Id = id,
             Email = email,
             FullName = fullName,
-            Role = role
+            Role = role,
+            OrganisationId = organisationId
         };
     }
 }

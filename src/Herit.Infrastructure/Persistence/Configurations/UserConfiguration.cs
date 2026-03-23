@@ -24,5 +24,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Role)
             .IsRequired()
             .HasConversion<int>();
+
+        builder.Property(u => u.OrganisationId);
+
+        builder.HasOne<Organisation>()
+            .WithMany()
+            .HasForeignKey(u => u.OrganisationId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
     }
 }
