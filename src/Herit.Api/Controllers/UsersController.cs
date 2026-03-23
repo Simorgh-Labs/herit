@@ -1,5 +1,5 @@
+using Herit.Application.Features.User.Commands.CreateOrganisationAdmin;
 using Herit.Application.Features.User.Commands.CreateStaffUser;
-using Herit.Application.Features.User.Commands.CreateSubAdmin;
 using Herit.Application.Features.User.Commands.DeleteStaffUser;
 using Herit.Application.Features.User.Commands.DeleteSubAdmin;
 using Herit.Application.Features.User.Commands.UpdateStaffUser;
@@ -47,8 +47,8 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("sub-admins")]
-    public async Task<IActionResult> CreateSubAdmin([FromBody] CreateSubAdminCommand command, CancellationToken ct)
+    [HttpPost("organisation-admins")]
+    public async Task<IActionResult> CreateOrganisationAdmin([FromBody] CreateOrganisationAdminCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
         return CreatedAtAction(nameof(GetById), new { id }, id);

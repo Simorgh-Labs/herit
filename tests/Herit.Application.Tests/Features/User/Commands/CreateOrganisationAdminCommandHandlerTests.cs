@@ -1,0 +1,62 @@
+using Herit.Application.Features.User.Commands.CreateOrganisationAdmin;
+using Herit.Application.Interfaces;
+using NSubstitute;
+using OrganisationEntity = Herit.Domain.Entities.Organisation;
+using UserEntity = Herit.Domain.Entities.User;
+
+namespace Herit.Application.Tests.Features.User.Commands;
+
+public class CreateOrganisationAdminCommandHandlerTests
+{
+    private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
+    private readonly IOrganisationRepository _organisationRepository = Substitute.For<IOrganisationRepository>();
+
+    private readonly CreateOrganisationAdminCommandHandler _handler;
+
+    public CreateOrganisationAdminCommandHandlerTests()
+    {
+        _handler = new CreateOrganisationAdminCommandHandler(_userRepository, _organisationRepository);
+    }
+
+    [Fact]
+    public async Task Handle_WithValidOrganisation_ReturnsNonEmptyGuid()
+    {
+        var orgId = Guid.NewGuid();
+        var organisation = OrganisationEntity.Create(orgId, "Test Organisation");
+        _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns(organisation);
+
+        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        Assert.NotEqual(Guid.Empty, result);
+    }
+
+    [Fact]
+    public async Task Handle_WithValidOrganisation_CallsAddAsyncExactlyOnce()
+    {
+        var orgId = Guid.NewGuid();
+        var organisation = OrganisationEntity.Create(orgId, "Test Organisation");
+        _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns(organisation);
+
+        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        await _userRepository.Received(1).AddAsync(
+            Arg.Is<UserEntity>(u => u.Email == "admin@gov.eg" && u.FullName == "Organisation Admin" && u.OrganisationId == orgId),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WithNonExistentOrganisation_ThrowsInvalidOperationException()
+    {
+        var orgId = Guid.NewGuid();
+        _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
+
+        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await _userRepository.DidNotReceive().AddAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
+    }
+}
