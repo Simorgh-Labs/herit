@@ -14,7 +14,7 @@ EF Core can store enum values as either their underlying integer or as a string 
 All enums are stored as **integers** using `HasConversion<int>()` in each entity's Fluent API configuration.
 
 Affected enums:
-- `UserRole` (SuperAdmin, DepartmentAdmin, Staff, Expat)
+- `UserRole` (SuperAdmin, OrganisationAdmin, Staff, Expat)
 - `ProposalStatus` (Ideation, Resourcing, Submitted, UnderReview, Approved)
 - `ProposalVisibility` (Private, Shared, Public)
 - `RfpStatus` (Draft, Approved, Published)

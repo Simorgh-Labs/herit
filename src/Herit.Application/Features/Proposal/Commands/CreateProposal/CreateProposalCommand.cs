@@ -6,7 +6,7 @@ public record CreateProposalCommand(
     string Title,
     string ShortDescription,
     Guid AuthorId,
-    Guid DepartmentId,
+    Guid OrganisationId,
     string LongDescription,
     Guid? RfpId = null) : IRequest<Guid>;
 

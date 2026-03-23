@@ -146,7 +146,7 @@ The API layer is the delivery mechanism. Controllers are thin — they receive H
   | `CfeoiController` | `api/v1/Cfeoi` | List by proposal, get, publish, close |
   | `EoiController` | `api/v1/Eoi` | List by CFEOI, get, submit, approve, reject, withdraw, set visibility |
   | `UsersController` | `api/v1/Users` | CRUD |
-  | `OrganisationsController` | `api/v1/Organisations` | CRUD |
+  | `OrganisationsController` | `api/v1/Organisations` | POST (create), GET (list), GET /{id}, PUT /{id}, DELETE /{id} |
 
 - **`Program.cs`** — Minimal hosting model entry point. Registers MediatR (scanning the Application assembly), infrastructure services, Swagger (feature-flagged), HTTPS redirection, and controller routing.
 
@@ -160,9 +160,9 @@ See [`erd.md`](erd.md) for the full Entity Relationship Diagram. The key entitie
 
 | Entity | Purpose |
 |--------|---------|
-| `User` | Platform participant. Has a `Role` (SuperAdmin, DepartmentAdmin, Staff, Expat). |
-| `Organisation` | A government department or sub-department. Self-referential hierarchy via nullable `ParentId`. |
-| `Rfp` | A Request For Proposal published by Staff to invite proposal submissions. References an `Organisation` (department) and an author (`User`). |
+| `User` | Platform participant. Has a `Role` (SuperAdmin, OrganisationAdmin, Staff, Expat). |
+| `Organisation` | A node in the government organisational hierarchy. The root organisation has no parent; all others reference a parent organisation via nullable `ParentId`. |
+| `Rfp` | A Request For Proposal published by Staff to invite proposal submissions. References an `Organisation` and an author (`User`). |
 | `Proposal` | A project proposal created by Staff or Expat. Optionally responds to an `Rfp`. Has a lifecycle status and a visibility level. |
 | `Cfeoi` | A Call For Expression Of Interest published under a `Proposal` to recruit contributors. Specifies `ResourceType` (Human or NonHuman). |
 | `Eoi` | An Expression Of Interest submitted by a `User` in response to a `Cfeoi`. Has a status (Pending → Approved/Rejected) and a visibility. |
@@ -397,3 +397,4 @@ All significant architectural decisions are documented in [`docs/decisions/`](..
 | [ADR-008](../decisions/ADR-008-single-authorship.md) | Single `AuthorId` per Proposal and RFP |
 | [ADR-009](../decisions/ADR-009-react-frontend.md) | React frontend, separately deployed, communicates via REST API |
 | [ADR-010](../decisions/ADR-010-github-actions.md) | GitHub Actions CI/CD with two-stage pipeline and federated Azure auth |
+| [ADR-011](../decisions/ADR-011-unified-organisation-terminology.md) | Unified Organisation terminology — delete duplicate Department handlers, rename `DepartmentId` → `OrganisationId`, `DepartmentAdmin` → `OrganisationAdmin` |

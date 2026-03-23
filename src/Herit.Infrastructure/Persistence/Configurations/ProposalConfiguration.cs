@@ -26,7 +26,7 @@ public class ProposalConfiguration : IEntityTypeConfiguration<Proposal>
         builder.Property(p => p.AuthorId)
             .IsRequired();
 
-        builder.Property(p => p.DepartmentId)
+        builder.Property(p => p.OrganisationId)
             .IsRequired();
 
         builder.Property(p => p.Status)

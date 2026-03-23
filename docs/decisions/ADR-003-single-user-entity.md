@@ -5,7 +5,7 @@
 
 ## Context
 
-Herit has four distinct user types — SuperAdmin, DepartmentAdmin, Staff, and Expat — with different permissions and workflows. A common alternative is to model each type as a separate entity (table-per-type or separate tables). We needed to decide how to represent user identity in the domain.
+Herit has four distinct user types — SuperAdmin, OrganisationAdmin, Staff, and Expat — with different permissions and workflows. A common alternative is to model each type as a separate entity (table-per-type or separate tables). We needed to decide how to represent user identity in the domain.
 
 ## Decision
 
@@ -13,7 +13,7 @@ All users are represented by a **single `User` entity** with a `Role` enum prope
 
 The four roles are:
 - `SuperAdmin` — platform-wide administration
-- `DepartmentAdmin` — manages a specific government department
+- `OrganisationAdmin` — manages a specific organisation
 - `Staff` — creates and manages proposals and RFPs
 - `Expat` — submits expressions of interest
 

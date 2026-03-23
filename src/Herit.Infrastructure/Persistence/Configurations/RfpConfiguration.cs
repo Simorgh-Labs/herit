@@ -26,7 +26,7 @@ public class RfpConfiguration : IEntityTypeConfiguration<Rfp>
         builder.Property(r => r.AuthorId)
             .IsRequired();
 
-        builder.Property(r => r.DepartmentId)
+        builder.Property(r => r.OrganisationId)
             .IsRequired();
 
         builder.Property(r => r.Status)
