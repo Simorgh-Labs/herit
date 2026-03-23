@@ -1,11 +1,7 @@
-using Herit.Application.Features.Organisation.Commands.CreateDepartment;
-using Herit.Application.Features.Organisation.Commands.DeleteDepartment;
+using Herit.Application.Features.Organisation.Commands.CreateOrganisation;
 using Herit.Application.Features.Organisation.Commands.DeleteOrganisation;
-using Herit.Application.Features.Organisation.Commands.UpdateDepartment;
 using Herit.Application.Features.Organisation.Commands.UpdateOrganisation;
-using Herit.Application.Features.Organisation.Queries.GetDepartmentById;
 using Herit.Application.Features.Organisation.Queries.GetOrganisationById;
-using Herit.Application.Features.Organisation.Queries.ListDepartments;
 using Herit.Application.Features.Organisation.Queries.ListOrganisations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace Herit.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
-public class OrganisationController : ControllerBase
+[Route("api/v1/Organisations")]
+public class OrganisationsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public OrganisationController(IMediator mediator) => _mediator = mediator;
+    public OrganisationsController(IMediator mediator) => _mediator = mediator;
+
+    [HttpPost]
+    public async Task<IActionResult> CreateOrganisation([FromBody] CreateOrganisationCommand command, CancellationToken ct)
+    {
+        var id = await _mediator.Send(command, ct);
+        return CreatedAtAction(nameof(GetOrganisationById), new { id }, id);
+    }
 
     [HttpGet]
     public async Task<IActionResult> ListOrganisations(CancellationToken ct)
@@ -42,35 +45,6 @@ public class OrganisationController : ControllerBase
     public async Task<IActionResult> DeleteOrganisation(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteOrganisationCommand(id), ct);
-        return NoContent();
-    }
-
-    [HttpGet("departments")]
-    public async Task<IActionResult> ListDepartments(CancellationToken ct)
-        => Ok(await _mediator.Send(new ListDepartmentsQuery(), ct));
-
-    [HttpGet("departments/{id:guid}")]
-    public async Task<IActionResult> GetDepartmentById(Guid id, CancellationToken ct)
-        => Ok(await _mediator.Send(new GetDepartmentByIdQuery(id), ct));
-
-    [HttpPost("departments")]
-    public async Task<IActionResult> CreateDepartment([FromBody] CreateDepartmentCommand command, CancellationToken ct)
-    {
-        var id = await _mediator.Send(command, ct);
-        return CreatedAtAction(nameof(GetDepartmentById), new { id }, id);
-    }
-
-    [HttpPut("departments/{id:guid}")]
-    public async Task<IActionResult> UpdateDepartment(Guid id, [FromBody] UpdateDepartmentCommand command, CancellationToken ct)
-    {
-        await _mediator.Send(command with { Id = id }, ct);
-        return NoContent();
-    }
-
-    [HttpDelete("departments/{id:guid}")]
-    public async Task<IActionResult> DeleteDepartment(Guid id, CancellationToken ct)
-    {
-        await _mediator.Send(new DeleteDepartmentCommand(id), ct);
         return NoContent();
     }
 }

@@ -14,3 +14,4 @@ This directory contains Architecture Decision Records (ADRs) for Herit. Each ADR
 | [ADR-008](ADR-008-single-authorship.md) | Single Author per Proposal and RFP | Accepted | Each Proposal and RFP has one `AuthorId`; co-authorship is not modelled in the schema. |
 | [ADR-009](ADR-009-react-frontend.md) | React Frontend | Accepted | Build the frontend in React as a separately deployed application communicating with the backend via REST API. |
 | [ADR-010](ADR-010-github-actions.md) | GitHub Actions for CI/CD | Accepted | Use GitHub Actions for all CI and CD with a two-stage pipeline deploying to Azure via `azd`. |
+| [ADR-011](ADR-011-unified-organisation-terminology.md) | Unified Organisation Terminology | Accepted | Unify on "Organisation" as the sole term in code; delete duplicate Department commands/queries; rename `DepartmentId` → `OrganisationId` and `DepartmentAdmin` → `OrganisationAdmin`. |

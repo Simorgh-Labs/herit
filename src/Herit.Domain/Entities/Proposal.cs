@@ -8,7 +8,7 @@ public class Proposal
     public string Title { get; private set; } = default!;
     public string ShortDescription { get; private set; } = default!;
     public Guid AuthorId { get; private set; }
-    public Guid DepartmentId { get; private set; }
+    public Guid OrganisationId { get; private set; }
     public string LongDescription { get; private set; } = default!;
     public ProposalStatus Status { get; private set; }
     public ProposalVisibility Visibility { get; private set; }
@@ -16,7 +16,7 @@ public class Proposal
 
     private Proposal() { }
 
-    public static Proposal Create(Guid id, string title, string shortDescription, Guid authorId, Guid departmentId, string longDescription, Guid? rfpId = null)
+    public static Proposal Create(Guid id, string title, string shortDescription, Guid authorId, Guid organisationId, string longDescription, Guid? rfpId = null)
     {
         return new Proposal
         {
@@ -24,7 +24,7 @@ public class Proposal
             Title = title,
             ShortDescription = shortDescription,
             AuthorId = authorId,
-            DepartmentId = departmentId,
+            OrganisationId = organisationId,
             LongDescription = longDescription,
             Status = ProposalStatus.Ideation,
             Visibility = ProposalVisibility.Private,

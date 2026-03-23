@@ -22,7 +22,7 @@ erDiagram
         string LongDescription
         RfpStatus Status
         Guid AuthorId FK
-        Guid DepartmentId FK
+        Guid OrganisationId FK
     }
 
     Proposal {
@@ -33,7 +33,7 @@ erDiagram
         ProposalStatus Status
         ProposalVisibility Visibility
         Guid AuthorId FK
-        Guid DepartmentId FK
+        Guid OrganisationId FK
         Guid RfpId FK
     }
 
@@ -57,9 +57,9 @@ erDiagram
 
     Organisation ||--o{ Organisation : "parent of"
     User ||--o{ Rfp : "authors"
-    Organisation ||--o{ Rfp : "department for"
+    Organisation ||--o{ Rfp : "belongs to"
     User ||--o{ Proposal : "authors"
-    Organisation ||--o{ Proposal : "department for"
+    Organisation ||--o{ Proposal : "belongs to"
     Rfp ||--o{ Proposal : "responded to by"
     Proposal ||--o{ Cfeoi : "has"
     User ||--o{ Eoi : "submits"

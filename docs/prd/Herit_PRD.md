@@ -49,14 +49,14 @@ And allows government staff to:
 ### 3.1 Super Admin
 
 The system owner. Responsible for initial setup of the organisational structure. Can:
-- Create, read, update, and delete (CRUD) the root organisation and any department hierarchy beneath it.
-- CRUD department admins for any department in the system.
+- Create, read, update, and delete (CRUD) the root organisation and any organisation hierarchy beneath it.
+- CRUD organisation admins for any organisation in the system.
 
-### 3.2 Department Admin
+### 3.2 Organisation Admin
 
-Manages a specific department and its sub-departments. Can:
-- CRUD a hierarchy of sub-departments within their organisation.
-- CRUD admins for their sub-departments.
+Manages a specific organisation and its sub-organisations. Can:
+- CRUD a hierarchy of sub-organisations within their organisation.
+- CRUD admins for their sub-organisations.
 - CRUD staff users and manage their access within their organisation.
 
 ### 3.3 Staff User
@@ -84,11 +84,10 @@ Diaspora members registering on the platform. Can:
 
 The entire system is organised as a tree:
 
-- **Root Organisation:** The single root node of the tree, representing the home-country government body.
-- **Department:** Any node directly or indirectly under the root organisation.
-- **Organisation:** Any subtree under the root organisation, directly or indirectly.
+- **Organisation:** Any node in the hierarchy tree, including the root. The root organisation has no parent (`ParentId` is null). All other organisations have a non-null `ParentId`.
+- **Root Organisation:** The single top-level organisation representing the home-country government body. Distinguished by having `ParentId = null`. Created once during system bootstrap.
 
-The super admin bootstraps the system with the root organisation. Admins at each level can create and manage sub-departments and staff beneath them, allowing the hierarchy to reflect any real-world government structure.
+The super admin bootstraps the system with the root organisation. Admins at each level can create and manage sub-organisations and staff beneath them, allowing the hierarchy to reflect any real-world government structure.
 
 ---
 
@@ -103,7 +102,7 @@ Published by a staff user to solicit proposals from the expat community on a spe
 | Title | Short text | Required |
 | Short Description | Plain text | Required |
 | Authors | User reference(s) | Required |
-| Associated Department | Department reference | Required |
+| Associated Organisation | Organisation reference | Required |
 | Long Description | Formatted (rich) text | Required |
 | Status | Enum | `draft` / `approved` / `published` |
 
@@ -116,7 +115,7 @@ A volunteer project proposal submitted by an expat user. May be submitted indepe
 | Title | Short text | Required |
 | Short Description | Plain text | Required |
 | Authors | User reference(s) | Required |
-| Associated Department | Department reference | Required |
+| Associated Organisation | Organisation reference | Required |
 | Long Description | Formatted (rich) text | Required |
 | Status | Enum | See §5.2.1 |
 | Visibility | Enum | `private` / `shared` / `public` |
@@ -206,8 +205,8 @@ A response submitted by an expat user to a CFEOI.
 
 | # | Use Case | Description |
 |---|---|---|
-| A1 | CRUD Departments | Admin manages the hierarchy of departments within their organisation. |
-| A2 | CRUD Sub-Admins | Admin manages administrators for their sub-departments. |
+| A1 | CRUD Organisations | Admin manages the hierarchy of organisations within their organisation. |
+| A2 | CRUD Sub-Admins | Admin manages administrators for their sub-organisations. |
 | A3 | CRUD Staff Users | Admin manages staff accounts and access permissions within their organisation. |
 
 ---
@@ -216,15 +215,15 @@ A response submitted by an expat user to a CFEOI.
 
 ```
 Root Organisation
-└── Department(s) [tree structure]
-    ├── Admin (manages department)
+└── Organisation(s) [tree structure]
+    ├── Admin (manages organisation)
     ├── Staff User(s)
     │   ├── RFP (published by Staff)
     │   └── Manages Proposals → Manages EOIs
     └── ...
 
 Expat User
-├── Proposal (submitted under a Department, optionally linked to RFP)
+├── Proposal (submitted under an Organisation, optionally linked to RFP)
 │   └── CFEOI (published by proposal owner)
 │       └── EOI (submitted by Expat in response to CFEOI)
 ```

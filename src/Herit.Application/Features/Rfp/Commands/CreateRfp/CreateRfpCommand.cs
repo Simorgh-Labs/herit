@@ -6,7 +6,7 @@ public record CreateRfpCommand(
     string Title,
     string ShortDescription,
     Guid AuthorId,
-    Guid DepartmentId,
+    Guid OrganisationId,
     string LongDescription) : IRequest<Guid>;
 
 public class CreateRfpCommandHandler : IRequestHandler<CreateRfpCommand, Guid>
