@@ -1,6 +1,8 @@
 using Azure.Identity;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Infrastructure;
+using Herit.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,12 @@ if (enableSwagger)
 }
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<HeritDbContext>();
+    await db.Database.MigrateAsync();
+}
 
 if (enableSwagger)
 {
