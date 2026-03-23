@@ -23,4 +23,10 @@ public class User
             OrganisationId = organisationId
         };
     }
+
+    public void Update(string email, string fullName)
+    {
+        Email = email;
+        FullName = fullName;
+    }
 }
