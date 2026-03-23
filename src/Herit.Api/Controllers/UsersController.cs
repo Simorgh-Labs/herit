@@ -2,7 +2,7 @@ using Herit.Application.Features.User.Commands.CreateOrganisationAdmin;
 using Herit.Application.Features.User.Commands.CreateStaffUser;
 using Herit.Application.Features.User.Commands.RegisterExpat;
 using Herit.Application.Features.User.Commands.DeleteStaffUser;
-using Herit.Application.Features.User.Commands.DeleteSubAdmin;
+using Herit.Application.Features.User.Commands.DeleteOrganisationAdmin;
 using Herit.Application.Features.User.Commands.UpdateStaffUser;
 using Herit.Application.Features.User.Queries.GetUserById;
 using Herit.Application.Features.User.Queries.ListUsers;
@@ -55,10 +55,10 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
-    [HttpDelete("sub-admins/{id:guid}")]
-    public async Task<IActionResult> DeleteSubAdmin(Guid id, CancellationToken ct)
+    [HttpDelete("organisation-admins/{id:guid}")]
+    public async Task<IActionResult> DeleteOrganisationAdmin(Guid id, CancellationToken ct)
     {
-        await _mediator.Send(new DeleteSubAdminCommand(id), ct);
+        await _mediator.Send(new DeleteOrganisationAdminCommand(id), ct);
         return NoContent();
     }
 
