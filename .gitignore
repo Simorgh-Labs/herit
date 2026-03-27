@@ -4,3 +4,5 @@
 !.claude/commands/*
 **/bin/
 **/obj/
+.postman/
+postman/

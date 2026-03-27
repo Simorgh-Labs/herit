@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 var keyVaultEndpoint = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
-if (!string.IsNullOrEmpty(keyVaultEndpoint))
+if (!string.IsNullOrEmpty(keyVaultEndpoint) && !builder.Environment.IsDevelopment())
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
 
 builder.Services.AddControllers();
