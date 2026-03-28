@@ -1,6 +1,7 @@
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
 using Herit.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Herit.Infrastructure.Repositories;
 
@@ -14,17 +15,34 @@ public class ProposalRepository : IProposalRepository
     }
 
     public Task<Proposal?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => _context.Proposals.FindAsync([id], cancellationToken).AsTask();
 
-    public Task<IEnumerable<Proposal>> ListAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task<IEnumerable<Proposal>> ListAsync(CancellationToken cancellationToken = default)
+        => await _context.Proposals.ToListAsync(cancellationToken);
 
-    public Task AddAsync(Proposal proposal, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task AddAsync(Proposal proposal, CancellationToken cancellationToken = default)
+    {
+        await _context.Proposals.AddAsync(proposal, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
-    public Task UpdateAsync(Proposal proposal, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task UpdateAsync(Proposal proposal, CancellationToken cancellationToken = default)
+    {
+        var tracked = _context.ChangeTracker.Entries<Proposal>()
+            .FirstOrDefault(e => e.Entity.Id == proposal.Id);
+        if (tracked is not null)
+            tracked.State = EntityState.Detached;
 
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        _context.Proposals.Update(proposal);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var proposal = await _context.Proposals.FindAsync([id], cancellationToken)
+            ?? throw new InvalidOperationException($"Proposal with id '{id}' was not found.");
+
+        _context.Proposals.Remove(proposal);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }
