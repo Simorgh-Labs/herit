@@ -15,3 +15,4 @@ This directory contains Architecture Decision Records (ADRs) for Herit. Each ADR
 | [ADR-009](ADR-009-react-frontend.md) | React Frontend | Accepted | Build the frontend in React as a separately deployed application communicating with the backend via REST API. |
 | [ADR-010](ADR-010-github-actions.md) | GitHub Actions for CI/CD | Accepted | Use GitHub Actions for all CI and CD with a two-stage pipeline deploying to Azure via `azd`. |
 | [ADR-011](ADR-011-unified-organisation-terminology.md) | Unified Organisation Terminology | Accepted | Unify on "Organisation" as the sole term in code; delete duplicate Department commands/queries; rename `DepartmentId` → `OrganisationId` and `DepartmentAdmin` → `OrganisationAdmin`. |
+| [ADR-012](ADR-012-generic-status-transitions.md) | Generic Status Transitions | Accepted | Model all entity status changes as a single generic command per entity with transition guard logic in the domain. |
