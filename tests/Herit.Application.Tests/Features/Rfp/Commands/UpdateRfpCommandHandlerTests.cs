@@ -1,14 +1,46 @@
 using Herit.Application.Features.Rfp.Commands.UpdateRfp;
+using Herit.Application.Interfaces;
+using NSubstitute;
+using RfpEntity = Herit.Domain.Entities.Rfp;
 
 namespace Herit.Application.Tests.Features.Rfp.Commands;
 
 public class UpdateRfpCommandHandlerTests
 {
-    [Fact]
-    public async Task Handle_ThrowsNotImplementedException()
+    private readonly IRfpRepository _repository = Substitute.For<IRfpRepository>();
+    private readonly UpdateRfpCommandHandler _handler;
+
+    public UpdateRfpCommandHandlerTests()
     {
-        var handler = new UpdateRfpCommandHandler();
-        var command = new UpdateRfpCommand(Guid.NewGuid(), "Title", "Short", "Long");
-        await Assert.ThrowsAsync<NotImplementedException>(() => handler.Handle(command, CancellationToken.None));
+        _handler = new UpdateRfpCommandHandler(_repository);
+    }
+
+    [Fact]
+    public async Task Handle_WithExistingRfp_UpdatesFieldsAndCallsUpdateAsync()
+    {
+        var id = Guid.NewGuid();
+        var rfp = RfpEntity.Create(id, "Old Title", "Old Short", Guid.NewGuid(), Guid.NewGuid(), "Old Long");
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(rfp);
+
+        var command = new UpdateRfpCommand(id, "New Title", "New Short", "New Long");
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        Assert.Equal(MediatR.Unit.Value, result);
+        Assert.Equal("New Title", rfp.Title);
+        Assert.Equal("New Short", rfp.ShortDescription);
+        Assert.Equal("New Long", rfp.LongDescription);
+        await _repository.Received(1).UpdateAsync(rfp, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WithNonExistentRfp_ThrowsInvalidOperationException()
+    {
+        var id = Guid.NewGuid();
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((RfpEntity?)null);
+
+        var command = new UpdateRfpCommand(id, "Title", "Short", "Long");
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await _repository.DidNotReceive().UpdateAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
     }
 }
