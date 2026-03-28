@@ -1,11 +1,8 @@
-using Herit.Application.Features.Proposal.Commands.ApproveProposal;
 using Herit.Application.Features.Proposal.Commands.CreateProposal;
 using Herit.Application.Features.Proposal.Commands.DeleteProposal;
-using Herit.Application.Features.Proposal.Commands.ReviewProposal;
 using Herit.Application.Features.Proposal.Commands.SetProposalVisibility;
-using Herit.Application.Features.Proposal.Commands.SubmitProposal;
 using Herit.Application.Features.Proposal.Commands.UpdateProposal;
-using Herit.Application.Features.Proposal.Commands.WithdrawProposal;
+using Herit.Application.Features.Proposal.Commands.UpdateProposalStatus;
 using Herit.Application.Features.Proposal.Queries.GetProposalById;
 using Herit.Application.Features.Proposal.Queries.ListProposals;
 using Herit.Domain.Enums;
@@ -51,31 +48,10 @@ public class ProposalsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("{id:guid}/submit")]
-    public async Task<IActionResult> Submit(Guid id, CancellationToken ct)
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] ProposalStatus newStatus, CancellationToken ct)
     {
-        await _mediator.Send(new SubmitProposalCommand(id), ct);
-        return NoContent();
-    }
-
-    [HttpPatch("{id:guid}/approve")]
-    public async Task<IActionResult> Approve(Guid id, CancellationToken ct)
-    {
-        await _mediator.Send(new ApproveProposalCommand(id), ct);
-        return NoContent();
-    }
-
-    [HttpPatch("{id:guid}/review")]
-    public async Task<IActionResult> Review(Guid id, CancellationToken ct)
-    {
-        await _mediator.Send(new ReviewProposalCommand(id), ct);
-        return NoContent();
-    }
-
-    [HttpPatch("{id:guid}/withdraw")]
-    public async Task<IActionResult> Withdraw(Guid id, CancellationToken ct)
-    {
-        await _mediator.Send(new WithdrawProposalCommand(id), ct);
+        await _mediator.Send(new UpdateProposalStatusCommand(id, newStatus), ct);
         return NoContent();
     }
 
