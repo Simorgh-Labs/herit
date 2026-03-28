@@ -4,6 +4,13 @@ namespace Herit.Domain.Entities;
 
 public class Rfp
 {
+    private static readonly Dictionary<RfpStatus, RfpStatus[]> AllowedTransitions = new()
+    {
+        [RfpStatus.Draft] = [RfpStatus.Approved],
+        [RfpStatus.Approved] = [RfpStatus.Published],
+        [RfpStatus.Published] = []
+    };
+
     public Guid Id { get; private set; }
     public string Title { get; private set; } = default!;
     public string ShortDescription { get; private set; } = default!;
@@ -26,5 +33,20 @@ public class Rfp
             LongDescription = longDescription,
             Status = RfpStatus.Draft
         };
+    }
+
+    public void Update(string title, string shortDescription, string longDescription)
+    {
+        Title = title;
+        ShortDescription = shortDescription;
+        LongDescription = longDescription;
+    }
+
+    public void TransitionStatus(RfpStatus newStatus)
+    {
+        if (!AllowedTransitions[Status].Contains(newStatus))
+            throw new InvalidOperationException($"Cannot transition from {Status} to {newStatus}.");
+
+        Status = newStatus;
     }
 }

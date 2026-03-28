@@ -1,7 +1,7 @@
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Application.Features.Rfp.Commands.DeleteRfp;
-using Herit.Application.Features.Rfp.Commands.PublishRfp;
 using Herit.Application.Features.Rfp.Commands.UpdateRfp;
+using Herit.Application.Features.Rfp.Commands.UpdateRfpStatus;
 using Herit.Application.Features.Rfp.Queries.GetRfpById;
 using Herit.Application.Features.Rfp.Queries.ListRfps;
 using MediatR;
@@ -46,10 +46,10 @@ public class RfpsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("{id:guid}/publish")]
-    public async Task<IActionResult> Publish(Guid id, CancellationToken ct)
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateRfpStatusCommand command, CancellationToken ct)
     {
-        await _mediator.Send(new PublishRfpCommand(id), ct);
+        await _mediator.Send(command with { Id = id }, ct);
         return NoContent();
     }
 }
