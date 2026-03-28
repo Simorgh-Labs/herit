@@ -1,3 +1,4 @@
+using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
 
@@ -7,8 +8,21 @@ public record UpdateRfpStatusCommand(Guid Id, RfpStatus NewStatus) : IRequest<Un
 
 public class UpdateRfpStatusCommandHandler : IRequestHandler<UpdateRfpStatusCommand, Unit>
 {
-    public Task<Unit> Handle(UpdateRfpStatusCommand request, CancellationToken cancellationToken)
+    private readonly IRfpRepository _repository;
+
+    public UpdateRfpStatusCommandHandler(IRfpRepository repository)
     {
-        throw new NotImplementedException();
+        _repository = repository;
+    }
+
+    public async Task<Unit> Handle(UpdateRfpStatusCommand request, CancellationToken cancellationToken)
+    {
+        var rfp = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        if (rfp is null)
+            throw new InvalidOperationException($"Rfp '{request.Id}' does not exist.");
+
+        rfp.TransitionStatus(request.NewStatus);
+        await _repository.UpdateAsync(rfp, cancellationToken);
+        return Unit.Value;
     }
 }
