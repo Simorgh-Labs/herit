@@ -4,6 +4,12 @@ namespace Herit.Domain.Entities;
 
 public class Cfeoi
 {
+    private static readonly Dictionary<CfeoiStatus, CfeoiStatus[]> AllowedTransitions = new()
+    {
+        [CfeoiStatus.Open] = [CfeoiStatus.Closed],
+        [CfeoiStatus.Closed] = []
+    };
+
     public Guid Id { get; private set; }
     public string Title { get; private set; } = default!;
     public string Description { get; private set; } = default!;
@@ -24,5 +30,13 @@ public class Cfeoi
             ProposalId = proposalId,
             Status = CfeoiStatus.Open
         };
+    }
+
+    public void TransitionStatus(CfeoiStatus newStatus)
+    {
+        if (!AllowedTransitions[Status].Contains(newStatus))
+            throw new InvalidOperationException($"Cannot transition from {Status} to {newStatus}.");
+
+        Status = newStatus;
     }
 }
