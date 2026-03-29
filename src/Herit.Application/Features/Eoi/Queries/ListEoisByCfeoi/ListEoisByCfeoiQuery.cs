@@ -1,3 +1,4 @@
+using Herit.Application.Interfaces;
 using MediatR;
 
 namespace Herit.Application.Features.Eoi.Queries.ListEoisByCfeoi;
@@ -6,8 +7,13 @@ public record ListEoisByCfeoiQuery(Guid CfeoiId) : IRequest<IEnumerable<Herit.Do
 
 public class ListEoisByCfeoiQueryHandler : IRequestHandler<ListEoisByCfeoiQuery, IEnumerable<Herit.Domain.Entities.Eoi>>
 {
-    public Task<IEnumerable<Herit.Domain.Entities.Eoi>> Handle(ListEoisByCfeoiQuery request, CancellationToken cancellationToken)
+    private readonly IEoiRepository _eoiRepository;
+
+    public ListEoisByCfeoiQueryHandler(IEoiRepository eoiRepository)
     {
-        throw new NotImplementedException();
+        _eoiRepository = eoiRepository;
     }
+
+    public Task<IEnumerable<Herit.Domain.Entities.Eoi>> Handle(ListEoisByCfeoiQuery request, CancellationToken cancellationToken)
+        => _eoiRepository.ListByCfeoiAsync(request.CfeoiId, cancellationToken);
 }
