@@ -1,6 +1,7 @@
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
 using Herit.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Herit.Infrastructure.Repositories;
 
@@ -14,14 +15,27 @@ public class CfeoiRepository : ICfeoiRepository
     }
 
     public Task<Cfeoi?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => _context.Cfeois.FindAsync([id], cancellationToken).AsTask();
 
-    public Task<IEnumerable<Cfeoi>> ListByProposalAsync(Guid proposalId, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task<IEnumerable<Cfeoi>> ListByProposalAsync(Guid proposalId, CancellationToken cancellationToken = default)
+        => await _context.Cfeois
+            .Where(c => c.ProposalId == proposalId)
+            .ToListAsync(cancellationToken);
 
-    public Task AddAsync(Cfeoi cfeoi, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task AddAsync(Cfeoi cfeoi, CancellationToken cancellationToken = default)
+    {
+        await _context.Cfeois.AddAsync(cfeoi, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
-    public Task UpdateAsync(Cfeoi cfeoi, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+    public async Task UpdateAsync(Cfeoi cfeoi, CancellationToken cancellationToken = default)
+    {
+        var tracked = _context.ChangeTracker.Entries<Cfeoi>()
+            .FirstOrDefault(e => e.Entity.Id == cfeoi.Id);
+        if (tracked is not null)
+            tracked.State = EntityState.Detached;
+
+        _context.Cfeois.Update(cfeoi);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }
