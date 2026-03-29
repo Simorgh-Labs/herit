@@ -1,3 +1,4 @@
+using Herit.Application.Interfaces;
 using MediatR;
 
 namespace Herit.Application.Features.Cfeoi.Queries.ListCfeoisByProposal;
@@ -6,8 +7,13 @@ public record ListCfeoisByProposalQuery(Guid ProposalId) : IRequest<IEnumerable<
 
 public class ListCfeoisByProposalQueryHandler : IRequestHandler<ListCfeoisByProposalQuery, IEnumerable<Herit.Domain.Entities.Cfeoi>>
 {
-    public Task<IEnumerable<Herit.Domain.Entities.Cfeoi>> Handle(ListCfeoisByProposalQuery request, CancellationToken cancellationToken)
+    private readonly ICfeoiRepository _cfeoiRepository;
+
+    public ListCfeoisByProposalQueryHandler(ICfeoiRepository cfeoiRepository)
     {
-        throw new NotImplementedException();
+        _cfeoiRepository = cfeoiRepository;
     }
+
+    public Task<IEnumerable<Herit.Domain.Entities.Cfeoi>> Handle(ListCfeoisByProposalQuery request, CancellationToken cancellationToken)
+        => _cfeoiRepository.ListByProposalAsync(request.ProposalId, cancellationToken);
 }
