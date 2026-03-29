@@ -1,14 +1,42 @@
 using Herit.Application.Features.Eoi.Commands.WithdrawEoi;
+using Herit.Application.Interfaces;
+using MediatR;
+using NSubstitute;
+using EoiEntity = Herit.Domain.Entities.Eoi;
 
 namespace Herit.Application.Tests.Features.Eoi.Commands;
 
 public class WithdrawEoiCommandHandlerTests
 {
-    [Fact]
-    public async Task Handle_ThrowsNotImplementedException()
+    private readonly IEoiRepository _eoiRepository = Substitute.For<IEoiRepository>();
+    private readonly WithdrawEoiCommandHandler _handler;
+
+    public WithdrawEoiCommandHandlerTests()
     {
-        var handler = new WithdrawEoiCommandHandler();
-        var command = new WithdrawEoiCommand(Guid.NewGuid());
-        await Assert.ThrowsAsync<NotImplementedException>(() => handler.Handle(command, CancellationToken.None));
+        _handler = new WithdrawEoiCommandHandler(_eoiRepository);
+    }
+
+    [Fact]
+    public async Task Handle_HappyPath_CallsDeleteAsync()
+    {
+        var eoiId = Guid.NewGuid();
+        var eoi = EoiEntity.Create(eoiId, Guid.NewGuid(), "Message", Guid.NewGuid());
+        _eoiRepository.GetByIdAsync(eoiId, Arg.Any<CancellationToken>()).Returns(eoi);
+
+        var result = await _handler.Handle(new WithdrawEoiCommand(eoiId), CancellationToken.None);
+
+        Assert.Equal(Unit.Value, result);
+        await _eoiRepository.Received(1).DeleteAsync(eoiId, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_EoiNotFound_ThrowsInvalidOperationException()
+    {
+        var eoiId = Guid.NewGuid();
+        _eoiRepository.GetByIdAsync(eoiId, Arg.Any<CancellationToken>()).Returns((EoiEntity?)null);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _handler.Handle(new WithdrawEoiCommand(eoiId), CancellationToken.None));
+        await _eoiRepository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 }
