@@ -4,6 +4,13 @@ namespace Herit.Domain.Entities;
 
 public class Eoi
 {
+    private static readonly Dictionary<EoiStatus, EoiStatus[]> AllowedTransitions = new()
+    {
+        [EoiStatus.Pending] = [EoiStatus.Approved, EoiStatus.Rejected],
+        [EoiStatus.Approved] = [],
+        [EoiStatus.Rejected] = []
+    };
+
     public Guid Id { get; private set; }
     public Guid SubmittedById { get; private set; }
     public string Message { get; private set; } = default!;
@@ -24,5 +31,18 @@ public class Eoi
             Status = EoiStatus.Pending,
             Visibility = EoiVisibility.Private
         };
+    }
+
+    public void TransitionStatus(EoiStatus newStatus)
+    {
+        if (!AllowedTransitions[Status].Contains(newStatus))
+            throw new InvalidOperationException($"Cannot transition from {Status} to {newStatus}.");
+
+        Status = newStatus;
+    }
+
+    public void SetVisibility(EoiVisibility visibility)
+    {
+        Visibility = visibility;
     }
 }
