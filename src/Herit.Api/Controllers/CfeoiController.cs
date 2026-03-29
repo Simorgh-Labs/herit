@@ -1,5 +1,5 @@
-using Herit.Application.Features.Cfeoi.Commands.CloseCfeoi;
 using Herit.Application.Features.Cfeoi.Commands.PublishCfeoi;
+using Herit.Application.Features.Cfeoi.Commands.UpdateCfeoiStatus;
 using Herit.Application.Features.Cfeoi.Queries.GetCfeoiById;
 using Herit.Application.Features.Cfeoi.Queries.ListCfeoisByProposal;
 using MediatR;
@@ -30,10 +30,10 @@ public class CfeoiController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
-    [HttpPatch("{id:guid}/close")]
-    public async Task<IActionResult> Close(Guid id, CancellationToken ct)
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateCfeoiStatusCommand command, CancellationToken ct)
     {
-        await _mediator.Send(new CloseCfeoiCommand(id), ct);
+        await _mediator.Send(command with { Id = id }, ct);
         return NoContent();
     }
 }
