@@ -1,4 +1,5 @@
 using Azure.Identity;
+using Herit.Api.Middleware;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
@@ -24,6 +25,9 @@ var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
 
 builder.Services.AddInfrastructure(connectionString);
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddEndpointsApiExplorer();
 
 var enableSwagger = builder.Configuration.GetValue<bool>("Features:EnableSwagger");
@@ -47,6 +51,7 @@ if (enableSwagger)
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Herit API v1"));
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.MapControllers();
 
