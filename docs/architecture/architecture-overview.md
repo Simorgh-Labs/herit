@@ -23,7 +23,7 @@
 
 Herit is a two-sided government platform connecting Australian expats with government departments. Expats submit proposals and express interest in contributing; government staff publish Requests For Proposals (RFPs) and manage contributor intake via Calls For Expression Of Interest (CFEOIs).
 
-The backend is a .NET 10 REST API backed by Azure SQL. The frontend (React, not yet implemented) will communicate with the API exclusively over HTTP. Infrastructure is provisioned on Microsoft Azure using Bicep and deployed via the Azure Developer CLI.
+The backend is a .NET 10 REST API backed by Azure SQL. The frontend consists of two React single-page applications — a public-facing expat portal (`frontend/portal`) and an internal staff and admin app (`frontend/staff`) — both communicating with the API exclusively over HTTP. Infrastructure is provisioned on Microsoft Azure using Bicep and deployed via the Azure Developer CLI.
 
 This document describes how the system is structured, how its layers interact, and how it is built and deployed.
 
@@ -45,10 +45,14 @@ herit/
 │   ├── Herit.Application.Tests/
 │   ├── Herit.Infrastructure.Tests/
 │   └── Herit.Api.Tests/
+├── frontend/
+│   ├── portal/                 # React SPA — public-facing expat portal
+│   └── staff/                  # React SPA — staff and admin interface
 ├── infra/                      # Bicep templates for Azure infrastructure
 ├── docs/
-│   ├── architecture/           # ERD, this document
+│   ├── architecture/           # ERD, this document, frontend architecture
 │   ├── decisions/              # Architecture Decision Records (ADRs)
+│   ├── frontend/               # User flows and design documentation
 │   └── prd/                    # Product Requirements Document
 └── .github/workflows/          # GitHub Actions CI/CD pipeline
 ```
@@ -282,9 +286,10 @@ Infrastructure is defined as code using **Bicep** templates under `/infra/` and 
 
 | Resource | Purpose |
 |---|---|
-| **App Service Plan** | Shared compute host for the API and web app services |
+| **App Service Plan** | Shared compute host for the API and both web app services |
 | **API App Service** | Hosts the .NET 10 ASP.NET Core API (`Herit.Api`). Linux, .NET Core 10.0. System-assigned managed identity for Key Vault access. |
-| **Web App Service** | Hosts the React frontend. Linux, Node 20 LTS, served via PM2 in SPA mode. |
+| **Portal App Service** | Hosts the expat-facing React SPA (`frontend/portal`). Linux, Node 20 LTS, served via PM2 in SPA mode. |
+| **Staff App Service** | Hosts the staff and admin React SPA (`frontend/staff`). Linux, Node 20 LTS, served via PM2 in SPA mode. |
 | **Azure SQL Server + Database** | Production database (`Herit`). A deployment script provisions a dedicated app user with `db_owner`. Azure Services firewall rule enabled. |
 | **Azure Key Vault** | Stores secrets: SQL connection string, SQL admin password, app user password. Accessed by the API App Service via managed identity. |
 | **Application Insights** | Telemetry and monitoring for both the API and web app. Connection string surfaced as an environment variable. |
