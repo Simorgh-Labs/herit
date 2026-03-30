@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Proposal.Commands.UpdateProposal;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -39,14 +40,14 @@ public class UpdateProposalCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ProposalNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_ProposalNotFound_ThrowsNotFoundException()
     {
         var proposalId = Guid.NewGuid();
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>()).Returns((ProposalEntity?)null);
 
         var command = new UpdateProposalCommand(proposalId, "Title", "Short", "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().UpdateAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
     }
 }

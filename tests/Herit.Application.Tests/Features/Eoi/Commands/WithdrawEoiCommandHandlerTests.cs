@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Eoi.Commands.WithdrawEoi;
 using Herit.Application.Interfaces;
 using MediatR;
@@ -30,12 +31,12 @@ public class WithdrawEoiCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_EoiNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_EoiNotFound_ThrowsNotFoundException()
     {
         var eoiId = Guid.NewGuid();
         _eoiRepository.GetByIdAsync(eoiId, Arg.Any<CancellationToken>()).Returns((EoiEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new WithdrawEoiCommand(eoiId), CancellationToken.None));
         await _eoiRepository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }

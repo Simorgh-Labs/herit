@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -22,7 +23,7 @@ public class CreateStaffUserCommandHandler : IRequestHandler<CreateStaffUserComm
     {
         var organisation = await _organisationRepository.GetByIdAsync(request.OrganisationId, cancellationToken);
         if (organisation is null)
-            throw new InvalidOperationException($"Organisation with ID '{request.OrganisationId}' was not found.");
+            throw new NotFoundException($"Organisation with ID '{request.OrganisationId}' was not found.");
 
         var user = UserEntity.Create(Guid.NewGuid(), request.Email, request.FullName, UserRole.Staff, request.OrganisationId);
 

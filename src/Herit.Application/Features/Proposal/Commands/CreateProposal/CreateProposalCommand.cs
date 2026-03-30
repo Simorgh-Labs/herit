@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 using ProposalEntity = Herit.Domain.Entities.Proposal;
@@ -35,17 +36,17 @@ public class CreateProposalCommandHandler : IRequestHandler<CreateProposalComman
     {
         var author = await _userRepository.GetByIdAsync(request.AuthorId, cancellationToken);
         if (author is null)
-            throw new InvalidOperationException($"User '{request.AuthorId}' does not exist.");
+            throw new NotFoundException($"User '{request.AuthorId}' does not exist.");
 
         var organisation = await _organisationRepository.GetByIdAsync(request.OrganisationId, cancellationToken);
         if (organisation is null)
-            throw new InvalidOperationException($"Organisation '{request.OrganisationId}' does not exist.");
+            throw new NotFoundException($"Organisation '{request.OrganisationId}' does not exist.");
 
         if (request.RfpId is not null)
         {
             var rfp = await _rfpRepository.GetByIdAsync(request.RfpId.Value, cancellationToken);
             if (rfp is null)
-                throw new InvalidOperationException($"Rfp '{request.RfpId}' does not exist.");
+                throw new NotFoundException($"Rfp '{request.RfpId}' does not exist.");
         }
 
         var id = Guid.NewGuid();

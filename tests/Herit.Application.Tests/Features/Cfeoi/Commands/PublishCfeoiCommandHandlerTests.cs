@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Cfeoi.Commands.PublishCfeoi;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -36,14 +37,14 @@ public class PublishCfeoiCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ProposalNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_ProposalNotFound_ThrowsNotFoundException()
     {
         var proposalId = Guid.NewGuid();
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>()).Returns((ProposalEntity?)null);
 
         var command = new PublishCfeoiCommand("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _cfeoiRepository.DidNotReceive().AddAsync(Arg.Any<CfeoiEntity>(), Arg.Any<CancellationToken>());
     }
 }

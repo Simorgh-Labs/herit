@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 
@@ -18,7 +19,7 @@ public class DeleteOrganisationCommandHandler : IRequestHandler<DeleteOrganisati
     {
         var organisation = await _repository.GetByIdAsync(request.Id, cancellationToken);
         if (organisation is null)
-            throw new InvalidOperationException($"Organisation '{request.Id}' does not exist.");
+            throw new NotFoundException($"Organisation '{request.Id}' does not exist.");
 
         await _repository.DeleteAsync(request.Id, cancellationToken);
         return Unit.Value;

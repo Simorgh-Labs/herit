@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Rfp.Commands.DeleteRfp;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -27,13 +28,13 @@ public class DeleteRfpCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentRfp_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentRfp_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.DeleteAsync(id, Arg.Any<CancellationToken>())
-            .Throws(new InvalidOperationException($"Rfp with id '{id}' was not found."));
+            .Throws(new NotFoundException($"Rfp with id '{id}' was not found."));
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new DeleteRfpCommand(id), CancellationToken.None));
     }
 }

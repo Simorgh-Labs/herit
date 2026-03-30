@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Rfp.Commands.UpdateRfpStatus;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -49,12 +50,12 @@ public class UpdateRfpStatusCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_RfpNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_RfpNotFound_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((RfpEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new UpdateRfpStatusCommand(id, RfpStatus.Approved), CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
     }

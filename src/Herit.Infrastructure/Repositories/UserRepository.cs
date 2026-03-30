@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
 using Herit.Infrastructure.Persistence;
@@ -40,7 +41,7 @@ public class UserRepository : IUserRepository
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await _context.Users.FindAsync([id], cancellationToken)
-            ?? throw new InvalidOperationException($"User with id '{id}' was not found.");
+            ?? throw new NotFoundException($"User with id '{id}' was not found.");
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync(cancellationToken);

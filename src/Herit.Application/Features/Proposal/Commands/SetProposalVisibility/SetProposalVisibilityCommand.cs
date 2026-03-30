@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -19,7 +20,7 @@ public class SetProposalVisibilityCommandHandler : IRequestHandler<SetProposalVi
     {
         var proposal = await _proposalRepository.GetByIdAsync(request.Id, cancellationToken);
         if (proposal is null)
-            throw new InvalidOperationException($"Proposal '{request.Id}' does not exist.");
+            throw new NotFoundException($"Proposal '{request.Id}' does not exist.");
 
         proposal.SetVisibility(request.Visibility);
         await _proposalRepository.UpdateAsync(proposal, cancellationToken);

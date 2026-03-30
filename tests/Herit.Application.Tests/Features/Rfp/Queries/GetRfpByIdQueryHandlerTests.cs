@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Rfp.Queries.GetRfpById;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -29,13 +30,11 @@ public class GetRfpByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenRfpNotFound_ReturnsNull()
+    public async Task Handle_WhenRfpNotFound_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((RfpEntity?)null);
 
-        var result = await _handler.Handle(new GetRfpByIdQuery(id), CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(new GetRfpByIdQuery(id), CancellationToken.None));
     }
 }

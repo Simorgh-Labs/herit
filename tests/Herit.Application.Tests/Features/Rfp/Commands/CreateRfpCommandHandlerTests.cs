@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -41,7 +42,7 @@ public class CreateRfpCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_AuthorNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_AuthorNotFound_ThrowsNotFoundException()
     {
         var authorId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
@@ -49,12 +50,12 @@ public class CreateRfpCommandHandlerTests
 
         var command = new CreateRfpCommand("Title", "Short", authorId, organisationId, "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _rfpRepository.DidNotReceive().AddAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task Handle_OrganisationNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_OrganisationNotFound_ThrowsNotFoundException()
     {
         var authorId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
@@ -64,7 +65,7 @@ public class CreateRfpCommandHandlerTests
 
         var command = new CreateRfpCommand("Title", "Short", authorId, organisationId, "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _rfpRepository.DidNotReceive().AddAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
     }
 }

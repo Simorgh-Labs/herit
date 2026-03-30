@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Organisation.Queries.GetOrganisationById;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -30,21 +31,20 @@ public class GetOrganisationByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentId_ReturnsNull()
+    public async Task Handle_WithNonExistentId_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
-        var result = await _handler.Handle(new GetOrganisationByIdQuery(id), CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(new GetOrganisationByIdQuery(id), CancellationToken.None));
     }
 
     [Fact]
     public async Task Handle_QueriesRepositoryWithCorrectId()
     {
         var id = Guid.NewGuid();
-        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
+        var organisation = OrganisationEntity.Create(id, "Ministry of Finance");
+        _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(organisation);
 
         await _handler.Handle(new GetOrganisationByIdQuery(id), CancellationToken.None);
 

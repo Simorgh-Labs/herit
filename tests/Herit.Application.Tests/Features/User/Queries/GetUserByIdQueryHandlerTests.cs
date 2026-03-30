@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.User.Queries.GetUserById;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -30,14 +31,12 @@ public class GetUserByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenRepositoryReturnsNull_ReturnsNull()
+    public async Task Handle_WhenRepositoryReturnsNull_ThrowsNotFoundException()
     {
         var userId = Guid.NewGuid();
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
         var query = new GetUserByIdQuery(userId);
-        var result = await _handler.Handle(query, CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(query, CancellationToken.None));
     }
 }

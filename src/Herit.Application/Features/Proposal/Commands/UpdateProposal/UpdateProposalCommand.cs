@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 
@@ -22,7 +23,7 @@ public class UpdateProposalCommandHandler : IRequestHandler<UpdateProposalComman
     {
         var proposal = await _proposalRepository.GetByIdAsync(request.Id, cancellationToken);
         if (proposal is null)
-            throw new InvalidOperationException($"Proposal '{request.Id}' does not exist.");
+            throw new NotFoundException($"Proposal '{request.Id}' does not exist.");
 
         proposal.Update(request.Title, request.ShortDescription, request.LongDescription);
         await _proposalRepository.UpdateAsync(proposal, cancellationToken);

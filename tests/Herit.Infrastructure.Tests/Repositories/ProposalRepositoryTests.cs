@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Domain.Entities;
 using Herit.Infrastructure.Persistence;
 using Herit.Infrastructure.Repositories;
@@ -116,7 +117,7 @@ public class ProposalRepositoryTests : IDisposable
     [Fact]
     public async Task DeleteAsync_Throws_WhenNotExists()
     {
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _repository.DeleteAsync(Guid.NewGuid()));
     }
 }

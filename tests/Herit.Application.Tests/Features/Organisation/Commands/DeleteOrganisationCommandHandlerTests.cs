@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Organisation.Commands.DeleteOrganisation;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -30,14 +31,14 @@ public class DeleteOrganisationCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentOrganisation_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentOrganisation_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
         var command = new DeleteOrganisationCommand(id);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 

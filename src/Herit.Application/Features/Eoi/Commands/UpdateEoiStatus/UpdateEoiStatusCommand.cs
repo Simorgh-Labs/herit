@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -19,7 +20,7 @@ public class UpdateEoiStatusCommandHandler : IRequestHandler<UpdateEoiStatusComm
     {
         var eoi = await _repository.GetByIdAsync(request.Id, cancellationToken);
         if (eoi is null)
-            throw new InvalidOperationException($"Eoi '{request.Id}' does not exist.");
+            throw new NotFoundException($"Eoi '{request.Id}' does not exist.");
 
         eoi.TransitionStatus(request.NewStatus);
         await _repository.UpdateAsync(eoi, cancellationToken);

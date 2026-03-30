@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
 using Herit.Infrastructure.Persistence;
@@ -49,7 +50,7 @@ public class EoiRepository : IEoiRepository
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var eoi = await _context.Eois.FindAsync([id], cancellationToken)
-            ?? throw new InvalidOperationException($"Eoi with id '{id}' was not found.");
+            ?? throw new NotFoundException($"Eoi with id '{id}' was not found.");
 
         _context.Eois.Remove(eoi);
         await _context.SaveChangesAsync(cancellationToken);

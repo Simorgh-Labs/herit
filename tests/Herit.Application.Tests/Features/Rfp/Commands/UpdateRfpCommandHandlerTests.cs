@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Rfp.Commands.UpdateRfp;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -33,14 +34,14 @@ public class UpdateRfpCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentRfp_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentRfp_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((RfpEntity?)null);
 
         var command = new UpdateRfpCommand(id, "Title", "Short", "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
     }
 }

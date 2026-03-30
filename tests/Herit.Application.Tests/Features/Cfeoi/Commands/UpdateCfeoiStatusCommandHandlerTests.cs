@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Cfeoi.Commands.UpdateCfeoiStatus;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -34,12 +35,12 @@ public class UpdateCfeoiStatusCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CfeoiNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_CfeoiNotFound_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((CfeoiEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new UpdateCfeoiStatusCommand(id, CfeoiStatus.Closed), CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<CfeoiEntity>(), Arg.Any<CancellationToken>());
     }

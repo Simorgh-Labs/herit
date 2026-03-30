@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Eoi.Commands.SetEoiVisibility;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -32,12 +33,12 @@ public class SetEoiVisibilityCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_EoiNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_EoiNotFound_ThrowsNotFoundException()
     {
         var eoiId = Guid.NewGuid();
         _eoiRepository.GetByIdAsync(eoiId, Arg.Any<CancellationToken>()).Returns((EoiEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new SetEoiVisibilityCommand(eoiId, EoiVisibility.Shared), CancellationToken.None));
         await _eoiRepository.DidNotReceive().UpdateAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
     }

@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Proposal.Commands.CreateProposal;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -66,7 +67,7 @@ public class CreateProposalCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_AuthorNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_AuthorNotFound_ThrowsNotFoundException()
     {
         var authorId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
@@ -74,12 +75,12 @@ public class CreateProposalCommandHandlerTests
 
         var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task Handle_OrganisationNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_OrganisationNotFound_ThrowsNotFoundException()
     {
         var authorId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
@@ -89,12 +90,12 @@ public class CreateProposalCommandHandlerTests
 
         var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task Handle_RfpNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_RfpNotFound_ThrowsNotFoundException()
     {
         var authorId = Guid.NewGuid();
         var organisationId = Guid.NewGuid();
@@ -107,7 +108,7 @@ public class CreateProposalCommandHandlerTests
 
         var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long", rfpId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
     }
 }

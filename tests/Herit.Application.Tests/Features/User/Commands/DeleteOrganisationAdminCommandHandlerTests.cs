@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.User.Commands.DeleteOrganisationAdmin;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -30,14 +31,14 @@ public class DeleteOrganisationAdminCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentUser_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentUser_ThrowsNotFoundException()
     {
         var userId = Guid.NewGuid();
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
         var command = new DeleteOrganisationAdminCommand(userId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _userRepository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
