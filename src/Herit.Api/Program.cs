@@ -1,8 +1,11 @@
 using Azure.Identity;
+using FluentValidation;
 using Herit.Api.Middleware;
+using Herit.Application.Behaviours;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -16,6 +19,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreateRfpCommand).Assembly));
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+builder.Services.AddValidatorsFromAssembly(typeof(CreateRfpCommand).Assembly);
 
 var connectionStringKey = builder.Configuration["AZURE_SQL_CONNECTION_STRING_KEY"];
 var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
