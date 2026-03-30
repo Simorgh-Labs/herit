@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Eoi.Queries.GetEoiById;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -29,13 +30,11 @@ public class GetEoiByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_EoiNotFound_ReturnsNull()
+    public async Task Handle_EoiNotFound_ThrowsNotFoundException()
     {
         var eoiId = Guid.NewGuid();
         _eoiRepository.GetByIdAsync(eoiId, Arg.Any<CancellationToken>()).Returns((EoiEntity?)null);
 
-        var result = await _handler.Handle(new GetEoiByIdQuery(eoiId), CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(new GetEoiByIdQuery(eoiId), CancellationToken.None));
     }
 }

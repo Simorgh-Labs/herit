@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -27,11 +28,11 @@ public class SubmitEoiCommandHandler : IRequestHandler<SubmitEoiCommand, Guid>
     {
         var user = await _userRepository.GetByIdAsync(request.SubmittedById, cancellationToken);
         if (user is null)
-            throw new InvalidOperationException($"User '{request.SubmittedById}' does not exist.");
+            throw new NotFoundException($"User '{request.SubmittedById}' does not exist.");
 
         var cfeoi = await _cfeoiRepository.GetByIdAsync(request.CfeoiId, cancellationToken);
         if (cfeoi is null)
-            throw new InvalidOperationException($"Cfeoi '{request.CfeoiId}' does not exist.");
+            throw new NotFoundException($"Cfeoi '{request.CfeoiId}' does not exist.");
 
         if (cfeoi.Status != CfeoiStatus.Open)
             throw new InvalidOperationException($"Cfeoi '{request.CfeoiId}' is not open for submissions.");

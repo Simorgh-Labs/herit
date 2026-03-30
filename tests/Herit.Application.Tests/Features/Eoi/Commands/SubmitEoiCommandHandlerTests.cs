@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Eoi.Commands.SubmitEoi;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -41,19 +42,19 @@ public class SubmitEoiCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_UserNotFound_ThrowsNotFoundException()
     {
         var submittedById = Guid.NewGuid();
         _userRepository.GetByIdAsync(submittedById, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
         var command = new SubmitEoiCommand(submittedById, "Message", Guid.NewGuid());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _eoiRepository.DidNotReceive().AddAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task Handle_CfeoiNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_CfeoiNotFound_ThrowsNotFoundException()
     {
         var submittedById = Guid.NewGuid();
         var cfeoiId = Guid.NewGuid();
@@ -63,7 +64,7 @@ public class SubmitEoiCommandHandlerTests
 
         var command = new SubmitEoiCommand(submittedById, "Message", cfeoiId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _eoiRepository.DidNotReceive().AddAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
     }
 

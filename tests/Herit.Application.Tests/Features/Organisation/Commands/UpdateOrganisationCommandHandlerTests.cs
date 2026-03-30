@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Organisation.Commands.UpdateOrganisation;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -31,14 +32,14 @@ public class UpdateOrganisationCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentOrganisation_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentOrganisation_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
         var command = new UpdateOrganisationCommand(id, "New Name");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<OrganisationEntity>(), Arg.Any<CancellationToken>());
     }
 

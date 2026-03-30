@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 
@@ -18,7 +19,7 @@ public class UpdateStaffUserCommandHandler : IRequestHandler<UpdateStaffUserComm
     {
         var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
         if (user is null)
-            throw new InvalidOperationException($"User with ID '{request.Id}' was not found.");
+            throw new NotFoundException($"User with ID '{request.Id}' was not found.");
 
         user.Update(request.Email, request.FullName);
 

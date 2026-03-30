@@ -23,10 +23,7 @@ public class RfpsController : ControllerBase
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
-    {
-        var result = await _mediator.Send(new GetRfpByIdQuery(id), ct);
-        return result is null ? NotFound() : Ok(result);
-    }
+        => Ok(await _mediator.Send(new GetRfpByIdQuery(id), ct));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRfpCommand command, CancellationToken ct)

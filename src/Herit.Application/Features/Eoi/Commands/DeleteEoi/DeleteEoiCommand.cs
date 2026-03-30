@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 
@@ -18,7 +19,7 @@ public class DeleteEoiCommandHandler : IRequestHandler<DeleteEoiCommand, Unit>
     {
         var eoi = await _eoiRepository.GetByIdAsync(request.Id, cancellationToken);
         if (eoi is null)
-            throw new InvalidOperationException($"Eoi '{request.Id}' does not exist.");
+            throw new NotFoundException($"Eoi '{request.Id}' does not exist.");
 
         await _eoiRepository.DeleteAsync(request.Id, cancellationToken);
         return Unit.Value;

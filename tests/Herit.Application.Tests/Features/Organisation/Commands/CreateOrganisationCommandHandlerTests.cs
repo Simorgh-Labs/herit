@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Organisation.Commands.CreateOrganisation;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -46,14 +47,14 @@ public class CreateOrganisationCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentParent_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentParent_ThrowsNotFoundException()
     {
         var parentId = Guid.NewGuid();
         _repository.GetByIdAsync(parentId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
         var command = new CreateOrganisationCommand("Child Organisation", parentId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _repository.DidNotReceive().AddAsync(Arg.Any<OrganisationEntity>(), Arg.Any<CancellationToken>());
     }
 

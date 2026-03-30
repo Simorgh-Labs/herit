@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -19,7 +20,7 @@ public class UpdateRfpStatusCommandHandler : IRequestHandler<UpdateRfpStatusComm
     {
         var rfp = await _repository.GetByIdAsync(request.Id, cancellationToken);
         if (rfp is null)
-            throw new InvalidOperationException($"Rfp '{request.Id}' does not exist.");
+            throw new NotFoundException($"Rfp '{request.Id}' does not exist.");
 
         rfp.TransitionStatus(request.NewStatus);
         await _repository.UpdateAsync(rfp, cancellationToken);

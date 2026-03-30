@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.User.Commands.CreateStaffUser;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -49,14 +50,14 @@ public class CreateStaffUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentOrganisation_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentOrganisation_ThrowsNotFoundException()
     {
         var orgId = Guid.NewGuid();
         _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
         var command = new CreateStaffUserCommand("staff@gov.eg", "Staff Member", orgId);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _userRepository.DidNotReceive().AddAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
     }
 }

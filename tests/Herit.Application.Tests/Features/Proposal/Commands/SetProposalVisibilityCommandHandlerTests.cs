@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Proposal.Commands.SetProposalVisibility;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -34,12 +35,12 @@ public class SetProposalVisibilityCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ProposalNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_ProposalNotFound_ThrowsNotFoundException()
     {
         var proposalId = Guid.NewGuid();
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>()).Returns((ProposalEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new SetProposalVisibilityCommand(proposalId, ProposalVisibility.Public), CancellationToken.None));
         await _proposalRepository.DidNotReceive().UpdateAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
     }

@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
 using DomainEntities = Herit.Domain.Entities;
@@ -21,7 +22,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         {
             var parent = await _repository.GetByIdAsync(parentId, cancellationToken);
             if (parent is null)
-                throw new InvalidOperationException($"Parent organisation '{parentId}' does not exist.");
+                throw new NotFoundException($"Parent organisation '{parentId}' does not exist.");
         }
 
         var id = Guid.NewGuid();

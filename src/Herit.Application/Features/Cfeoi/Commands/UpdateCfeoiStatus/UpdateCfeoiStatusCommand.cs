@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -19,7 +20,7 @@ public class UpdateCfeoiStatusCommandHandler : IRequestHandler<UpdateCfeoiStatus
     {
         var cfeoi = await _repository.GetByIdAsync(request.Id, cancellationToken);
         if (cfeoi is null)
-            throw new InvalidOperationException($"Cfeoi '{request.Id}' does not exist.");
+            throw new NotFoundException($"Cfeoi '{request.Id}' does not exist.");
 
         cfeoi.TransitionStatus(request.NewStatus);
         await _repository.UpdateAsync(cfeoi, cancellationToken);

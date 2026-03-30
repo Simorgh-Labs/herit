@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.User.Commands.UpdateStaffUser;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -33,14 +34,14 @@ public class UpdateStaffUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentUser_ThrowsInvalidOperationException()
+    public async Task Handle_WithNonExistentUser_ThrowsNotFoundException()
     {
         var userId = Guid.NewGuid();
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
         var command = new UpdateStaffUserCommand(userId, "updated@gov.eg", "Updated Name");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _userRepository.DidNotReceive().UpdateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
     }
 }

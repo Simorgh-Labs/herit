@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Cfeoi.Queries.GetCfeoiById;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -30,13 +31,11 @@ public class GetCfeoiByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CfeoiNotFound_ReturnsNull()
+    public async Task Handle_CfeoiNotFound_ThrowsNotFoundException()
     {
         var cfeoiId = Guid.NewGuid();
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns((CfeoiEntity?)null);
 
-        var result = await _handler.Handle(new GetCfeoiByIdQuery(cfeoiId), CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(new GetCfeoiByIdQuery(cfeoiId), CancellationToken.None));
     }
 }

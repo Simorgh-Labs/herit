@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -19,7 +20,7 @@ public class DeleteOrganisationAdminCommandHandler : IRequestHandler<DeleteOrgan
     {
         var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
         if (user is null)
-            throw new InvalidOperationException($"User with ID '{request.Id}' was not found.");
+            throw new NotFoundException($"User with ID '{request.Id}' was not found.");
 
         if (user.Role != UserRole.OrganisationAdmin)
             throw new InvalidOperationException($"User with ID '{request.Id}' is not an OrganisationAdmin.");

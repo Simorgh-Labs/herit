@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Proposal.Queries.GetProposalById;
 using Herit.Application.Interfaces;
 using NSubstitute;
@@ -29,13 +30,11 @@ public class GetProposalByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ProposalNotFound_ReturnsNull()
+    public async Task Handle_ProposalNotFound_ThrowsNotFoundException()
     {
         var proposalId = Guid.NewGuid();
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>()).Returns((ProposalEntity?)null);
 
-        var result = await _handler.Handle(new GetProposalByIdQuery(proposalId), CancellationToken.None);
-
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(new GetProposalByIdQuery(proposalId), CancellationToken.None));
     }
 }

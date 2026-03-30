@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
 using MediatR;
@@ -26,7 +27,7 @@ public class PublishCfeoiCommandHandler : IRequestHandler<PublishCfeoiCommand, G
     {
         var proposal = await _proposalRepository.GetByIdAsync(request.ProposalId, cancellationToken);
         if (proposal is null)
-            throw new InvalidOperationException($"Proposal '{request.ProposalId}' does not exist.");
+            throw new NotFoundException($"Proposal '{request.ProposalId}' does not exist.");
 
         var id = Guid.NewGuid();
         var cfeoi = CfeoiEntity.Create(id, request.Title, request.Description, request.ResourceType, request.ProposalId);

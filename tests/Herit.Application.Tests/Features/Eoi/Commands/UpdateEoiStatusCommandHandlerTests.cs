@@ -1,3 +1,4 @@
+using Herit.Application.Exceptions;
 using Herit.Application.Features.Eoi.Commands.UpdateEoiStatus;
 using Herit.Application.Interfaces;
 using Herit.Domain.Enums;
@@ -48,12 +49,12 @@ public class UpdateEoiStatusCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_EoiNotFound_ThrowsInvalidOperationException()
+    public async Task Handle_EoiNotFound_ThrowsNotFoundException()
     {
         var id = Guid.NewGuid();
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((EoiEntity?)null);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
+        await Assert.ThrowsAsync<NotFoundException>(
             () => _handler.Handle(new UpdateEoiStatusCommand(id, EoiStatus.Approved), CancellationToken.None));
         await _repository.DidNotReceive().UpdateAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
     }

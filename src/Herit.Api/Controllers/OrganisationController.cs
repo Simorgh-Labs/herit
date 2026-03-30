@@ -29,10 +29,7 @@ public class OrganisationsController : ControllerBase
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetOrganisationById(Guid id, CancellationToken ct)
-    {
-        var result = await _mediator.Send(new GetOrganisationByIdQuery(id), ct);
-        return result is null ? NotFound() : Ok(result);
-    }
+        => Ok(await _mediator.Send(new GetOrganisationByIdQuery(id), ct));
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateOrganisation(Guid id, [FromBody] UpdateOrganisationCommand command, CancellationToken ct)
