@@ -1,8 +1,10 @@
 using Azure.Identity;
 using FluentValidation;
 using Herit.Api.Middleware;
+using Herit.Api.Services;
 using Herit.Application.Behaviours;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
+using Herit.Application.Interfaces;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
 using MediatR;
@@ -31,6 +33,9 @@ var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
     ?? builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddInfrastructure(connectionString);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();

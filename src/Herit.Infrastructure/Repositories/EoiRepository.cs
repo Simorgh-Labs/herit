@@ -30,6 +30,11 @@ public class EoiRepository : IEoiRepository
             .Select(x => x.Eoi)
             .ToListAsync(cancellationToken);
 
+    public async Task<IEnumerable<Eoi>> ListByUserAsync(Guid userId, CancellationToken cancellationToken = default)
+        => await _context.Eois
+            .Where(e => e.SubmittedById == userId)
+            .ToListAsync(cancellationToken);
+
     public async Task AddAsync(Eoi eoi, CancellationToken cancellationToken = default)
     {
         await _context.Eois.AddAsync(eoi, cancellationToken);
