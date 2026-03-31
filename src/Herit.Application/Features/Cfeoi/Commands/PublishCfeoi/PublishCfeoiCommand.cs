@@ -10,7 +10,15 @@ public record PublishCfeoiCommand(
     string Title,
     string Description,
     CfeoiResourceType ResourceType,
-    Guid ProposalId) : IRequest<Guid>;
+    Guid ProposalId,
+    string RoleTitle,
+    string Skills,
+    int Slots,
+    int? DurationWeeks = null,
+    string? Location = null,
+    string? Compensation = null,
+    DateOnly? Deadline = null,
+    string? ExternalLinks = null) : IRequest<Guid>;
 
 public class PublishCfeoiCommandHandler : IRequestHandler<PublishCfeoiCommand, Guid>
 {
@@ -30,7 +38,20 @@ public class PublishCfeoiCommandHandler : IRequestHandler<PublishCfeoiCommand, G
             throw new NotFoundException($"Proposal '{request.ProposalId}' does not exist.");
 
         var id = Guid.NewGuid();
-        var cfeoi = CfeoiEntity.Create(id, request.Title, request.Description, request.ResourceType, request.ProposalId);
+        var cfeoi = CfeoiEntity.Create(
+            id,
+            request.Title,
+            request.Description,
+            request.ResourceType,
+            request.ProposalId,
+            request.RoleTitle,
+            request.Skills,
+            request.Slots,
+            request.DurationWeeks,
+            request.Location,
+            request.Compensation,
+            request.Deadline,
+            request.ExternalLinks);
         await _cfeoiRepository.AddAsync(cfeoi, cancellationToken);
         return id;
     }

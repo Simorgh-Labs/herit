@@ -1,4 +1,5 @@
 using Herit.Application.Features.Cfeoi.Commands.PublishCfeoi;
+using Herit.Application.Features.Cfeoi.Commands.UpdateCfeoi;
 using Herit.Application.Features.Cfeoi.Commands.UpdateCfeoiStatus;
 using Herit.Application.Features.Cfeoi.Queries.GetCfeoiById;
 using Herit.Application.Features.Cfeoi.Queries.ListCfeois;
@@ -29,6 +30,13 @@ public class CfeoiController : ControllerBase
     {
         var id = await _mediator.Send(command, ct);
         return CreatedAtAction(nameof(GetById), new { id }, id);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCfeoiCommand command, CancellationToken ct)
+    {
+        await _mediator.Send(command with { Id = id }, ct);
+        return NoContent();
     }
 
     [HttpPatch("{id:guid}/status")]
