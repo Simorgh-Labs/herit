@@ -22,8 +22,8 @@ public class ListCfeoisByProposalQueryHandlerTests
         var proposalId = Guid.NewGuid();
         var cfeois = new[]
         {
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 1", "Description 1", CfeoiResourceType.Human, proposalId),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 2", "Description 2", CfeoiResourceType.NonHuman, proposalId)
+            CfeoiEntity.Create(Guid.NewGuid(), "Title 1", "Description 1", CfeoiResourceType.Human, proposalId, "R", "S", 1),
+            CfeoiEntity.Create(Guid.NewGuid(), "Title 2", "Description 2", CfeoiResourceType.NonHuman, proposalId, "R", "S", 1)
         };
         _cfeoiRepository.ListByProposalAsync(proposalId, Arg.Any<CancellationToken>()).Returns(cfeois);
 

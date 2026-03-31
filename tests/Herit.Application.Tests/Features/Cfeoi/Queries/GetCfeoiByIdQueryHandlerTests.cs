@@ -21,7 +21,7 @@ public class GetCfeoiByIdQueryHandlerTests
     public async Task Handle_CfeoiFound_ReturnsCfeoi()
     {
         var cfeoiId = Guid.NewGuid();
-        var cfeoi = CfeoiEntity.Create(cfeoiId, "Title", "Description", CfeoiResourceType.Human, Guid.NewGuid());
+        var cfeoi = CfeoiEntity.Create(cfeoiId, "Title", "Description", CfeoiResourceType.Human, Guid.NewGuid(), "Engineer", "C#", 1);
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns(cfeoi);
 
         var result = await _handler.Handle(new GetCfeoiByIdQuery(cfeoiId), CancellationToken.None);

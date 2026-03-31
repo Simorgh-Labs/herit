@@ -21,9 +21,9 @@ public class ListCfeoisQueryHandlerTests
     {
         var cfeois = new[]
         {
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 1", "Description 1", CfeoiResourceType.Human, Guid.NewGuid()),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 2", "Description 2", CfeoiResourceType.NonHuman, Guid.NewGuid()),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 3", "Description 3", CfeoiResourceType.Human, Guid.NewGuid())
+            CfeoiEntity.Create(Guid.NewGuid(), "Title 1", "Description 1", CfeoiResourceType.Human, Guid.NewGuid(), "R", "S", 1),
+            CfeoiEntity.Create(Guid.NewGuid(), "Title 2", "Description 2", CfeoiResourceType.NonHuman, Guid.NewGuid(), "R", "S", 1),
+            CfeoiEntity.Create(Guid.NewGuid(), "Title 3", "Description 3", CfeoiResourceType.Human, Guid.NewGuid(), "R", "S", 1)
         };
         _cfeoiRepository.ListAsync(null, null, Arg.Any<CancellationToken>()).Returns(cfeois);
 
@@ -38,7 +38,7 @@ public class ListCfeoisQueryHandlerTests
         var proposalId = Guid.NewGuid();
         var cfeois = new[]
         {
-            CfeoiEntity.Create(Guid.NewGuid(), "Open CFEOI", "Description", CfeoiResourceType.Human, proposalId)
+            CfeoiEntity.Create(Guid.NewGuid(), "Open CFEOI", "Description", CfeoiResourceType.Human, proposalId, "R", "S", 1)
         };
         _cfeoiRepository.ListAsync(CfeoiStatus.Open, null, Arg.Any<CancellationToken>()).Returns(cfeois);
 
@@ -54,8 +54,8 @@ public class ListCfeoisQueryHandlerTests
         var proposalId = Guid.NewGuid();
         var cfeois = new[]
         {
-            CfeoiEntity.Create(Guid.NewGuid(), "Title A", "Description", CfeoiResourceType.Human, proposalId),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title B", "Description", CfeoiResourceType.NonHuman, proposalId)
+            CfeoiEntity.Create(Guid.NewGuid(), "Title A", "Description", CfeoiResourceType.Human, proposalId, "R", "S", 1),
+            CfeoiEntity.Create(Guid.NewGuid(), "Title B", "Description", CfeoiResourceType.NonHuman, proposalId, "R", "S", 1)
         };
         _cfeoiRepository.ListAsync(null, proposalId, Arg.Any<CancellationToken>()).Returns(cfeois);
 

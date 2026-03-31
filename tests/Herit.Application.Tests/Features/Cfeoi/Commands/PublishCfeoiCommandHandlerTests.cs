@@ -19,6 +19,9 @@ public class PublishCfeoiCommandHandlerTests
         _handler = new PublishCfeoiCommandHandler(_cfeoiRepository, _proposalRepository);
     }
 
+    private static PublishCfeoiCommand BuildCommand(Guid proposalId) =>
+        new("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId, "Engineer", "C#", 2);
+
     [Fact]
     public async Task Handle_HappyPath_ReturnsValidGuidAndCallsAddAsync()
     {
@@ -26,13 +29,16 @@ public class PublishCfeoiCommandHandlerTests
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>())
             .Returns(ProposalEntity.Create(proposalId, "Title", "Short", Guid.NewGuid(), Guid.NewGuid(), "Long"));
 
-        var command = new PublishCfeoiCommand("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId);
-
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(BuildCommand(proposalId), CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result);
         await _cfeoiRepository.Received(1).AddAsync(
-            Arg.Is<CfeoiEntity>(c => c.Title == "CFEOI Title" && c.ProposalId == proposalId),
+            Arg.Is<CfeoiEntity>(c =>
+                c.Title == "CFEOI Title" &&
+                c.ProposalId == proposalId &&
+                c.RoleTitle == "Engineer" &&
+                c.Skills == "C#" &&
+                c.Slots == 2),
             Arg.Any<CancellationToken>());
     }
 
@@ -42,9 +48,7 @@ public class PublishCfeoiCommandHandlerTests
         var proposalId = Guid.NewGuid();
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>()).Returns((ProposalEntity?)null);
 
-        var command = new PublishCfeoiCommand("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId);
-
-        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(BuildCommand(proposalId), CancellationToken.None));
         await _cfeoiRepository.DidNotReceive().AddAsync(Arg.Any<CfeoiEntity>(), Arg.Any<CancellationToken>());
     }
 }
