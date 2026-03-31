@@ -69,15 +69,15 @@ public class ProposalTests
     }
 
     [Fact]
-    public void TransitionStatus_SubmittedToResourcing_Succeeds()
+    public void TransitionStatus_SubmittedToWithdrawn_Succeeds()
     {
         var proposal = CreateIdeationProposal();
         proposal.TransitionStatus(ProposalStatus.Resourcing);
         proposal.TransitionStatus(ProposalStatus.Submitted);
 
-        proposal.TransitionStatus(ProposalStatus.Resourcing);
+        proposal.TransitionStatus(ProposalStatus.Withdrawn);
 
-        Assert.Equal(ProposalStatus.Resourcing, proposal.Status);
+        Assert.Equal(ProposalStatus.Withdrawn, proposal.Status);
     }
 
     [Fact]
@@ -143,6 +143,28 @@ public class ProposalTests
         proposal.TransitionStatus(ProposalStatus.Approved);
 
         Assert.Throws<InvalidOperationException>(() => proposal.TransitionStatus(ProposalStatus.UnderReview));
+    }
+
+    [Fact]
+    public void TransitionStatus_WithdrawnToUnderReview_Throws()
+    {
+        var proposal = CreateIdeationProposal();
+        proposal.TransitionStatus(ProposalStatus.Resourcing);
+        proposal.TransitionStatus(ProposalStatus.Submitted);
+        proposal.TransitionStatus(ProposalStatus.Withdrawn);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.TransitionStatus(ProposalStatus.UnderReview));
+    }
+
+    [Fact]
+    public void TransitionStatus_WithdrawnToSubmitted_Throws()
+    {
+        var proposal = CreateIdeationProposal();
+        proposal.TransitionStatus(ProposalStatus.Resourcing);
+        proposal.TransitionStatus(ProposalStatus.Submitted);
+        proposal.TransitionStatus(ProposalStatus.Withdrawn);
+
+        Assert.Throws<InvalidOperationException>(() => proposal.TransitionStatus(ProposalStatus.Submitted));
     }
 
     // SetVisibility tests
