@@ -1,5 +1,6 @@
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
+using Herit.Domain.Enums;
 using Herit.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,16 @@ public class CfeoiRepository : ICfeoiRepository
 
     public Task<Cfeoi?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => _context.Cfeois.FindAsync([id], cancellationToken).AsTask();
+
+    public async Task<IEnumerable<Cfeoi>> ListAsync(CfeoiStatus? status = null, Guid? proposalId = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Cfeois.AsQueryable();
+        if (status is not null)
+            query = query.Where(c => c.Status == status);
+        if (proposalId is not null)
+            query = query.Where(c => c.ProposalId == proposalId);
+        return await query.ToListAsync(cancellationToken);
+    }
 
     public async Task<IEnumerable<Cfeoi>> ListByProposalAsync(Guid proposalId, CancellationToken cancellationToken = default)
         => await _context.Cfeois
