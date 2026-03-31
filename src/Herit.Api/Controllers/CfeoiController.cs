@@ -1,7 +1,8 @@
 using Herit.Application.Features.Cfeoi.Commands.PublishCfeoi;
 using Herit.Application.Features.Cfeoi.Commands.UpdateCfeoiStatus;
 using Herit.Application.Features.Cfeoi.Queries.GetCfeoiById;
-using Herit.Application.Features.Cfeoi.Queries.ListCfeoisByProposal;
+using Herit.Application.Features.Cfeoi.Queries.ListCfeois;
+using Herit.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,8 @@ public class CfeoiController : ControllerBase
     public CfeoiController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    public async Task<IActionResult> ListByProposal([FromQuery] Guid proposalId, CancellationToken ct)
-        => Ok(await _mediator.Send(new ListCfeoisByProposalQuery(proposalId), ct));
+    public async Task<IActionResult> List([FromQuery] CfeoiStatus? status, [FromQuery] Guid? proposalId, CancellationToken ct)
+        => Ok(await _mediator.Send(new ListCfeoisQuery(status, proposalId), ct));
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)

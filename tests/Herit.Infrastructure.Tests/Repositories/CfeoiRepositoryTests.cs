@@ -103,4 +103,54 @@ public class CfeoiRepositoryTests : IDisposable
         Assert.NotNull(persisted);
         Assert.Equal(CfeoiStatus.Closed, persisted.Status);
     }
+
+    [Fact]
+    public async Task ListAsync_NoFilters_ReturnsAllCfeois()
+    {
+        await _repository.AddAsync(CreateCfeoi(title: "CFEOI 1"));
+        await _repository.AddAsync(CreateCfeoi(title: "CFEOI 2"));
+        await _repository.AddAsync(CreateCfeoi(title: "CFEOI 3"));
+
+        var result = await _repository.ListAsync();
+
+        Assert.Equal(3, result.Count());
+    }
+
+    [Fact]
+    public async Task ListAsync_FilterByStatus_ReturnsOnlyMatchingCfeois()
+    {
+        var open = CreateCfeoi(title: "Open CFEOI");
+        var closed = CreateCfeoi(title: "Closed CFEOI");
+        await _repository.AddAsync(open);
+        await _repository.AddAsync(closed);
+        closed.TransitionStatus(CfeoiStatus.Closed);
+        await _repository.UpdateAsync(closed);
+
+        var result = await _repository.ListAsync(status: CfeoiStatus.Open);
+
+        Assert.Single(result);
+        Assert.All(result, c => Assert.Equal(CfeoiStatus.Open, c.Status));
+    }
+
+    [Fact]
+    public async Task ListAsync_FilterByProposalId_ReturnsOnlyMatchingCfeois()
+    {
+        var proposalId = Guid.NewGuid();
+        await _repository.AddAsync(CreateCfeoi(proposalId: proposalId, title: "Match 1"));
+        await _repository.AddAsync(CreateCfeoi(proposalId: proposalId, title: "Match 2"));
+        await _repository.AddAsync(CreateCfeoi(title: "Other"));
+
+        var result = await _repository.ListAsync(proposalId: proposalId);
+
+        Assert.Equal(2, result.Count());
+        Assert.All(result, c => Assert.Equal(proposalId, c.ProposalId));
+    }
+
+    [Fact]
+    public async Task ListAsync_WhenEmpty_ReturnsEmptyCollection()
+    {
+        var result = await _repository.ListAsync();
+
+        Assert.Empty(result);
+    }
 }
