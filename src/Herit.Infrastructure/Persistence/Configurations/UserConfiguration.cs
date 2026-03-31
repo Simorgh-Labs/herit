@@ -27,6 +27,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.OrganisationId);
 
+        builder.Property(u => u.Nationality)
+            .HasMaxLength(128);
+
+        builder.Property(u => u.Location)
+            .HasMaxLength(256);
+
+        builder.Property(u => u.ExpertiseTags)
+            .HasMaxLength(1024);
+
         builder.HasOne<Organisation>()
             .WithMany()
             .HasForeignKey(u => u.OrganisationId)

@@ -4,6 +4,7 @@ using Herit.Application.Features.User.Commands.RegisterExpat;
 using Herit.Application.Features.User.Commands.DeleteStaffUser;
 using Herit.Application.Features.User.Commands.DeleteOrganisationAdmin;
 using Herit.Application.Features.User.Commands.UpdateStaffUser;
+using Herit.Application.Features.User.Commands.UpdateUserProfile;
 using Herit.Application.Features.User.Queries.GetUserById;
 using Herit.Application.Features.User.Queries.ListUsers;
 using MediatR;
@@ -59,6 +60,13 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> DeleteOrganisationAdmin(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteOrganisationAdminCommand(id), ct);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}/profile")]
+    public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] UpdateUserProfileCommand command, CancellationToken ct)
+    {
+        await _mediator.Send(command with { Id = id }, ct);
         return NoContent();
     }
 
