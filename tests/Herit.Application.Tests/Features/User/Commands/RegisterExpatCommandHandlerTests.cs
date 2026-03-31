@@ -54,4 +54,29 @@ public class RegisterExpatCommandHandlerTests
         Assert.Equal(UserRole.Expat, capturedUser.Role);
         Assert.Null(capturedUser.OrganisationId);
     }
+
+    [Fact]
+    public async Task Handle_PersistsOptionalProfileFields()
+    {
+        var termsAt = DateTimeOffset.UtcNow;
+        var command = new RegisterExpatCommand(
+            "expat@example.com", "Jane Doe",
+            Nationality: "Australian",
+            Location: "Sydney, AU",
+            ExpertiseTags: "C#,Azure",
+            TermsAcceptedAt: termsAt);
+        UserEntity? capturedUser = null;
+
+        await _userRepository.AddAsync(
+            Arg.Do<UserEntity>(u => capturedUser = u),
+            Arg.Any<CancellationToken>());
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        Assert.NotNull(capturedUser);
+        Assert.Equal("Australian", capturedUser.Nationality);
+        Assert.Equal("Sydney, AU", capturedUser.Location);
+        Assert.Equal("C#,Azure", capturedUser.ExpertiseTags);
+        Assert.Equal(termsAt, capturedUser.TermsAcceptedAt);
+    }
 }
