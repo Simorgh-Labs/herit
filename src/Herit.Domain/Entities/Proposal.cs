@@ -8,9 +8,10 @@ public class Proposal
     {
         [ProposalStatus.Ideation] = [ProposalStatus.Resourcing],
         [ProposalStatus.Resourcing] = [ProposalStatus.Submitted],
-        [ProposalStatus.Submitted] = [ProposalStatus.UnderReview, ProposalStatus.Resourcing],
+        [ProposalStatus.Submitted] = [ProposalStatus.UnderReview, ProposalStatus.Withdrawn],
         [ProposalStatus.UnderReview] = [ProposalStatus.Approved],
-        [ProposalStatus.Approved] = []
+        [ProposalStatus.Approved] = [],
+        [ProposalStatus.Withdrawn] = []
     };
 
     public Guid Id { get; private set; }

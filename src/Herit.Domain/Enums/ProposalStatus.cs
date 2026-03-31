@@ -6,5 +6,6 @@ public enum ProposalStatus
     Resourcing,
     Submitted,
     UnderReview,
-    Approved
+    Approved,
+    Withdrawn
 }

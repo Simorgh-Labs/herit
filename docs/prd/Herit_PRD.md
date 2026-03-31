@@ -130,6 +130,7 @@ A volunteer project proposal submitted by an expat user. May be submitted indepe
 | **Submitted** | Required resources have been identified and the proposal is submitted to the department for review. |
 | **Under Review** | Department staff are reviewing the proposal internally. |
 | **Approved** | The department has approved the proposal and is ready to convert it into an active project. |
+| **Withdrawn** | The owner has withdrawn the proposal after it was submitted. This is a terminal state; a withdrawn proposal cannot be resubmitted. |
 
 ### 5.3 CFEOI (Call For Expression Of Interest)
 
