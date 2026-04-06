@@ -1,6 +1,7 @@
 using Herit.Application.Interfaces;
 using Herit.Infrastructure.Persistence;
 using Herit.Infrastructure.Repositories;
+using Herit.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ICfeoiRepository, CfeoiRepository>();
         services.AddScoped<IEoiRepository, EoiRepository>();
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+        services.AddScoped<IIdentityProviderService, B2cIdentityProviderService>();
 
         return services;
     }
