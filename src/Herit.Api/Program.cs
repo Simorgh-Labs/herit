@@ -9,6 +9,7 @@ using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 var keyVaultEndpoint = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
 if (!string.IsNullOrEmpty(keyVaultEndpoint) && !builder.Environment.IsDevelopment())
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
+
+builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
 builder.Services.AddControllers();
 
@@ -65,6 +68,8 @@ if (enableSwagger)
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
