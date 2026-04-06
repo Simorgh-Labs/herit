@@ -26,7 +26,7 @@ public class CreateOrganisationAdminCommandHandlerTests
         var organisation = OrganisationEntity.Create(orgId, "Test Organisation");
         _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns(organisation);
 
-        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+        var command = new CreateOrganisationAdminCommand("ext-admin-1", "admin@gov.eg", "Organisation Admin", orgId);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -40,7 +40,7 @@ public class CreateOrganisationAdminCommandHandlerTests
         var organisation = OrganisationEntity.Create(orgId, "Test Organisation");
         _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns(organisation);
 
-        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+        var command = new CreateOrganisationAdminCommand("ext-admin-1", "admin@gov.eg", "Organisation Admin", orgId);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -55,7 +55,7 @@ public class CreateOrganisationAdminCommandHandlerTests
         var orgId = Guid.NewGuid();
         _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
-        var command = new CreateOrganisationAdminCommand("admin@gov.eg", "Organisation Admin", orgId);
+        var command = new CreateOrganisationAdminCommand("ext-admin-1", "admin@gov.eg", "Organisation Admin", orgId);
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _userRepository.DidNotReceive().AddAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());

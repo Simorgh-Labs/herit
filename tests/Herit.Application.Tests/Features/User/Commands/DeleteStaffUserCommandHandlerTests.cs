@@ -21,7 +21,7 @@ public class DeleteStaffUserCommandHandlerTests
     public async Task Handle_WithExistingStaffUser_CallsDeleteAsyncOnce()
     {
         var userId = Guid.NewGuid();
-        var user = UserEntity.Create(userId, "staff@gov.eg", "Staff User", UserRole.Staff, Guid.NewGuid());
+        var user = UserEntity.Create(userId, "ext-staff", "staff@gov.eg", "Staff User", UserRole.Staff, Guid.NewGuid());
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
 
         var command = new DeleteStaffUserCommand(userId);
@@ -46,7 +46,7 @@ public class DeleteStaffUserCommandHandlerTests
     public async Task Handle_WithWrongRole_ThrowsInvalidOperationException()
     {
         var userId = Guid.NewGuid();
-        var user = UserEntity.Create(userId, "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
 
         var command = new DeleteStaffUserCommand(userId);

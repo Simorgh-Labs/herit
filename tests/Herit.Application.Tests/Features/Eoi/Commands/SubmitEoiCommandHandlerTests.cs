@@ -27,7 +27,7 @@ public class SubmitEoiCommandHandlerTests
         var submittedById = Guid.NewGuid();
         var cfeoiId = Guid.NewGuid();
         _userRepository.GetByIdAsync(submittedById, Arg.Any<CancellationToken>())
-            .Returns(UserEntity.Create(submittedById, "user@example.com", "Test User", UserRole.Staff));
+            .Returns(UserEntity.Create(submittedById, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>())
             .Returns(CfeoiEntity.Create(cfeoiId, "Title", "Desc", CfeoiResourceType.Human, Guid.NewGuid(), "Engineer", "C#", 1));
 
@@ -59,7 +59,7 @@ public class SubmitEoiCommandHandlerTests
         var submittedById = Guid.NewGuid();
         var cfeoiId = Guid.NewGuid();
         _userRepository.GetByIdAsync(submittedById, Arg.Any<CancellationToken>())
-            .Returns(UserEntity.Create(submittedById, "user@example.com", "Test User", UserRole.Staff));
+            .Returns(UserEntity.Create(submittedById, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns((CfeoiEntity?)null);
 
         var command = new SubmitEoiCommand(submittedById, "Message", cfeoiId);
@@ -76,7 +76,7 @@ public class SubmitEoiCommandHandlerTests
         var closedCfeoi = CfeoiEntity.Create(cfeoiId, "Title", "Desc", CfeoiResourceType.Human, Guid.NewGuid(), "Engineer", "C#", 1);
         closedCfeoi.TransitionStatus(CfeoiStatus.Closed);
         _userRepository.GetByIdAsync(submittedById, Arg.Any<CancellationToken>())
-            .Returns(UserEntity.Create(submittedById, "user@example.com", "Test User", UserRole.Staff));
+            .Returns(UserEntity.Create(submittedById, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns(closedCfeoi);
 
         var command = new SubmitEoiCommand(submittedById, "Message", cfeoiId);

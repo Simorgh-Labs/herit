@@ -21,8 +21,8 @@ public class ListUsersQueryHandlerTests
     {
         var users = new List<UserEntity>
         {
-            UserEntity.Create(Guid.NewGuid(), "user1@gov.eg", "User One", UserRole.Staff),
-            UserEntity.Create(Guid.NewGuid(), "user2@gov.eg", "User Two", UserRole.Staff),
+            UserEntity.Create(Guid.NewGuid(), "ext-1", "user1@gov.eg", "User One", UserRole.Staff),
+            UserEntity.Create(Guid.NewGuid(), "ext-2", "user2@gov.eg", "User Two", UserRole.Staff),
         };
         _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns(users);
 

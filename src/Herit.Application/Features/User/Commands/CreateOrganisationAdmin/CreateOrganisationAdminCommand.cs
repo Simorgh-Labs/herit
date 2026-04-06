@@ -6,7 +6,7 @@ using UserEntity = Herit.Domain.Entities.User;
 
 namespace Herit.Application.Features.User.Commands.CreateOrganisationAdmin;
 
-public record CreateOrganisationAdminCommand(string Email, string FullName, Guid OrganisationId) : IRequest<Guid>;
+public record CreateOrganisationAdminCommand(string ExternalId, string Email, string FullName, Guid OrganisationId) : IRequest<Guid>;
 
 public class CreateOrganisationAdminCommandHandler : IRequestHandler<CreateOrganisationAdminCommand, Guid>
 {
@@ -25,7 +25,7 @@ public class CreateOrganisationAdminCommandHandler : IRequestHandler<CreateOrgan
         if (organisation is null)
             throw new NotFoundException($"Organisation with ID '{request.OrganisationId}' was not found.");
 
-        var user = UserEntity.Create(Guid.NewGuid(), request.Email, request.FullName, UserRole.OrganisationAdmin, request.OrganisationId);
+        var user = UserEntity.Create(Guid.NewGuid(), request.ExternalId, request.Email, request.FullName, UserRole.OrganisationAdmin, request.OrganisationId);
 
         await _userRepository.AddAsync(user, cancellationToken);
 

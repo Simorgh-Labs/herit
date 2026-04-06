@@ -21,7 +21,7 @@ public class UpdateStaffUserCommandHandlerTests
     public async Task Handle_WithExistingUser_CallsUpdateAsyncExactlyOnce()
     {
         var userId = Guid.NewGuid();
-        var user = UserEntity.Create(userId, "old@gov.eg", "Old Name", UserRole.Staff);
+        var user = UserEntity.Create(userId, "ext-staff", "old@gov.eg", "Old Name", UserRole.Staff);
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
 
         var command = new UpdateStaffUserCommand(userId, "updated@gov.eg", "Updated Name");

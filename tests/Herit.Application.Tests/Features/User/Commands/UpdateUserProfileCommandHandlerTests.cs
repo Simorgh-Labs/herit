@@ -18,7 +18,7 @@ public class UpdateUserProfileCommandHandlerTests
     }
 
     private static UserEntity CreateExpat(Guid id) =>
-        UserEntity.Create(id, "expat@example.com", "Jane Doe", UserRole.Expat);
+        UserEntity.Create(id, "ext-1", "expat@example.com", "Jane Doe", UserRole.Expat);
 
     [Fact]
     public async Task Handle_HappyPath_UpdatesProfileAndCallsUpdateAsync()
@@ -56,7 +56,7 @@ public class UpdateUserProfileCommandHandlerTests
     public async Task Handle_NullFields_ClearsProfileValues()
     {
         var id = Guid.NewGuid();
-        var user = UserEntity.Create(id, "expat@example.com", "Jane Doe", UserRole.Expat,
+        var user = UserEntity.Create(id, "ext-1", "expat@example.com", "Jane Doe", UserRole.Expat,
             nationality: "Australian", location: "Sydney");
         _userRepository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(user);
 
