@@ -114,4 +114,26 @@ public class UserRepositoryTests : IDisposable
         await Assert.ThrowsAsync<NotFoundException>(
             () => _repository.DeleteAsync(Guid.NewGuid()));
     }
+
+    [Fact]
+    public async Task GetByExternalIdAsync_ReturnsUser_WhenExists()
+    {
+        var id = Guid.NewGuid();
+        var user = User.Create(id, "ext-carol", "carol@example.com", "Carol White", UserRole.Staff);
+        await _repository.AddAsync(user);
+
+        var result = await _repository.GetByExternalIdAsync("ext-carol");
+
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal("ext-carol", result.ExternalId);
+    }
+
+    [Fact]
+    public async Task GetByExternalIdAsync_ReturnsNull_WhenNotExists()
+    {
+        var result = await _repository.GetByExternalIdAsync("no-such-external-id");
+
+        Assert.Null(result);
+    }
 }
