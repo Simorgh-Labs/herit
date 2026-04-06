@@ -33,8 +33,8 @@ public class EoiController : ControllerBase
     [HttpGet("my")]
     public async Task<IActionResult> ListMyEois(CancellationToken ct)
     {
-        var userId = _currentUserService.GetCurrentUserId();
-        return Ok(await _mediator.Send(new ListEoisByUserQuery(userId), ct));
+        var user = await _currentUserService.GetCurrentUserAsync(ct);
+        return Ok(await _mediator.Send(new ListEoisByUserQuery(user.Id), ct));
     }
 
     [HttpGet("{id:guid}")]

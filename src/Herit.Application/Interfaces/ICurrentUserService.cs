@@ -1,6 +1,8 @@
+using Herit.Domain.Entities;
+
 namespace Herit.Application.Interfaces;
 
 public interface ICurrentUserService
 {
-    Guid GetCurrentUserId();
+    Task<User> GetCurrentUserAsync(CancellationToken ct = default);
 }

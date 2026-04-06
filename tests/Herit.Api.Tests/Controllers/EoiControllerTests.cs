@@ -1,6 +1,8 @@
 using Herit.Api.Controllers;
 using Herit.Application.Features.Eoi.Queries.ListEoisByUser;
 using Herit.Application.Interfaces;
+using Herit.Domain.Entities;
+using Herit.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -23,12 +25,13 @@ public class EoiControllerTests
     public async Task ListMyEois_ReturnsOkWithEois()
     {
         var userId = Guid.NewGuid();
+        var user = User.Create(userId, "ext-123", "test@example.com", "Test User", UserRole.Expat);
         var eois = new[]
         {
             EoiEntity.Create(Guid.NewGuid(), userId, "Message 1", Guid.NewGuid()),
             EoiEntity.Create(Guid.NewGuid(), userId, "Message 2", Guid.NewGuid())
         };
-        _currentUserService.GetCurrentUserId().Returns(userId);
+        _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(user);
         _mediator.Send(Arg.Any<ListEoisByUserQuery>(), Arg.Any<CancellationToken>())
             .Returns((IEnumerable<EoiEntity>)eois);
 
@@ -43,7 +46,8 @@ public class EoiControllerTests
     public async Task ListMyEois_SendsQueryWithCurrentUserId()
     {
         var userId = Guid.NewGuid();
-        _currentUserService.GetCurrentUserId().Returns(userId);
+        var user = User.Create(userId, "ext-123", "test@example.com", "Test User", UserRole.Expat);
+        _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(user);
         _mediator.Send(Arg.Any<ListEoisByUserQuery>(), Arg.Any<CancellationToken>())
             .Returns(Enumerable.Empty<EoiEntity>());
 
