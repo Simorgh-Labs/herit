@@ -6,6 +6,7 @@ using UserEntity = Herit.Domain.Entities.User;
 namespace Herit.Application.Features.User.Commands.RegisterExpat;
 
 public record RegisterExpatCommand(
+    string ExternalId,
     string Email,
     string FullName,
     string? Nationality = null,
@@ -26,6 +27,7 @@ public class RegisterExpatCommandHandler : IRequestHandler<RegisterExpatCommand,
     {
         var user = UserEntity.Create(
             Guid.NewGuid(),
+            request.ExternalId,
             request.Email,
             request.FullName,
             UserRole.Expat,

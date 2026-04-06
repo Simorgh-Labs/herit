@@ -27,7 +27,7 @@ public class UserRepositoryTests : IDisposable
     public async Task GetByIdAsync_ReturnsUser_WhenExists()
     {
         var id = Guid.NewGuid();
-        var user = User.Create(id, "alice@example.com", "Alice Smith", UserRole.Staff);
+        var user = User.Create(id, "ext-alice", "alice@example.com", "Alice Smith", UserRole.Staff);
         await _repository.AddAsync(user);
 
         var result = await _repository.GetByIdAsync(id);
@@ -49,8 +49,8 @@ public class UserRepositoryTests : IDisposable
     [Fact]
     public async Task ListAsync_ReturnsAllUsers()
     {
-        await _repository.AddAsync(User.Create(Guid.NewGuid(), "a@example.com", "User A", UserRole.Staff));
-        await _repository.AddAsync(User.Create(Guid.NewGuid(), "b@example.com", "User B", UserRole.OrganisationAdmin));
+        await _repository.AddAsync(User.Create(Guid.NewGuid(), "ext-a", "a@example.com", "User A", UserRole.Staff));
+        await _repository.AddAsync(User.Create(Guid.NewGuid(), "ext-b", "b@example.com", "User B", UserRole.OrganisationAdmin));
 
         var result = await _repository.ListAsync();
 
@@ -69,7 +69,7 @@ public class UserRepositoryTests : IDisposable
     public async Task AddAsync_PersistsUser()
     {
         var id = Guid.NewGuid();
-        var user = User.Create(id, "bob@example.com", "Bob Jones", UserRole.Expat);
+        var user = User.Create(id, "ext-bob", "bob@example.com", "Bob Jones", UserRole.Expat);
 
         await _repository.AddAsync(user);
 
@@ -83,10 +83,10 @@ public class UserRepositoryTests : IDisposable
     public async Task UpdateAsync_PersistsChanges()
     {
         var id = Guid.NewGuid();
-        var user = User.Create(id, "original@example.com", "Original Name", UserRole.Staff);
+        var user = User.Create(id, "ext-orig", "original@example.com", "Original Name", UserRole.Staff);
         await _repository.AddAsync(user);
 
-        var updated = User.Create(id, "updated@example.com", "Updated Name", UserRole.OrganisationAdmin);
+        var updated = User.Create(id, "ext-orig", "updated@example.com", "Updated Name", UserRole.OrganisationAdmin);
         await _repository.UpdateAsync(updated);
 
         var persisted = await _context.Users.FindAsync(id);
@@ -100,7 +100,7 @@ public class UserRepositoryTests : IDisposable
     public async Task DeleteAsync_RemovesUser_WhenExists()
     {
         var id = Guid.NewGuid();
-        await _repository.AddAsync(User.Create(id, "delete@example.com", "To Delete", UserRole.Staff));
+        await _repository.AddAsync(User.Create(id, "ext-del", "delete@example.com", "To Delete", UserRole.Staff));
 
         await _repository.DeleteAsync(id);
 

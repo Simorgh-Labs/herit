@@ -21,7 +21,7 @@ public class GetUserByIdQueryHandlerTests
     public async Task Handle_WhenRepositoryReturnsUser_ReturnsUser()
     {
         var userId = Guid.NewGuid();
-        var user = UserEntity.Create(userId, "user@gov.eg", "Test User", UserRole.Staff);
+        var user = UserEntity.Create(userId, "ext-1", "user@gov.eg", "Test User", UserRole.Staff);
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
 
         var query = new GetUserByIdQuery(userId);

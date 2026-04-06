@@ -5,6 +5,7 @@ namespace Herit.Domain.Entities;
 public class User
 {
     public Guid Id { get; private set; }
+    public string ExternalId { get; private set; } = default!;
     public string Email { get; private set; } = default!;
     public string FullName { get; private set; } = default!;
     public UserRole Role { get; private set; }
@@ -18,6 +19,7 @@ public class User
 
     public static User Create(
         Guid id,
+        string externalId,
         string email,
         string fullName,
         UserRole role,
@@ -30,6 +32,7 @@ public class User
         return new User
         {
             Id = id,
+            ExternalId = externalId,
             Email = email,
             FullName = fullName,
             Role = role,

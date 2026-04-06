@@ -19,7 +19,7 @@ public class RegisterExpatCommandHandlerTests
     [Fact]
     public async Task Handle_ReturnsNonEmptyGuid()
     {
-        var command = new RegisterExpatCommand("expat@example.com", "Jane Doe");
+        var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -29,7 +29,7 @@ public class RegisterExpatCommandHandlerTests
     [Fact]
     public async Task Handle_CallsAddAsyncExactlyOnce()
     {
-        var command = new RegisterExpatCommand("expat@example.com", "Jane Doe");
+        var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -41,7 +41,7 @@ public class RegisterExpatCommandHandlerTests
     [Fact]
     public async Task Handle_CreatesUserWithExpatRoleAndNullOrganisationId()
     {
-        var command = new RegisterExpatCommand("expat@example.com", "Jane Doe");
+        var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
         UserEntity? capturedUser = null;
 
         await _userRepository.AddAsync(
@@ -60,7 +60,7 @@ public class RegisterExpatCommandHandlerTests
     {
         var termsAt = DateTimeOffset.UtcNow;
         var command = new RegisterExpatCommand(
-            "expat@example.com", "Jane Doe",
+            "ext-123", "expat@example.com", "Jane Doe",
             Nationality: "Australian",
             Location: "Sydney, AU",
             ExpertiseTags: "C#,Azure",

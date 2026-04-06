@@ -12,9 +12,10 @@ public class UserTests
     {
         var id = Guid.NewGuid();
 
-        var user = User.Create(id, "user@example.com", "Jane Doe", UserRole.Expat);
+        var user = User.Create(id, "ext-1", "user@example.com", "Jane Doe", UserRole.Expat);
 
         Assert.Equal(id, user.Id);
+        Assert.Equal("ext-1", user.ExternalId);
         Assert.Equal("user@example.com", user.Email);
         Assert.Equal("Jane Doe", user.FullName);
         Assert.Equal(UserRole.Expat, user.Role);
@@ -32,7 +33,7 @@ public class UserTests
         var orgId = Guid.NewGuid();
         var termsAt = DateTimeOffset.UtcNow;
 
-        var user = User.Create(id, "user@example.com", "Jane Doe", UserRole.Expat,
+        var user = User.Create(id, "ext-1", "user@example.com", "Jane Doe", UserRole.Expat,
             organisationId: orgId,
             nationality: "Australian",
             location: "Sydney, AU",
@@ -51,7 +52,7 @@ public class UserTests
     [Fact]
     public void Update_SetsEmailAndFullName()
     {
-        var user = User.Create(Guid.NewGuid(), "old@example.com", "Old Name", UserRole.Staff);
+        var user = User.Create(Guid.NewGuid(), "ext-1", "old@example.com", "Old Name", UserRole.Staff);
 
         user.Update("new@example.com", "New Name");
 
@@ -64,7 +65,7 @@ public class UserTests
     [Fact]
     public void UpdateProfile_SetsAllProfileFields()
     {
-        var user = User.Create(Guid.NewGuid(), "user@example.com", "Jane Doe", UserRole.Expat);
+        var user = User.Create(Guid.NewGuid(), "ext-1", "user@example.com", "Jane Doe", UserRole.Expat);
         var termsAt = DateTimeOffset.UtcNow;
 
         user.UpdateProfile("Australian", "Sydney, AU", "C#,Azure", termsAt);
@@ -78,7 +79,7 @@ public class UserTests
     [Fact]
     public void UpdateProfile_ClearsFieldsWhenNullPassed()
     {
-        var user = User.Create(Guid.NewGuid(), "user@example.com", "Jane Doe", UserRole.Expat,
+        var user = User.Create(Guid.NewGuid(), "ext-1", "user@example.com", "Jane Doe", UserRole.Expat,
             nationality: "Australian", location: "Sydney");
 
         user.UpdateProfile();
@@ -92,7 +93,7 @@ public class UserTests
     [Fact]
     public void UpdateProfile_DoesNotAffectEmailOrFullName()
     {
-        var user = User.Create(Guid.NewGuid(), "user@example.com", "Jane Doe", UserRole.Expat);
+        var user = User.Create(Guid.NewGuid(), "ext-1", "user@example.com", "Jane Doe", UserRole.Expat);
 
         user.UpdateProfile("Australian");
 
