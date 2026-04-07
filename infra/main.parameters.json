@@ -22,6 +22,24 @@
     },
     "apimSku": {
       "value": "${APIM_SKU=Consumption}"
+    },
+    "b2cClientId": {
+      "value": "${B2C_CLIENT_ID}"
+    },
+    "b2cClientSecret": {
+      "value": "${B2C_CLIENT_SECRET}"
+    },
+    "b2cTenantId": {
+      "value": "${B2C_TENANT_ID}"
+    },
+    "b2cAuthority": {
+      "value": "${B2C_AUTHORITY}"
+    },
+    "b2cTenant": {
+      "value": "${B2C_TENANT}"
+    },
+    "b2cUserFlowName": {
+      "value": "${B2C_USER_FLOW_NAME}"
     }
   }
 }
