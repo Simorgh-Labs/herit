@@ -66,13 +66,13 @@ public class CreateStaffUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenB2cCreationThrows_DoesNotWriteToDatabase()
+    public async Task Handle_WhenIdentityProviderCreationThrows_DoesNotWriteToDatabase()
     {
         var orgId = Guid.NewGuid();
         var organisation = OrganisationEntity.Create(orgId, "Test Organisation");
         _organisationRepository.GetByIdAsync(orgId, Arg.Any<CancellationToken>()).Returns(organisation);
         _identityProviderService.CreateUserAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .ThrowsAsync(new InvalidOperationException("B2C provisioning failed"));
+            .ThrowsAsync(new InvalidOperationException("Identity provider provisioning failed"));
 
         var command = new CreateStaffUserCommand("staff@gov.eg", "Staff Member", orgId);
 

@@ -34,7 +34,7 @@ public class CurrentUserService : ICurrentUserService
             claimsPrincipal.FindFirst("oid")?.Value
             ?? claimsPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value
             ?? claimsPrincipal.FindFirst("sub")?.Value
-            ?? throw new UnauthorizedAccessException("B2C subject claim could not be determined.");
+            ?? throw new UnauthorizedAccessException("Subject claim could not be determined.");
 
         var user = await _userRepository.GetByExternalIdAsync(externalId, ct);
 
