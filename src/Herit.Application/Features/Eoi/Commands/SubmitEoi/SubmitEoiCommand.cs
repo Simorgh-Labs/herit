@@ -7,9 +7,11 @@ using EoiEntity = Herit.Domain.Entities.Eoi;
 namespace Herit.Application.Features.Eoi.Commands.SubmitEoi;
 
 public record SubmitEoiCommand(
-    Guid SubmittedById,
     string Message,
-    Guid CfeoiId) : IRequest<Guid>;
+    Guid CfeoiId) : IRequest<Guid>
+{
+    public Guid SubmittedById { get; init; }
+}
 
 public class SubmitEoiCommandHandler : IRequestHandler<SubmitEoiCommand, Guid>
 {

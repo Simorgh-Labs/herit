@@ -31,7 +31,7 @@ public class SubmitEoiCommandHandlerTests
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>())
             .Returns(CfeoiEntity.Create(cfeoiId, "Title", "Desc", CfeoiResourceType.Human, Guid.NewGuid(), "Engineer", "C#", 1));
 
-        var command = new SubmitEoiCommand(submittedById, "My message", cfeoiId);
+        var command = new SubmitEoiCommand("My message", cfeoiId) with { SubmittedById = submittedById };
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -47,7 +47,7 @@ public class SubmitEoiCommandHandlerTests
         var submittedById = Guid.NewGuid();
         _userRepository.GetByIdAsync(submittedById, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
-        var command = new SubmitEoiCommand(submittedById, "Message", Guid.NewGuid());
+        var command = new SubmitEoiCommand("Message", Guid.NewGuid()) with { SubmittedById = submittedById };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _eoiRepository.DidNotReceive().AddAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
@@ -62,7 +62,7 @@ public class SubmitEoiCommandHandlerTests
             .Returns(UserEntity.Create(submittedById, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns((CfeoiEntity?)null);
 
-        var command = new SubmitEoiCommand(submittedById, "Message", cfeoiId);
+        var command = new SubmitEoiCommand("Message", cfeoiId) with { SubmittedById = submittedById };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _eoiRepository.DidNotReceive().AddAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());
@@ -79,7 +79,7 @@ public class SubmitEoiCommandHandlerTests
             .Returns(UserEntity.Create(submittedById, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _cfeoiRepository.GetByIdAsync(cfeoiId, Arg.Any<CancellationToken>()).Returns(closedCfeoi);
 
-        var command = new SubmitEoiCommand(submittedById, "Message", cfeoiId);
+        var command = new SubmitEoiCommand("Message", cfeoiId) with { SubmittedById = submittedById };
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command, CancellationToken.None));
         await _eoiRepository.DidNotReceive().AddAsync(Arg.Any<EoiEntity>(), Arg.Any<CancellationToken>());

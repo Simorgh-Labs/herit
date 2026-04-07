@@ -31,7 +31,7 @@ public class CreateRfpCommandHandlerTests
         _organisationRepository.GetByIdAsync(organisationId, Arg.Any<CancellationToken>())
             .Returns(OrganisationEntity.Create(organisationId, "Test Org"));
 
-        var command = new CreateRfpCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateRfpCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -48,7 +48,7 @@ public class CreateRfpCommandHandlerTests
         var organisationId = Guid.NewGuid();
         _userRepository.GetByIdAsync(authorId, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
-        var command = new CreateRfpCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateRfpCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _rfpRepository.DidNotReceive().AddAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());
@@ -63,7 +63,7 @@ public class CreateRfpCommandHandlerTests
             .Returns(UserEntity.Create(authorId, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _organisationRepository.GetByIdAsync(organisationId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
-        var command = new CreateRfpCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateRfpCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _rfpRepository.DidNotReceive().AddAsync(Arg.Any<RfpEntity>(), Arg.Any<CancellationToken>());

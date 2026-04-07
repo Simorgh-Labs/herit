@@ -4,18 +4,26 @@ using Herit.Application.Features.Rfp.Commands.UpdateRfp;
 using Herit.Application.Features.Rfp.Commands.UpdateRfpStatus;
 using Herit.Application.Features.Rfp.Queries.GetRfpById;
 using Herit.Application.Features.Rfp.Queries.ListRfps;
+using Herit.Application.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Herit.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize]
 public class RfpsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUserService _currentUserService;
 
-    public RfpsController(IMediator mediator) => _mediator = mediator;
+    public RfpsController(IMediator mediator, ICurrentUserService currentUserService)
+    {
+        _mediator = mediator;
+        _currentUserService = currentUserService;
+    }
 
     [HttpGet]
     public async Task<IActionResult> List(CancellationToken ct)
@@ -26,13 +34,16 @@ public class RfpsController : ControllerBase
         => Ok(await _mediator.Send(new GetRfpByIdQuery(id), ct));
 
     [HttpPost]
+    [Authorize(Policy = "Staff")]
     public async Task<IActionResult> Create([FromBody] CreateRfpCommand command, CancellationToken ct)
     {
-        var id = await _mediator.Send(command, ct);
+        var user = await _currentUserService.GetCurrentUserAsync(ct);
+        var id = await _mediator.Send(command with { AuthorId = user.Id }, ct);
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "Staff")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRfpCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);
@@ -40,6 +51,7 @@ public class RfpsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "Staff")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteRfpCommand(id), ct);
@@ -47,6 +59,7 @@ public class RfpsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/status")]
+    [Authorize(Policy = "Staff")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateRfpStatusCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);

@@ -8,9 +8,11 @@ namespace Herit.Application.Features.Rfp.Commands.CreateRfp;
 public record CreateRfpCommand(
     string Title,
     string ShortDescription,
-    Guid AuthorId,
     Guid OrganisationId,
-    string LongDescription) : IRequest<Guid>;
+    string LongDescription) : IRequest<Guid>
+{
+    public Guid AuthorId { get; init; }
+}
 
 public class CreateRfpCommandHandler : IRequestHandler<CreateRfpCommand, Guid>
 {
