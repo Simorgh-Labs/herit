@@ -6,17 +6,19 @@ using UserEntity = Herit.Domain.Entities.User;
 
 namespace Herit.Application.Features.User.Commands.CreateStaffUser;
 
-public record CreateStaffUserCommand(string ExternalId, string Email, string FullName, Guid OrganisationId) : IRequest<Guid>;
+public record CreateStaffUserCommand(string Email, string FullName, Guid OrganisationId) : IRequest<Guid>;
 
 public class CreateStaffUserCommandHandler : IRequestHandler<CreateStaffUserCommand, Guid>
 {
     private readonly IUserRepository _userRepository;
     private readonly IOrganisationRepository _organisationRepository;
+    private readonly IIdentityProviderService _identityProviderService;
 
-    public CreateStaffUserCommandHandler(IUserRepository userRepository, IOrganisationRepository organisationRepository)
+    public CreateStaffUserCommandHandler(IUserRepository userRepository, IOrganisationRepository organisationRepository, IIdentityProviderService identityProviderService)
     {
         _userRepository = userRepository;
         _organisationRepository = organisationRepository;
+        _identityProviderService = identityProviderService;
     }
 
     public async Task<Guid> Handle(CreateStaffUserCommand request, CancellationToken cancellationToken)
@@ -25,7 +27,9 @@ public class CreateStaffUserCommandHandler : IRequestHandler<CreateStaffUserComm
         if (organisation is null)
             throw new NotFoundException($"Organisation with ID '{request.OrganisationId}' was not found.");
 
-        var user = UserEntity.Create(Guid.NewGuid(), request.ExternalId, request.Email, request.FullName, UserRole.Staff, request.OrganisationId);
+        var externalId = await _identityProviderService.CreateUserAsync(request.Email, request.FullName, cancellationToken);
+
+        var user = UserEntity.Create(Guid.NewGuid(), externalId, request.Email, request.FullName, UserRole.Staff, request.OrganisationId);
 
         await _userRepository.AddAsync(user, cancellationToken);
 
