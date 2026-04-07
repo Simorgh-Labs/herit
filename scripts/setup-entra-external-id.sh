@@ -2,25 +2,28 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
-# setup-b2c.sh
+# setup-entra-external-id.sh
 #
-# Provisions the Azure AD B2C resources required by the Herit API:
-#   1. Creates the API app registration in the B2C tenant.
-#   2. Generates a client secret and prints it for Key Vault storage.
+# Provisions the Microsoft Entra External ID resources required by the Herit API:
+#   1. Creates the API app registration in the Entra External ID tenant.
+#   2. Generates a client secret and outputs it for Key Vault storage.
 #   3. Configures Google as an identity provider.
-#   4. Prints the values needed to populate Key Vault.
+#   4. Outputs the tenant ID, client ID, and other values so the operator
+#      can populate Key Vault.
 #
 # Usage:
-#   ./scripts/setup-b2c.sh \
-#     --tenant-id <b2c-tenant-id> \
+#   ./scripts/setup-entra-external-id.sh \
+#     --tenant-id <entra-tenant-id> \
 #     --google-client-id <google-oauth-client-id> \
 #     --google-client-secret <google-oauth-client-secret>
 #
 # Prerequisites:
-#   - az CLI installed and logged in to the B2C tenant
-#     (az login --tenant <tenant-id> --allow-no-subscriptions)
-#   - Microsoft.Graph permission: Application.ReadWrite.All,
-#     IdentityProvider.ReadWrite.All (granted to the signed-in principal)
+#   - az CLI installed and authenticated against the Entra External ID tenant:
+#     az login --tenant <tenant-id> --allow-no-subscriptions
+#   - The signed-in principal must have the following Microsoft Graph API
+#     permissions on the tenant:
+#       Application.ReadWrite.All
+#       IdentityProvider.ReadWrite.All
 # ---------------------------------------------------------------------------
 
 TENANT_ID=""
@@ -49,8 +52,8 @@ done
 # Validation
 # ---------------------------------------------------------------------------
 MISSING=()
-[[ -z "$TENANT_ID" ]]           && MISSING+=("--tenant-id")
-[[ -z "$GOOGLE_CLIENT_ID" ]]    && MISSING+=("--google-client-id")
+[[ -z "$TENANT_ID" ]]            && MISSING+=("--tenant-id")
+[[ -z "$GOOGLE_CLIENT_ID" ]]     && MISSING+=("--google-client-id")
 [[ -z "$GOOGLE_CLIENT_SECRET" ]] && MISSING+=("--google-client-secret")
 
 if [[ ${#MISSING[@]} -gt 0 ]]; then
@@ -60,9 +63,8 @@ if [[ ${#MISSING[@]} -gt 0 ]]; then
 fi
 
 APP_DISPLAY_NAME="Herit API"
-USER_FLOW_NAME="B2C_1_SignUpSignIn"
 
-echo "==> Setting az CLI context to B2C tenant ${TENANT_ID}..."
+echo "==> Setting az CLI context to Entra External ID tenant ${TENANT_ID}..."
 az account set --subscription "" 2>/dev/null || true
 
 # ---------------------------------------------------------------------------
@@ -96,7 +98,7 @@ else
     --headers "Content-Type=application/json" \
     --body "{
       \"displayName\": \"${APP_DISPLAY_NAME}\",
-      \"signInAudience\": \"AzureADandPersonalMicrosoftAccount\"
+      \"signInAudience\": \"AzureADMyOrg\"
     }" \
     --only-show-errors)
 
@@ -128,6 +130,12 @@ echo "    Client secret generated."
 
 # ---------------------------------------------------------------------------
 # Step 3: Configure Google as an identity provider
+#
+# NOTE: As of 2025, configuring social identity providers in Entra External ID
+# via the Graph API may require the tenant to be an External ID (CIAM) tenant.
+# If the command below fails with a 404 or unsupported operation error, configure
+# Google manually via the Azure Portal:
+#   Azure Portal → Entra External ID → External Identities → All identity providers
 # ---------------------------------------------------------------------------
 echo ""
 echo "==> Step 3: Configuring Google as an identity provider..."
@@ -150,21 +158,20 @@ echo "    Google identity provider configured."
 # ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
-B2C_DOMAIN="${TENANT_ID}.onmicrosoft.com"
-B2C_AUTHORITY="https://${TENANT_ID}.b2clogin.com"
+ENTRA_TENANT="${TENANT_ID}.onmicrosoft.com"
+ENTRA_AUTHORITY="https://${TENANT_ID}.ciamlogin.com"
 
 echo ""
 echo "============================================================"
-echo " B2C setup complete. Store the following in Key Vault:"
+echo " Entra External ID setup complete."
+echo " Store the following values in Key Vault:"
 echo "============================================================"
 echo ""
-echo "  b2c-tenant-id:     ${TENANT_ID}"
-echo "  b2c-client-id:     ${CLIENT_ID}"
-echo "  b2c-client-secret: ${CLIENT_SECRET}"
-echo "  b2c-authority:     ${B2C_AUTHORITY}"
-echo "  b2c-tenant:        ${B2C_DOMAIN}"
-echo "  b2c-user-flow:     ${USER_FLOW_NAME}"
+echo "  entra-tenant-id:     ${TENANT_ID}"
+echo "  entra-client-id:     ${CLIENT_ID}"
+echo "  entra-client-secret: ${CLIENT_SECRET}"
+echo "  entra-authority:     ${ENTRA_AUTHORITY}"
+echo "  entra-tenant:        ${ENTRA_TENANT}"
 echo ""
-echo "  NOTE: The sign-up/sign-in user flow (${USER_FLOW_NAME}) must be"
-echo "  created manually in the Azure Portal. See docs/ops/b2c-setup.md."
+echo "  See docs/ops/entra-external-id-setup.md for next steps."
 echo "============================================================"

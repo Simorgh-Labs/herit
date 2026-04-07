@@ -20,7 +20,7 @@ public class DeleteOrganisationAdminCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithExistingOrganisationAdmin_CallsDeleteB2cThenDeleteAsync()
+    public async Task Handle_WithExistingOrganisationAdmin_CallsDeleteIdentityThenDeleteAsync()
     {
         var userId = Guid.NewGuid();
         var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
@@ -61,13 +61,13 @@ public class DeleteOrganisationAdminCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenB2cDeletionThrows_DoesNotDeleteFromDatabase()
+    public async Task Handle_WhenIdentityProviderDeletionThrows_DoesNotDeleteFromDatabase()
     {
         var userId = Guid.NewGuid();
         var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
         _identityProviderService.DeleteUserAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .ThrowsAsync(new InvalidOperationException("B2C deletion failed"));
+            .ThrowsAsync(new InvalidOperationException("Identity provider deletion failed"));
 
         var command = new DeleteOrganisationAdminCommand(userId);
 

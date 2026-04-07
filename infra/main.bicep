@@ -44,28 +44,24 @@ param appUserPassword string
 param appUser string = 'appUser'
 
 @secure()
-@description('Azure AD B2C client ID for the API app registration')
-param b2cClientId string
+@description('Microsoft Entra External ID client ID for the API app registration')
+param entraClientId string
 
 @secure()
-@description('Azure AD B2C client secret for Graph API access')
-param b2cClientSecret string
+@description('Microsoft Entra External ID client secret for Graph API access')
+param entraClientSecret string
 
 @secure()
-@description('Azure AD B2C tenant ID')
-param b2cTenantId string
+@description('Microsoft Entra External ID tenant ID')
+param entraTenantId string
 
 @secure()
-@description('Azure AD B2C authority base URL, e.g. https://<tenant>.b2clogin.com')
-param b2cAuthority string
+@description('Microsoft Entra External ID authority base URL, e.g. https://<tenant>.ciamlogin.com')
+param entraAuthority string
 
 @secure()
-@description('Azure AD B2C tenant domain, e.g. <tenant>.onmicrosoft.com')
-param b2cTenant string
-
-@secure()
-@description('Azure AD B2C sign-up/sign-in user flow name')
-param b2cUserFlowName string
+@description('Microsoft Entra External ID tenant domain, e.g. <tenant>.onmicrosoft.com')
+param entraTenant string
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
@@ -109,10 +105,10 @@ module api './app/api-appservice-avm.bicep' = {
       AZURE_KEY_VAULT_ENDPOINT: keyVault.outputs.uri
       AZURE_SQL_CONNECTION_STRING_KEY: connectionStringKey
       SCM_DO_BUILD_DURING_DEPLOYMENT: false
-      AzureAdB2C__Instance: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=b2c-authority)'
-      AzureAdB2C__Domain: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=b2c-tenant)'
-      AzureAdB2C__ClientId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=b2c-client-id)'
-      AzureAdB2C__SignUpSignInPolicyId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=b2c-user-flow)'
+      AzureAd__Instance: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-authority)'
+      AzureAd__Domain: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant)'
+      AzureAd__TenantId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant-id)'
+      AzureAd__ClientId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-client-id)'
     }
     appInsightResourceId: monitoring.outputs.applicationInsightsResourceId
     allowedOrigins: [web.outputs.SERVICE_WEB_URI]
@@ -159,28 +155,24 @@ module accessKeyVault 'br/public:avm/res/key-vault/vault:0.3.5' = {
           value: 'Server=${sqlService.outputs.sqlServerName}${environment().suffixes.sqlServerHostname}; Database=${sqlService.outputs.databaseName}; User=${appUser}; Password=${appUserPassword}'
         }
         {
-          name: 'b2c-client-id'
-          value: b2cClientId
+          name: 'entra-client-id'
+          value: entraClientId
         }
         {
-          name: 'b2c-client-secret'
-          value: b2cClientSecret
+          name: 'entra-client-secret'
+          value: entraClientSecret
         }
         {
-          name: 'b2c-tenant-id'
-          value: b2cTenantId
+          name: 'entra-tenant-id'
+          value: entraTenantId
         }
         {
-          name: 'b2c-authority'
-          value: b2cAuthority
+          name: 'entra-authority'
+          value: entraAuthority
         }
         {
-          name: 'b2c-tenant'
-          value: b2cTenant
-        }
-        {
-          name: 'b2c-user-flow'
-          value: b2cUserFlowName
+          name: 'entra-tenant'
+          value: entraTenant
         }
       ]
     }

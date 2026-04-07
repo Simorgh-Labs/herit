@@ -20,7 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ICfeoiRepository, CfeoiRepository>();
         services.AddScoped<IEoiRepository, EoiRepository>();
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
-        services.AddScoped<IIdentityProviderService, B2cIdentityProviderService>();
+        services.AddScoped<IIdentityProviderService, EntraExternalIdIdentityProviderService>();
 
         return services;
     }

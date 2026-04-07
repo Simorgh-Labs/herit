@@ -6,21 +6,21 @@ using Microsoft.Graph.Models;
 
 namespace Herit.Infrastructure.Services;
 
-public class B2cIdentityProviderService : IIdentityProviderService
+public class EntraExternalIdIdentityProviderService : IIdentityProviderService
 {
     private readonly GraphServiceClient _graphClient;
-    private readonly string _b2cExtensionAppId;
+    private readonly string _entraTenant;
 
-    public B2cIdentityProviderService(IConfiguration configuration)
+    public EntraExternalIdIdentityProviderService(IConfiguration configuration)
     {
-        var tenantId = configuration["AzureAdB2C:TenantId"]
-            ?? throw new InvalidOperationException("AzureAdB2C:TenantId is not configured.");
-        var clientId = configuration["AzureAdB2C:ClientId"]
-            ?? throw new InvalidOperationException("AzureAdB2C:ClientId is not configured.");
-        var clientSecret = configuration["AzureAdB2C:ClientSecret"]
-            ?? throw new InvalidOperationException("AzureAdB2C:ClientSecret is not configured.");
-        _b2cExtensionAppId = configuration["AzureAdB2C:ExtensionAppId"]
-            ?? throw new InvalidOperationException("AzureAdB2C:ExtensionAppId is not configured.");
+        var tenantId = configuration["AzureAd:TenantId"]
+            ?? throw new InvalidOperationException("AzureAd:TenantId is not configured.");
+        var clientId = configuration["AzureAd:ClientId"]
+            ?? throw new InvalidOperationException("AzureAd:ClientId is not configured.");
+        var clientSecret = configuration["AzureAd:ClientSecret"]
+            ?? throw new InvalidOperationException("AzureAd:ClientSecret is not configured.");
+        _entraTenant = configuration["AzureAd:Domain"]
+            ?? throw new InvalidOperationException("AzureAd:Domain is not configured.");
 
         var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
         _graphClient = new GraphServiceClient(credential);
@@ -37,7 +37,7 @@ public class B2cIdentityProviderService : IIdentityProviderService
                 new ObjectIdentity
                 {
                     SignInType = "emailAddress",
-                    Issuer = _b2cExtensionAppId,
+                    Issuer = _entraTenant,
                     IssuerAssignedId = email,
                 }
             ],
