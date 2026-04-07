@@ -1,6 +1,5 @@
 using Herit.Application.Features.User.Commands.CreateOrganisationAdmin;
 using Herit.Application.Features.User.Commands.CreateStaffUser;
-using Herit.Application.Features.User.Commands.RegisterExpat;
 using Herit.Application.Features.User.Commands.DeleteStaffUser;
 using Herit.Application.Features.User.Commands.DeleteOrganisationAdmin;
 using Herit.Application.Features.User.Commands.UpdateStaffUser;
@@ -70,10 +69,4 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterExpatCommand command, CancellationToken ct)
-    {
-        var id = await _mediator.Send(command, ct);
-        return CreatedAtAction(nameof(GetById), new { id }, id);
-    }
 }
