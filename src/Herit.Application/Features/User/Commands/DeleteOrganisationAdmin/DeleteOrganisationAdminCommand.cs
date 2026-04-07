@@ -10,10 +10,12 @@ public record DeleteOrganisationAdminCommand(Guid Id) : IRequest<Unit>;
 public class DeleteOrganisationAdminCommandHandler : IRequestHandler<DeleteOrganisationAdminCommand, Unit>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IIdentityProviderService _identityProviderService;
 
-    public DeleteOrganisationAdminCommandHandler(IUserRepository userRepository)
+    public DeleteOrganisationAdminCommandHandler(IUserRepository userRepository, IIdentityProviderService identityProviderService)
     {
         _userRepository = userRepository;
+        _identityProviderService = identityProviderService;
     }
 
     public async Task<Unit> Handle(DeleteOrganisationAdminCommand request, CancellationToken cancellationToken)
@@ -25,6 +27,7 @@ public class DeleteOrganisationAdminCommandHandler : IRequestHandler<DeleteOrgan
         if (user.Role != UserRole.OrganisationAdmin)
             throw new InvalidOperationException($"User with ID '{request.Id}' is not an OrganisationAdmin.");
 
+        await _identityProviderService.DeleteUserAsync(user.ExternalId, cancellationToken);
         await _userRepository.DeleteAsync(request.Id, cancellationToken);
 
         return Unit.Value;

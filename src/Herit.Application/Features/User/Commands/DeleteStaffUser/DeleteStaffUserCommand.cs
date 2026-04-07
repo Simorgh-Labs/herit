@@ -10,10 +10,12 @@ public record DeleteStaffUserCommand(Guid Id) : IRequest<Unit>;
 public class DeleteStaffUserCommandHandler : IRequestHandler<DeleteStaffUserCommand, Unit>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IIdentityProviderService _identityProviderService;
 
-    public DeleteStaffUserCommandHandler(IUserRepository userRepository)
+    public DeleteStaffUserCommandHandler(IUserRepository userRepository, IIdentityProviderService identityProviderService)
     {
         _userRepository = userRepository;
+        _identityProviderService = identityProviderService;
     }
 
     public async Task<Unit> Handle(DeleteStaffUserCommand request, CancellationToken cancellationToken)
@@ -25,6 +27,7 @@ public class DeleteStaffUserCommandHandler : IRequestHandler<DeleteStaffUserComm
         if (user.Role != UserRole.Staff)
             throw new InvalidOperationException($"User with ID '{request.Id}' is not a Staff user.");
 
+        await _identityProviderService.DeleteUserAsync(user.ExternalId, cancellationToken);
         await _userRepository.DeleteAsync(request.Id, cancellationToken);
 
         return Unit.Value;
