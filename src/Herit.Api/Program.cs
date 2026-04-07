@@ -6,6 +6,7 @@ using Herit.Api.Services;
 using Herit.Application.Behaviours;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Application.Interfaces;
+using Herit.Application.Seeding;
 using Herit.Domain.Enums;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
@@ -14,6 +15,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+
+if (args.Contains("--seed-super-admin"))
+    return await RunSeedSuperAdminAsync(args);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,3 +95,53 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+return 0;
+
+static async Task<int> RunSeedSuperAdminAsync(string[] args)
+{
+    var email = GetArg(args, "--email");
+    var displayName = GetArg(args, "--display-name");
+
+    var missing = new List<string>();
+    if (string.IsNullOrWhiteSpace(email)) missing.Add("--email");
+    if (string.IsNullOrWhiteSpace(displayName)) missing.Add("--display-name");
+
+    if (missing.Count > 0)
+    {
+        await Console.Error.WriteLineAsync($"Error: missing required argument(s): {string.Join(", ", missing)}");
+        await Console.Error.WriteLineAsync("Usage: dotnet run --project Herit.API -- --seed-super-admin --email <email> --display-name <name>");
+        return 1;
+    }
+
+    var seedBuilder = WebApplication.CreateBuilder(args);
+
+    var kvEndpoint = seedBuilder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
+    if (!string.IsNullOrEmpty(kvEndpoint) && !seedBuilder.Environment.IsDevelopment())
+        seedBuilder.Configuration.AddAzureKeyVault(new Uri(kvEndpoint), new DefaultAzureCredential());
+
+    var seedConnectionStringKey = seedBuilder.Configuration["AZURE_SQL_CONNECTION_STRING_KEY"];
+    var seedConnectionString = (!string.IsNullOrEmpty(seedConnectionStringKey)
+        ? seedBuilder.Configuration[seedConnectionStringKey]
+        : null)
+        ?? seedBuilder.Configuration.GetConnectionString("DefaultConnection")!;
+
+    seedBuilder.Services.AddInfrastructure(seedConnectionString);
+    seedBuilder.Services.AddScoped<SuperAdminSeeder>();
+
+    var seedApp = seedBuilder.Build();
+
+    await using var scope = seedApp.Services.CreateAsyncScope();
+    var db = scope.ServiceProvider.GetRequiredService<HeritDbContext>();
+    await db.Database.MigrateAsync();
+
+    var seeder = scope.ServiceProvider.GetRequiredService<SuperAdminSeeder>();
+    await seeder.SeedAsync(email!, displayName!);
+
+    return 0;
+}
+
+static string? GetArg(string[] args, string name)
+{
+    var idx = Array.IndexOf(args, name);
+    return idx >= 0 && idx + 1 < args.Length ? args[idx + 1] : null;
+}
