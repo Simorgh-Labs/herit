@@ -61,6 +61,14 @@ jobs:
             --tenant-id "$Env:AZURE_TENANT_ID"
         shell: pwsh
 
+      - name: Log in with Azure CLI
+        if: ${{ env.AZURE_CLIENT_ID != '' }}
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
       - name: Log in with Azure (Client Credentials)
         if: ${{ env.AZURE_CREDENTIALS != '' }}
         run: |
@@ -84,6 +92,17 @@ jobs:
           ENTRA_TENANT_ID: ${{ secrets.ENTRA_TENANT_ID }}
           ENTRA_AUTHORITY: ${{ secrets.ENTRA_AUTHORITY }}
           ENTRA_TENANT: ${{ secrets.ENTRA_TENANT }}
+
+      - name: Restart API to pick up Key Vault references
+        if: ${{ env.AZURE_CLIENT_ID != '' }}
+        run: |
+          RG="rg-${{ vars.AZURE_ENV_NAME }}"
+          API_NAME=$(az webapp list --resource-group "$RG" --query "[?contains(name,'api')].name | [0]" -o tsv)
+          KV_NAME=$(az keyvault list --resource-group "$RG" --query "[0].name" -o tsv)
+          PRINCIPAL=$(az webapp identity show --name "$API_NAME" --resource-group "$RG" --query principalId -o tsv)
+          az keyvault set-policy --name "$KV_NAME" --object-id "$PRINCIPAL" --secret-permissions get list --output none
+          az webapp stop --name "$API_NAME" --resource-group "$RG"
+          az webapp start --name "$API_NAME" --resource-group "$RG"
 
       - name: Deploy Application
         run: azd deploy --no-prompt
