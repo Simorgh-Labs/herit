@@ -6,7 +6,6 @@ public class SubmitEoiCommandValidator : AbstractValidator<SubmitEoiCommand>
 {
     public SubmitEoiCommandValidator()
     {
-        RuleFor(x => x.SubmittedById).NotEqual(Guid.Empty);
         RuleFor(x => x.Message).NotEmpty();
         RuleFor(x => x.CfeoiId).NotEqual(Guid.Empty);
     }

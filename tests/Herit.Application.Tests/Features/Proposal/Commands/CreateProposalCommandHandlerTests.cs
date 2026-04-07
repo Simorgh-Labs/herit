@@ -33,7 +33,7 @@ public class CreateProposalCommandHandlerTests
         _organisationRepository.GetByIdAsync(organisationId, Arg.Any<CancellationToken>())
             .Returns(OrganisationEntity.Create(organisationId, "Test Org"));
 
-        var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateProposalCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -56,7 +56,7 @@ public class CreateProposalCommandHandlerTests
         _rfpRepository.GetByIdAsync(rfpId, Arg.Any<CancellationToken>())
             .Returns(RfpEntity.Create(rfpId, "RFP", "Short", authorId, organisationId, "Long"));
 
-        var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long", rfpId);
+        var command = new CreateProposalCommand("Title", "Short", organisationId, "Long", rfpId) with { AuthorId = authorId };
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -73,7 +73,7 @@ public class CreateProposalCommandHandlerTests
         var organisationId = Guid.NewGuid();
         _userRepository.GetByIdAsync(authorId, Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
 
-        var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateProposalCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
@@ -88,7 +88,7 @@ public class CreateProposalCommandHandlerTests
             .Returns(UserEntity.Create(authorId, "ext-1", "user@example.com", "Test User", UserRole.Staff));
         _organisationRepository.GetByIdAsync(organisationId, Arg.Any<CancellationToken>()).Returns((OrganisationEntity?)null);
 
-        var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long");
+        var command = new CreateProposalCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());
@@ -106,7 +106,7 @@ public class CreateProposalCommandHandlerTests
             .Returns(OrganisationEntity.Create(organisationId, "Test Org"));
         _rfpRepository.GetByIdAsync(rfpId, Arg.Any<CancellationToken>()).Returns((RfpEntity?)null);
 
-        var command = new CreateProposalCommand("Title", "Short", authorId, organisationId, "Long", rfpId);
+        var command = new CreateProposalCommand("Title", "Short", organisationId, "Long", rfpId) with { AuthorId = authorId };
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _proposalRepository.DidNotReceive().AddAsync(Arg.Any<ProposalEntity>(), Arg.Any<CancellationToken>());

@@ -5,12 +5,14 @@ using Herit.Application.Features.Cfeoi.Queries.GetCfeoiById;
 using Herit.Application.Features.Cfeoi.Queries.ListCfeois;
 using Herit.Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Herit.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize]
 public class CfeoiController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -26,6 +28,7 @@ public class CfeoiController : ControllerBase
         => Ok(await _mediator.Send(new GetCfeoiByIdQuery(id), ct));
 
     [HttpPost]
+    [Authorize(Policy = "StaffOrExpat")]
     public async Task<IActionResult> Publish([FromBody] PublishCfeoiCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
@@ -33,6 +36,7 @@ public class CfeoiController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "StaffOrExpat")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCfeoiCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);
@@ -40,6 +44,7 @@ public class CfeoiController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/status")]
+    [Authorize(Policy = "StaffOrExpat")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateCfeoiStatusCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);

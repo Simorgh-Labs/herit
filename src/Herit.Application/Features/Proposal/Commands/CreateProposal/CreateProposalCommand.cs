@@ -8,10 +8,12 @@ namespace Herit.Application.Features.Proposal.Commands.CreateProposal;
 public record CreateProposalCommand(
     string Title,
     string ShortDescription,
-    Guid AuthorId,
     Guid OrganisationId,
     string LongDescription,
-    Guid? RfpId = null) : IRequest<Guid>;
+    Guid? RfpId = null) : IRequest<Guid>
+{
+    public Guid AuthorId { get; init; }
+}
 
 public class CreateProposalCommandHandler : IRequestHandler<CreateProposalCommand, Guid>
 {

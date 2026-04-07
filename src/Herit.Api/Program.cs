@@ -1,13 +1,16 @@
 using Azure.Identity;
 using FluentValidation;
+using Herit.Api.Authorization;
 using Herit.Api.Middleware;
 using Herit.Api.Services;
 using Herit.Application.Behaviours;
 using Herit.Application.Features.Rfp.Commands.CreateRfp;
 using Herit.Application.Interfaces;
+using Herit.Domain.Enums;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -36,6 +39,21 @@ var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
     ?? builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddInfrastructure(connectionString);
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("SuperAdmin", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.SuperAdmin)))
+    .AddPolicy("OrganisationAdmin", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.OrganisationAdmin)))
+    .AddPolicy("Staff", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.Staff)))
+    .AddPolicy("Expat", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.Expat)))
+    .AddPolicy("AdminOrSuperAdmin", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.OrganisationAdmin, UserRole.SuperAdmin)))
+    .AddPolicy("StaffOrExpat", policy =>
+        policy.AddRequirements(new RoleRequirement(UserRole.Staff, UserRole.Expat)));
+builder.Services.AddScoped<IAuthorizationHandler, RoleRequirementHandler>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
