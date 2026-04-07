@@ -6,6 +6,7 @@ public class RegisterExpatCommandValidator : AbstractValidator<RegisterExpatComm
 {
     public RegisterExpatCommandValidator()
     {
+        RuleFor(x => x.ExternalId).NotEmpty();
         RuleFor(x => x.Email).NotEmpty().MaximumLength(256);
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(256);
     }

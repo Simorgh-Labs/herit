@@ -25,6 +25,10 @@ public class RegisterExpatCommandHandler : IRequestHandler<RegisterExpatCommand,
 
     public async Task<Guid> Handle(RegisterExpatCommand request, CancellationToken cancellationToken)
     {
+        var existing = await _userRepository.GetByExternalIdAsync(request.ExternalId, cancellationToken);
+        if (existing is not null)
+            return existing.Id;
+
         var user = UserEntity.Create(
             Guid.NewGuid(),
             request.ExternalId,

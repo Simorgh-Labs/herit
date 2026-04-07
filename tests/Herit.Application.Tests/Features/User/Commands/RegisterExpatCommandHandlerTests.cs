@@ -17,8 +17,9 @@ public class RegisterExpatCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsNonEmptyGuid()
+    public async Task Handle_ReturnsNonEmptyGuid_WhenUserDoesNotExist()
     {
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
         var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
 
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -27,8 +28,9 @@ public class RegisterExpatCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CallsAddAsyncExactlyOnce()
+    public async Task Handle_CallsAddAsyncExactlyOnce_WhenUserDoesNotExist()
     {
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
         var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
 
         await _handler.Handle(command, CancellationToken.None);
@@ -41,6 +43,7 @@ public class RegisterExpatCommandHandlerTests
     [Fact]
     public async Task Handle_CreatesUserWithExpatRoleAndNullOrganisationId()
     {
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
         var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
         UserEntity? capturedUser = null;
 
@@ -58,6 +61,7 @@ public class RegisterExpatCommandHandlerTests
     [Fact]
     public async Task Handle_PersistsOptionalProfileFields()
     {
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns((UserEntity?)null);
         var termsAt = DateTimeOffset.UtcNow;
         var command = new RegisterExpatCommand(
             "ext-123", "expat@example.com", "Jane Doe",
@@ -78,5 +82,32 @@ public class RegisterExpatCommandHandlerTests
         Assert.Equal("Sydney, AU", capturedUser.Location);
         Assert.Equal("C#,Azure", capturedUser.ExpertiseTags);
         Assert.Equal(termsAt, capturedUser.TermsAcceptedAt);
+    }
+
+    [Fact]
+    public async Task Handle_ReturnsExistingId_WhenUserAlreadyExists()
+    {
+        var existingId = Guid.NewGuid();
+        var existingUser = UserEntity.Create(existingId, "ext-123", "expat@example.com", "Jane Doe", UserRole.Expat);
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns(existingUser);
+        var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
+
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        Assert.Equal(existingId, result);
+    }
+
+    [Fact]
+    public async Task Handle_DoesNotCallAddAsync_WhenUserAlreadyExists()
+    {
+        var existingUser = UserEntity.Create(Guid.NewGuid(), "ext-123", "expat@example.com", "Jane Doe", UserRole.Expat);
+        _userRepository.GetByExternalIdAsync("ext-123", Arg.Any<CancellationToken>()).Returns(existingUser);
+        var command = new RegisterExpatCommand("ext-123", "expat@example.com", "Jane Doe");
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        await _userRepository.DidNotReceive().AddAsync(
+            Arg.Any<UserEntity>(),
+            Arg.Any<CancellationToken>());
     }
 }
