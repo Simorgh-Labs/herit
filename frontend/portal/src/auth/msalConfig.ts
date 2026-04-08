@@ -17,7 +17,7 @@ export const msalConfig: Configuration = {
         if (containsPii) return;
         if (import.meta.env.DEV) console.log(`[MSAL] ${message}`);
       },
-      logLevel: LogLevel.Warning,
+      logLevel: LogLevel.Verbose,
     },
   },
 };

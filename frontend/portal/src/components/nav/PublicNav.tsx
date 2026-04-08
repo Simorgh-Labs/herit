@@ -36,10 +36,14 @@ const HeritLogo = () => (
 export default function PublicNav() {
   const { instance } = useMsal();
 
-  const handleSignIn = () => {
-    instance.loginRedirect({
-      scopes: ['openid', 'profile', 'email'],
-    });
+  const handleSignIn = async () => {
+    try {
+      await instance.loginRedirect({
+        scopes: ['openid', 'profile', 'email'],
+      });
+    } catch (error) {
+      console.error('[Herit] loginRedirect failed:', error);
+    }
   };
 
   return (
