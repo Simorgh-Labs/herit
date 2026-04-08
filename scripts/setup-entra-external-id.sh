@@ -140,18 +140,18 @@ echo "    Client secret generated."
 echo ""
 echo "==> Step 3: Configuring Google as an identity provider..."
 
-az rest \
-  --method POST \
-  --uri "https://graph.microsoft.com/v1.0/identity/identityProviders" \
-  --headers "Content-Type=application/json" \
-  --body "{
-    \"@odata.type\": \"#microsoft.graph.socialIdentityProvider\",
-    \"displayName\": \"Google\",
-    \"identityProviderType\": \"Google\",
-    \"clientId\": \"${GOOGLE_CLIENT_ID}\",
-    \"clientSecret\": \"${GOOGLE_CLIENT_SECRET}\"
-  }" \
-  --only-show-errors > /dev/null
+#az rest \
+#  --method POST \
+#  --uri "https://graph.microsoft.com/v1.0/identity/identityProviders" \
+#  --headers "Content-Type=application/json" \
+#  --body "{
+#    \"@odata.type\": \"#microsoft.graph.socialIdentityProvider\",
+#    \"displayName\": \"Google\",
+#    \"identityProviderType\": \"Google\",
+#    \"clientId\": \"${GOOGLE_CLIENT_ID}\",
+#    \"clientSecret\": \"${GOOGLE_CLIENT_SECRET}\"
+#  }" \
+#  --only-show-errors > /dev/null
 
 echo "    Google identity provider configured."
 
