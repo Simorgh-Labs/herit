@@ -1,0 +1,409 @@
+<html lang="en">
+
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: 'nest'
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFEOI Directory - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme:
+        {
+          extend:
+          {
+            colors:
+            {
+              primary: '#1E40AF',
+              surface: '#F3F4F6',
+              border: '#E5E7EB',
+              text:
+              {
+                main: '#111827',
+                muted: '#6B7280'
+              }
+            },
+            fontFamily:
+            {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system',
+                'BlinkMacSystemFont', 'Segoe UI', 'Roboto',
+                'Helvetica Neue', 'Arial', 'sans-serif'
+              ],
+            },
+            boxShadow:
+            {
+              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+              'floating': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            }
+          }
+        }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+      body
+      {
+        font-family: 'Inter', sans-serif;
+      }
+
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body
+    class="m-0 p-0 bg-white text-text-main antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
+    <!-- Global Header -->
+    <header id="header"
+      class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+      <div
+        class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-8"><a href="#"
+            class="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"><i
+              class="fa-solid fa-globe text-xl"></i><span
+              class="text-xl font-bold tracking-tight">Herit</span></a>
+          <nav
+            class="hidden md:flex items-center bg-gray-900 rounded-full px-2 py-1.5">
+            <a href="#"
+              class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Browse
+              RFPs</a><a href="#"
+              class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Public
+              Proposals</a><a href="#"
+              class="px-4 py-2 text-sm font-medium text-white hover:text-gray-300 transition-colors bg-white/10 rounded-full">CFEOI
+              Directory</a></nav>
+        </div>
+        <div class="flex items-center"><button
+            class="hidden md:inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-primary border-2 border-primary rounded-full hover:bg-primary/5 transition-colors">
+            Sign In
+          </button><button
+            class="md:hidden text-gray-600 hover:text-gray-900"><i
+              class="fa-solid fa-bars text-xl"></i></button></div>
+      </div>
+    </header>
+    <main id="main-content" class="flex-grow w-full pb-16 bg-surface">
+      <!-- Breadcrumb -->
+      <div class="bg-white border-b border-border py-4">
+        <div class="max-w-[1200px] mx-auto px-6">
+          <nav aria-label="Breadcrumb" class="flex text-sm text-text-muted">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center"><a href="#"
+                  class="hover:text-primary transition-colors">Home</a></li>
+              <li aria-current="page">
+                <div class="flex items-center"><i
+                    class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span
+                    class="text-gray-900 font-medium truncate max-w-[200px] md:max-w-none">CFEOI
+                    Directory</span></div>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="max-w-[1200px] mx-auto px-6 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Sidebar Filters -->
+          <aside id="sidebar-filters" class="w-full lg:w-64 flex-shrink-0">
+            <div
+              class="bg-white rounded-xl border border-border p-5 sticky top-24 shadow-sm">
+              <h2 class="text-lg font-bold text-gray-900 mb-6">Filters</h2>
+              <!-- Status Filter -->
+              <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-900 mb-3">Status</h3>
+                <div class="space-y-2"><label
+                    class="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      class="relative flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                      <input type="checkbox" checked="" class="peer sr-only"><i
+                        class="fa-solid fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100 peer-checked:text-primary absolute"></i>
+                    </div><span class="text-sm text-gray-700">Open</span>
+                  </label><label
+                    class="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      class="relative flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                      <input type="checkbox" class="peer sr-only"><i
+                        class="fa-solid fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100 peer-checked:text-primary absolute"></i>
+                    </div><span class="text-sm text-gray-700">Closed</span>
+                  </label></div>
+              </div><!-- Resource Type Filter -->
+              <!-- Organisation Filter -->
+              <div>
+                <h3 class="text-sm font-semibold text-gray-900 mb-3">
+                  Organisation</h3>
+                <div class="space-y-2"><label
+                    class="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      class="relative flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                      <input type="checkbox" class="peer sr-only"><i
+                        class="fa-solid fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100 peer-checked:text-primary absolute"></i>
+                    </div><span class="text-sm text-gray-700">Ministry of
+                      Health</span>
+                  </label><label
+                    class="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      class="relative flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                      <input type="checkbox" class="peer sr-only"><i
+                        class="fa-solid fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100 peer-checked:text-primary absolute"></i>
+                    </div><span class="text-sm text-gray-700">Dept of
+                      Education</span>
+                  </label><label
+                    class="flex items-center gap-3 cursor-pointer group">
+                    <div
+                      class="relative flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                      <input type="checkbox" class="peer sr-only"><i
+                        class="fa-solid fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100 peer-checked:text-primary absolute"></i>
+                    </div><span class="text-sm text-gray-700">City
+                      Council</span>
+                  </label></div>
+              </div>
+            </div>
+          </aside><!-- Main Content Area -->
+          <div class="flex-grow">
+            <!-- Search and Sort Header -->
+            <div
+              class="bg-white rounded-xl border border-border p-4 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
+              <div class="relative w-full sm:w-[400px]">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                </div><input type="text"
+                  placeholder="Search by role title or skills…"
+                  class="w-full pl-10 pr-4 py-2.5 bg-surface border border-transparent rounded-lg text-sm focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+              </div>
+              <div class="flex items-center gap-3 w-full sm:w-auto"><span
+                  class="text-sm text-gray-500 whitespace-nowrap">Sort
+                  by:</span>
+                <div class="relative w-full sm:w-48"><select
+                    class="w-full appearance-none bg-surface border border-transparent rounded-lg px-4 py-2.5 text-sm text-gray-700 focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer">
+                    <option value="relevant">Most Relevant</option>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i
+                      class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                  </div>
+                </div>
+              </div>
+            </div><!-- Directory Grid -->
+            <div class="flex flex-col gap-4 mb-8">
+              <!-- Card 1 -->
+              <div
+                class="bg-white rounded-xl border border-border p-5 hover:shadow-card transition-shadow flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
+                <div class="flex-grow">
+                  <div class="flex flex-wrap items-center gap-2 mb-3"><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded">Open</span><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 rounded">Technical</span><span
+                      class="text-xs text-text-muted ml-2"><i
+                        class="fa-regular fa-clock mr-1"></i>2 Slots</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-900 mb-1">Blockchain
+                    Architect</h3>
+                  <div
+                    class="text-sm text-text-muted mb-3 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                    <span class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-building text-gray-400"></i>Ministry
+                      of Health</span><span
+                      class="hidden sm:inline text-gray-300">|</span><span
+                      class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-file-lines text-gray-400"></i>Parent:
+                      <a href="#" class="text-primary hover:underline">Patient
+                        Identity Verification</a></span></div>
+                  <div class="flex flex-wrap gap-2"><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">Blockchain</span><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">Cryptography</span><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">System
+                      Architecture</span></div>
+                </div>
+                <div
+                  class="flex flex-col items-start sm:items-end gap-3 min-w-[140px]">
+                  <div class="text-right w-full">
+                    <p class="text-xs text-text-muted mb-1"><i
+                        class="fa-solid fa-location-dot mr-1"></i>Remote</p>
+                    <p class="text-xs text-text-muted"><i
+                        class="fa-regular fa-calendar mr-1"></i>Closes Oct 30
+                    </p>
+                  </div><button
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-800 transition-colors">
+                    View Details
+                  </button>
+                </div>
+              </div><!-- Card 2 -->
+              <div
+                class="bg-white rounded-xl border border-border p-5 hover:shadow-card transition-shadow flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
+                <div class="flex-grow">
+                  <div class="flex flex-wrap items-center gap-2 mb-3"><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded">Open</span><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 rounded">Advisory</span><span
+                      class="text-xs text-text-muted ml-2"><i
+                        class="fa-regular fa-clock mr-1"></i>1 Slot</span></div>
+                  <h3 class="text-lg font-bold text-gray-900 mb-1">Healthcare
+                    Policy Expert</h3>
+                  <div
+                    class="text-sm text-text-muted mb-3 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                    <span class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-building text-gray-400"></i>Ministry
+                      of Health</span><span
+                      class="hidden sm:inline text-gray-300">|</span><span
+                      class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-file-lines text-gray-400"></i>Parent:
+                      <a href="#" class="text-primary hover:underline">Patient
+                        Identity Verification</a></span></div>
+                  <div class="flex flex-wrap gap-2"><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">Policy
+                      Analysis</span><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">Data
+                      Privacy</span></div>
+                </div>
+                <div
+                  class="flex flex-col items-start sm:items-end gap-3 min-w-[140px]">
+                  <div class="text-right w-full">
+                    <p class="text-xs text-text-muted mb-1"><i
+                        class="fa-solid fa-location-dot mr-1"></i>Toronto, CA
+                    </p>
+                  </div><button
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-800 transition-colors">
+                    View Details
+                  </button>
+                </div>
+              </div><!-- Card 3 -->
+              <div
+                class="bg-white rounded-xl border border-border p-5 hover:shadow-card transition-shadow flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
+                <div class="flex-grow">
+                  <div class="flex flex-wrap items-center gap-2 mb-3"><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded">Open</span><span
+                      class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 rounded">Technical</span><span
+                      class="text-xs text-text-muted ml-2"><i
+                        class="fa-regular fa-clock mr-1"></i>0 Slots</span>
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-500 mb-1">Data Engineer
+                  </h3>
+                  <div
+                    class="text-sm text-text-muted mb-3 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                    <span class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-building text-gray-400"></i>Dept of
+                      Education</span><span
+                      class="hidden sm:inline text-gray-300">|</span><span
+                      class="flex items-center gap-1.5"><i
+                        class="fa-regular fa-file-lines text-gray-400"></i>Parent:
+                      <a href="#" class="text-primary hover:underline">National
+                        Curriculum Data Migration</a></span></div>
+                  <div class="flex flex-wrap gap-2"><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">SQL</span><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">ETL</span><span
+                      class="px-2.5 py-1 bg-surface border border-border rounded-full text-xs text-gray-600">Python</span>
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col items-start sm:items-end gap-3 min-w-[140px]">
+                  <div class="text-right w-full">
+                    <p class="text-xs text-text-muted mb-1"><i
+                        class="fa-solid fa-location-dot mr-1"></i>Remote</p>
+                  </div><button
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-500 bg-surface border border-border rounded-lg hover:bg-gray-100 transition-colors">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div><!-- Pagination -->
+            <div
+              class="flex items-center justify-between border-t border-border pt-6">
+              <p class="text-sm text-gray-500">Showing <span
+                  class="font-medium text-gray-900">1</span> to <span
+                  class="font-medium text-gray-900">3</span> of <span
+                  class="font-medium text-gray-900">24</span> results</p>
+              <nav aria-label="Pagination"
+                class="inline-flex rounded-md shadow-sm"><a href="#"
+                  class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-border bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"><span
+                    class="sr-only">Previous</span><i
+                    class="fa-solid fa-chevron-left text-xs"></i></a><a href="#"
+                  aria-current="page"
+                  class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a><a
+                  href="#"
+                  class="bg-white border-border text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a><a
+                  href="#"
+                  class="bg-white border-border text-gray-500 hover:bg-gray-50 relative hidden md:inline-flex items-center px-4 py-2 border text-sm font-medium">3</a><span
+                  class="relative inline-flex items-center px-4 py-2 border border-border bg-white text-sm font-medium text-gray-700">...</span><a
+                  href="#"
+                  class="bg-white border-border text-gray-500 hover:bg-gray-50 relative hidden md:inline-flex items-center px-4 py-2 border text-sm font-medium">8</a><a
+                  href="#"
+                  class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-border bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"><span
+                    class="sr-only">Next</span><i
+                    class="fa-solid fa-chevron-right text-xs"></i></a></nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main><!-- Global Footer -->
+    <footer id="footer"
+      class="bg-white border-t border-border pt-16 pb-8 mt-auto">
+      <div class="max-w-[1200px] mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          <div class="md:col-span-2"><a href="#"
+              class="flex items-center gap-2 text-primary mb-4"><i
+                class="fa-solid fa-globe text-2xl"></i><span
+                class="text-2xl font-bold tracking-tight">Herit</span></a>
+            <p class="text-gray-500 text-sm max-w-sm leading-relaxed">
+              Connecting diaspora expertise with national needs. A secure
+              platform for browsing government RFPs, community proposals, and
+              vital volunteer roles.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-4">Platform</h4>
+            <ul class="space-y-3">
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Browse
+                  RFPs</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Public
+                  Proposals</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">CFEOI
+                  Directory</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-4">Resources</h4>
+            <ul class="space-y-3">
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Submission
+                  Guidelines</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Help
+                  Center</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Privacy
+                  Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-500">© 2024 Herit Civic Platform. All
+            rights reserved.</p>
+          <div class="flex items-center gap-4 text-gray-400"><a href="#"
+              class="hover:text-gray-600 transition-colors"><i
+                class="fa-brands fa-twitter"></i></a><a href="#"
+              class="hover:text-gray-600 transition-colors"><i
+                class="fa-brands fa-linkedin"></i></a></div>
+        </div>
+      </div>
+    </footer>
+  </body>
+
+</html>

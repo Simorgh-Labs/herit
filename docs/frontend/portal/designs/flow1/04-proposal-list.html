@@ -1,0 +1,683 @@
+<html lang="en">
+
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: 'nest'
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Proposals - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme:
+        {
+          extend:
+          {
+            colors:
+            {
+              primary: '#1E40AF',
+              surface: '#F3F4F6',
+              border: '#E5E7EB',
+              text:
+              {
+                main: '#111827',
+                muted: '#6B7280'
+              }
+            },
+            fontFamily:
+            {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system',
+                'BlinkMacSystemFont', 'Segoe UI', 'Roboto',
+                'Helvetica Neue', 'Arial', 'sans-serif'
+              ],
+            },
+            boxShadow:
+            {
+              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+              'floating': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            }
+          }
+        }
+      }
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+      body
+      {
+        font-family: 'Inter', sans-serif;
+      }
+
+      ::-webkit-scrollbar
+      {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body
+    class="m-0 p-0 bg-white text-text-main antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
+    <!-- Global Header -->
+    <header id="header"
+      class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-border">
+      <div
+        class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-8"><a href="#"
+            class="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"><i
+              class="fa-solid fa-globe text-xl"></i><span
+              class="text-xl font-bold tracking-tight">Herit</span></a>
+          <nav
+            class="hidden md:flex items-center bg-gray-900 rounded-full px-2 py-1.5">
+            <a href="#"
+              class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Browse
+              RFPs</a><a href="#"
+              class="px-4 py-2 text-sm font-medium text-white hover:text-gray-300 transition-colors bg-white/10 rounded-full">Public
+              Proposals</a><a href="#"
+              class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">CFEOI
+              Directory</a></nav>
+        </div>
+        <div class="flex items-center"><button
+            class="hidden md:inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-primary border-2 border-primary rounded-full hover:bg-primary/5 transition-colors">
+            Sign In
+          </button><button
+            class="md:hidden text-gray-600 hover:text-gray-900"><i
+              class="fa-solid fa-bars text-xl"></i></button></div>
+      </div>
+    </header>
+    <main id="main-content" class="flex-grow w-full">
+      <!-- Directory Header & Search -->
+      <section id="directory-header" class="pt-12 pb-8 bg-white">
+        <div class="max-w-[1200px] mx-auto px-6">
+          <div class="max-w-3xl mb-10">
+            <h1 class="text-4xl font-bold text-gray-900 tracking-tight mb-4">
+              Public Proposals Directory</h1>
+            <p class="text-lg text-text-muted leading-relaxed">
+              Discover community-driven initiatives and vendor proposals aimed
+              at addressing national needs. Filter by status, organisation, or
+              search directly.
+            </p>
+          </div><!-- Search and Sort Bar -->
+          <div
+            class="flex flex-col md:flex-row gap-4 items-center justify-between p-2 bg-surface rounded-xl border border-border">
+            <div class="relative w-full md:w-2/3 flex-grow">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fa-solid fa-search text-gray-400"></i></div><input
+                type="text"
+                placeholder="Search proposals by title or proposer..."
+                class="w-full pl-11 pr-4 py-3 bg-white border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow">
+            </div>
+            <div class="w-full md:w-auto flex items-center gap-3 pr-2"><span
+                class="text-sm font-medium text-gray-600 whitespace-nowrap">Sort
+                By:</span><select
+                class="bg-white border border-border text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 outline-none cursor-pointer">
+                <option>Most Relevant</option>
+                <option>Newest</option>
+                <option>Oldest</option>
+              </select></div>
+          </div>
+        </div>
+      </section><!-- Proposals Filter & Grid -->
+      <section id="proposals-content"
+        class="py-8 bg-white border-t border-border">
+        <div class="max-w-[1200px] mx-auto px-6">
+          <div class="flex flex-col lg:flex-row gap-10">
+            <!-- Left Sidebar Filters (25%) -->
+            <aside id="filters-sidebar" class="w-full lg:w-1/4 flex-shrink-0">
+              <div
+                class="bg-surface rounded-2xl p-6 border border-border sticky top-24">
+                <div
+                  class="flex items-center justify-between mb-6 border-b border-border pb-4">
+                  <h3 class="text-lg font-bold text-gray-900">Filters</h3>
+                  <button
+                    class="text-sm text-text-muted hover:text-primary transition-colors">Clear
+                    All</button>
+                </div><!-- Status Filter -->
+                <div class="mb-8">
+                  <h4
+                    class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">
+                    Status</h4>
+                  <div class="space-y-3"><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" checked=""
+                          class="peer sr-only"><i
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Under
+                        Review</span><span
+                        class="ml-auto text-xs text-text-muted">42</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><i
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                        <div
+                          class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                          <input type="checkbox" checked=""
+                            class="peer sr-only"><i
+                            class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                          <div
+                            class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                          </div>
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Approved</span><span
+                        class="ml-auto text-xs text-text-muted">18</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><svg
+                          aria-hidden="true" focusable="false" data-prefix="fas"
+                          data-icon="check" role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512" data-fa-i2svg=""
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></svg><span
+                          id="ih3sld"></span>
+                        <path id="ijtkxy" draggable="true" fill="currentColor"
+                          d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+                        </path>
+                        <!-- <i id="i4p0f" data-gjs-type="default" draggable="true" class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i> Font Awesome fontawesome.com -->
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Submitted</span><span
+                        class="ml-auto text-xs text-text-muted">7</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><svg
+                          aria-hidden="true" focusable="false" data-prefix="fas"
+                          data-icon="check" role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512" data-fa-i2svg=""
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10">
+                          <path fill="currentColor"
+                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+                          </path>
+                        </svg>
+                        <!-- <i id="iyg80r" data-gjs-type="default" draggable="true" class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i> Font Awesome fontawesome.com -->
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                        <div
+                          class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                          <input type="checkbox" checked=""
+                            class="peer sr-only"><i
+                            class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                          <div
+                            class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                          </div>
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Resourcing</span><span
+                        class="ml-auto text-xs text-text-muted">15</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><svg
+                          aria-hidden="true" focusable="false" data-prefix="fas"
+                          data-icon="check" role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512" data-fa-i2svg=""
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10">
+                          <path fill="currentColor"
+                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+                          </path>
+                        </svg>
+                        <!-- <i id="iyg80r" data-gjs-type="default" draggable="true" class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i> Font Awesome fontawesome.com -->
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                        <div
+                          class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                          <input type="checkbox" checked=""
+                            class="peer sr-only"><i
+                            class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                          <div
+                            class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                          </div>
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Ideation</span><span
+                        class="ml-auto text-xs text-text-muted">124</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><svg
+                          aria-hidden="true" focusable="false" data-prefix="fas"
+                          data-icon="check" role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512" data-fa-i2svg=""
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10">
+                          <path fill="currentColor"
+                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+                          </path>
+                        </svg>
+                        <!-- <i id="i9rgpr" data-gjs-type="default" draggable="true" class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i> Font Awesome fontawesome.com -->
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Withdrawn</span><span
+                        class="ml-auto text-xs text-text-muted">4</span>
+                    </label></div>
+                </div><!-- Organisation Filter -->
+                <div>
+                  <h4
+                    class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">
+                    Organisation</h4>
+                  <div class="space-y-3"><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><i
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Ministry
+                        of Health</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><i
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Dept.
+                        of Education</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><i
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i>
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Urban
+                        Planning Auth.</span>
+                    </label><label
+                      class="flex items-center gap-3 cursor-pointer group">
+                      <div
+                        class="relative flex items-center justify-center w-5 h-5 border border-gray-300 rounded bg-white group-hover:border-primary transition-colors">
+                        <input type="checkbox" class="peer sr-only"><svg
+                          aria-hidden="true" focusable="false" data-prefix="fas"
+                          data-icon="check" role="img"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512" data-fa-i2svg=""
+                          class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10">
+                          <path fill="currentColor"
+                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z">
+                          </path>
+                        </svg>
+                        <!-- <i id="iuxmnf" data-gjs-type="default" draggable="true" class="fa-solid fa-check text-white text-xs opacity-0 peer-checked:opacity-100 absolute z-10"></i> Font Awesome fontawesome.com -->
+                        <div
+                          class="absolute inset-0 bg-primary opacity-0 peer-checked:opacity-100 rounded transition-opacity">
+                        </div>
+                      </div><span
+                        class="text-sm text-gray-700 group-hover:text-gray-900">Dept.
+                        of ICT</span>
+                    </label></div><button
+                    class="mt-4 text-sm font-medium text-primary hover:underline">Show
+                    more</button>
+                </div>
+              </div>
+            </aside><!-- Right Grid Area (75%) -->
+            <div class="w-full lg:w-3/4">
+              <div class="flex items-center justify-between mb-6"><span
+                  class="text-sm text-text-muted font-medium">Showing 1-9 of 191
+                  proposals</span></div><!-- Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded-md">Under
+                        Review</span></div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Blockchain-based Patient Identity Verification</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      A decentralized approach to patient records ensuring data
+                      integrity and preventing identity fraud across regional
+                      clinics, integrating seamlessly with the proposed
+                      infrastructure upgrade.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-user text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Dr. Sarah
+                          Chen</span><span
+                          class="text-gray-400">•</span><span>Toronto, CA</span>
+                      </div>
+                    </div>
+                    <div id="ioc5x2"
+                      class="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                      <i
+                        class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                        id="idp1ii"
+                        class="truncate text-text-muted italic w-[130px]">Independent
+                        Proposal</span></div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div><!-- Card 2 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-800 rounded-md">Approved</span>
+                    </div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Open-source Clinic Management Module</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      Developing a free, open-source module for rural clinics to
+                      easily hook into the new national database, reducing
+                      software licensing costs for underfunded facilities.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-building text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Zac
+                          Scott</span><span
+                          class="text-gray-400">•</span><span>London, UK</span>
+                      </div>
+                    </div>
+                    <div id="igkv2v"
+                      class="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                      <i
+                        class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                        id="iw5u6o"
+                        class="truncate text-text-muted italic w-[130px]">Independent
+                        Proposal</span></div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div><!-- Card 3 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded-md">Under
+                        Review</span></div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Solar-Powered Smart Bus Shelters</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      Proposal to retrofit existing public transit stops with
+                      solar panels, providing lighting, real-time tracking
+                      displays, and USB charging stations for commuters.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-user text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Dr Marcus
+                          Wright</span><span
+                          class="text-gray-400">•</span><span>Berlin, DE</span>
+                      </div>
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                          id="imwck4"
+                          class="truncate text-text-muted italic w-[130px]">Independent
+                          Proposal</span></div>
+                    </div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div><!-- Card 4 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 rounded-md">IDEATION</span>
+                    </div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Youth Digital Literacy Workshops</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      A comprehensive curriculum designed for secondary schools
+                      to teach coding fundamentals and online safety, leveraging
+                      diaspora tech professionals as remote mentors.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-building text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Nima Kar</span><span
+                          class="text-gray-400">•</span><span>San Francisco,
+                          US</span></div>
+                    </div>
+                    <div id="iscemh"
+                      class="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                      <i
+                        class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                        id="i0dku8"
+                        class="truncate text-text-muted italic w-[130px]">Independent
+                        Proposal</span></div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div><!-- Card 5 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800 rounded-md">RESOURCING</span>
+                    </div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Diaspora Investment Bond Framework</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      Structural recommendations for creating secure,
+                      government-backed investment bonds specifically tailored
+                      for diaspora members looking to fund infrastructure
+                      projects.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-user text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Elena
+                          Rostova</span><span
+                          class="text-gray-400">•</span><span>New York,
+                          US</span></div>
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                          id="i0g9iq"
+                          class="truncate text-text-muted italic w-[130px]">Independent
+                          Proposal</span></div>
+                    </div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div><!-- Card 6 -->
+                <div
+                  class="bg-white rounded-xl border border-border hover:border-primary hover:shadow-card transition-all flex flex-col h-full group">
+                  <div class="p-5 flex-grow">
+                    <div class="flex items-start justify-between mb-3"><span
+                        class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded-md">Under
+                        Review</span></div>
+                    <h3
+                      class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      Mobile Water Quality Testing Kits</h3>
+                    <p class="text-sm text-text-muted mb-4 line-clamp-3">
+                      Deploying low-cost, smartphone-integrated water testing
+                      kits to rural communities to crowdsource water quality
+                      data and identify contamination hotspots quickly.
+                    </p>
+                    <div class="space-y-2 mt-auto">
+                      <div
+                        class="flex items-center gap-2 text-xs text-gray-600"><i
+                          class="fa-solid fa-building text-gray-400 w-4"></i><span
+                          class="font-medium text-gray-900">Dr Shirin
+                          Sohrabi</span><span
+                          class="text-gray-400">•</span><span>Sydney, AU</span>
+                      </div>
+                    </div>
+                    <div id="iv0hri"
+                      class="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                      <i
+                        class="fa-solid fa-folder-open text-gray-400 w-4"></i><span
+                        id="i984xr"
+                        class="truncate text-text-muted italic w-[130px]">Independent
+                        Proposal</span></div>
+                  </div>
+                  <div
+                    class="p-4 border-t border-border bg-surface/50 rounded-b-xl">
+                    <a href="#"
+                      class="flex items-center justify-between w-full text-sm font-medium text-primary hover:text-blue-800 transition-colors">
+                      View Proposal
+                      <i
+                        class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></a>
+                  </div>
+                </div>
+              </div><!-- Pagination Control -->
+              <div
+                class="mt-12 flex items-center justify-center border-t border-border pt-8">
+                <nav aria-label="Pagination"
+                  class="inline-flex items-center gap-2"><button disabled=""
+                    class="w-10 h-10 flex items-center justify-center rounded-lg border border-border bg-white text-gray-400 hover:text-gray-900 hover:bg-surface transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><i
+                      class="fa-solid fa-chevron-left text-sm"></i></button>
+                  <div class="hidden sm:flex items-center gap-2"><button
+                      class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-medium text-sm transition-colors">1</button><button
+                      class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent text-gray-600 hover:bg-surface font-medium text-sm transition-colors">2</button><button
+                      class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent text-gray-600 hover:bg-surface font-medium text-sm transition-colors">3</button><button
+                      class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent text-gray-600 hover:bg-surface font-medium text-sm transition-colors">4</button><span
+                      class="w-10 h-10 flex items-center justify-center text-gray-400">...</span><button
+                      class="w-10 h-10 flex items-center justify-center rounded-lg border border-transparent text-gray-600 hover:bg-surface font-medium text-sm transition-colors">22</button>
+                  </div><button
+                    class="w-10 h-10 flex items-center justify-center rounded-lg border border-border bg-white text-gray-600 hover:text-gray-900 hover:bg-surface transition-colors"><i
+                      class="fa-solid fa-chevron-right text-sm"></i></button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main><!-- Global Footer -->
+    <footer id="footer"
+      class="bg-white border-t border-border pt-16 pb-8 mt-auto">
+      <div class="max-w-[1200px] mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          <div class="md:col-span-2"><a href="#"
+              class="flex items-center gap-2 text-primary mb-4"><i
+                class="fa-solid fa-globe text-2xl"></i><span
+                class="text-2xl font-bold tracking-tight">Herit</span></a>
+            <p class="text-gray-500 text-sm max-w-sm leading-relaxed">
+              Connecting diaspora expertise with national needs. A secure
+              platform for browsing government RFPs, community proposals, and
+              vital volunteer roles.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-4">Platform</h4>
+            <ul class="space-y-3">
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Browse
+                  RFPs</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Public
+                  Proposals</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">CFEOI
+                  Directory</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-4">Resources</h4>
+            <ul class="space-y-3">
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Submission
+                  Guidelines</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Help
+                  Center</a></li>
+              <li><a href="#"
+                  class="text-sm text-gray-600 hover:text-primary transition-colors">Privacy
+                  Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-gray-500">© 2024 Herit Civic Platform. All
+            rights reserved.</p>
+          <div class="flex items-center gap-4 text-gray-400"><a href="#"
+              class="hover:text-gray-600 transition-colors"><i
+                class="fa-brands fa-twitter"></i></a><a href="#"
+              class="hover:text-gray-600 transition-colors"><i
+                class="fa-brands fa-linkedin"></i></a></div>
+        </div>
+      </div>
+    </footer>
+  </body>
+
+</html>

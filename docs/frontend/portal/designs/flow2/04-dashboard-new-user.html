@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            blue: '#1D4ED8',
+                            light: '#EFF6FF',
+                        },
+                        surface: {
+                            main: '#FFFFFF',
+                            subtle: '#F9FAFB',
+                            border: '#E5E7EB',
+                        },
+                        text: {
+                            main: '#111827',
+                            muted: '#6B7280',
+                        },
+                        status: {
+                            error: '#DC2626',
+                            errorLight: '#FEF2F2',
+                            success: '#10B981',
+                            warning: '#FBBF24',
+                            info: '#3B82F6'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+                        'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="m-0 p-0 bg-surface-subtle min-h-screen font-sans antialiased text-text-main flex flex-col">
+
+    <!-- Top Navigation -->
+    <header id="header" class="bg-surface-main border-b border-surface-border shadow-nav sticky top-0 z-50 h-16 flex items-center justify-between px-6">
+        <!-- Left Nav -->
+        <div class="flex items-center gap-8">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-primary-light rounded-lg flex items-center justify-center border border-primary-blue/10 group-hover:bg-primary-blue/10 transition-colors">
+                    <svg class="w-4 h-4 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m22 4v-4m-9-4h.01M9 20h6a2 2 0 002-2v-8a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2zm3-4v.01M12 8v.01M12 4v.01M4 4h16"></path>
+                    </svg>
+                </div>
+                <span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a>
+                <a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a>
+                <a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a>
+            </nav>
+        </div>
+
+        <!-- Right Nav -->
+        <div class="flex items-center gap-4">
+            <button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2">
+                <i class="fa-solid fa-plus text-xs"></i>
+                Create Proposal
+            </button>
+            
+            <div class="relative group cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm">
+                    <i class="fa-solid fa-chevron-down text-xs text-text-muted group-hover:text-text-main transition-colors"></i>
+                </div>
+                <!-- Dropdown (Hidden by default, shown on hover for demo) -->
+                <div class="absolute right-0 mt-2 w-48 bg-surface-main rounded-xl shadow-card border border-surface-border py-1 hidden group-hover:block z-50">
+                    <a href="#" class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Dashboard</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Proposals</a>
+                    <div class="h-px bg-surface-border my-1"></div>
+                    <a href="#" class="block px-4 py-2 text-sm text-status-error hover:bg-status-errorLight transition-colors">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-1 w-full max-w-[1440px] mx-auto p-6 lg:p-8 flex flex-col gap-6">
+        
+        <!-- Welcome Banner -->
+        <div id="welcome-banner" class="w-full bg-primary-light rounded-[16px] border border-primary-blue/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden shadow-soft">
+            <button class="absolute top-4 right-4 text-text-muted hover:text-text-main transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-6 relative z-10">
+                <div class="hidden md:flex w-16 h-16 rounded-full bg-white items-center justify-center shadow-sm border border-primary-blue/10 shrink-0">
+                    <i class="fa-solid fa-building-columns text-2xl text-primary-blue opacity-80"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-text-main mb-1">Welcome to Herit, Alexander!</h2>
+                    <p class="text-sm text-text-muted max-w-2xl">Your profile is set up. You can now start browsing active Requests for Proposals (RFPs) or submit an Expression of Interest to connect your expertise with civic needs.</p>
+                </div>
+            </div>
+            <div class="flex shrink-0 gap-3 w-full sm:w-auto relative z-10">
+                <button class="flex-1 sm:flex-none bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2.5 px-5 rounded-lg transition-colors shadow-soft">
+                    Browse RFPs
+                </button>
+                <button class="flex-1 sm:flex-none bg-white hover:bg-surface-subtle text-text-main text-sm font-medium py-2.5 px-5 rounded-lg border border-surface-border transition-colors shadow-sm">
+                    Create a Proposal
+                </button>
+            </div>
+            <!-- Decorative background element -->
+            <i class="fa-solid fa-globe absolute -right-10 -bottom-10 text-[180px] text-primary-blue opacity-[0.03] pointer-events-none"></i>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+            
+            <!-- Left Column (2/3) -->
+            <div class="lg:col-span-2 flex flex-col gap-8">
+                
+                <!-- My Proposals Section -->
+                <section id="my-proposals" class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-text-main flex items-center gap-2">
+                            My Proposals
+                            <span class="bg-surface-border text-text-muted text-xs font-medium px-2 py-0.5 rounded-full">0</span>
+                        </h3>
+                    </div>
+                    
+                    <!-- Empty State Card -->
+                    <div class="bg-surface-main rounded-[16px] border-2 border-dashed border-surface-border p-10 flex flex-col items-center justify-center text-center shadow-sm hover:border-primary-blue/30 transition-colors group">
+                        <div class="w-16 h-16 bg-surface-subtle rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-light transition-colors">
+                            <i class="fa-solid fa-file-contract text-2xl text-text-muted group-hover:text-primary-blue transition-colors"></i>
+                        </div>
+                        <h4 class="text-base font-medium text-text-main mb-2">No proposals yet</h4>
+                        <p class="text-sm text-text-muted max-w-sm mb-6">You haven't submitted any proposals. Start by browsing active RFPs or create a new proposal from scratch.</p>
+                        <button class="bg-white hover:bg-surface-subtle text-primary-blue text-sm font-medium py-2 px-4 rounded-lg border border-surface-border shadow-sm transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            Start a Proposal
+                        </button>
+                    </div>
+                </section>
+
+                <!-- My EOIs Section -->
+                <section id="my-eois" class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-text-main flex items-center gap-2">
+                            My Expressions of Interest
+                            <span class="bg-surface-border text-text-muted text-xs font-medium px-2 py-0.5 rounded-full">0</span>
+                        </h3>
+                    </div>
+                    
+                    <!-- Empty State Card -->
+                    <div class="bg-surface-main rounded-[16px] border-2 border-dashed border-surface-border p-10 flex flex-col items-center justify-center text-center shadow-sm hover:border-primary-blue/30 transition-colors group">
+                        <div class="w-16 h-16 bg-surface-subtle rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-light transition-colors">
+                            <i class="fa-solid fa-handshake text-2xl text-text-muted group-hover:text-primary-blue transition-colors"></i>
+                        </div>
+                        <h4 class="text-base font-medium text-text-main mb-2">No EOIs submitted</h4>
+                        <p class="text-sm text-text-muted max-w-sm mb-6">Express your interest in contributing to civic projects by submitting an EOI to the directory.</p>
+                        <button class="bg-white hover:bg-surface-subtle text-primary-blue text-sm font-medium py-2 px-4 rounded-lg border border-surface-border shadow-sm transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            Submit an EOI
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Right Column (1/3) - Sidebar -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                
+                <!-- Profile Summary Card -->
+                <div class="bg-surface-main rounded-[16px] border border-surface-border shadow-card p-6 flex flex-col">
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-surface-subtle">
+                        <div>
+                            <h3 class="text-base font-semibold text-text-main">Alexander Wright</h3>
+                            <p class="text-sm text-text-muted">alexander.w@example.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between py-2 border-b border-surface-border">
+                            <span class="text-sm text-text-muted">Profile Status</span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success">
+                                <i class="fa-solid fa-circle text-[8px]"></i> Complete
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-surface-border">
+                            <span class="text-sm text-text-muted">Member Since</span>
+                            <span class="text-sm font-medium text-text-main">April 2026</span>
+                        </div>
+                    </div>
+                    
+                    <button class="mt-6 w-full bg-surface-subtle hover:bg-surface-border text-text-main text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                        Edit Profile
+                    </button>
+                </div>
+
+                <!-- Quick Links Card -->
+                <div class="bg-surface-main rounded-[16px] border border-surface-border shadow-card p-6 flex flex-col gap-4">
+                    <h3 class="text-base font-semibold text-text-main">Quick Links</h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-subtle transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-surface-subtle flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all">
+                                <i class="fa-solid fa-book-open text-text-muted group-hover:text-primary-blue"></i>
+                            </div>
+                            <span class="text-sm font-medium text-text-main">How to write a Proposal</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-surface-border ml-auto group-hover:text-text-muted"></i>
+                        </a>
+                        <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-subtle transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-surface-subtle flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all">
+                                <i class="fa-solid fa-gavel text-text-muted group-hover:text-primary-blue"></i>
+                            </div>
+                            <span class="text-sm font-medium text-text-main">Civic Guidelines</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-surface-border ml-auto group-hover:text-text-muted"></i>
+                        </a>
+                        <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-subtle transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-surface-subtle flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all">
+                                <i class="fa-solid fa-circle-question text-text-muted group-hover:text-primary-blue"></i>
+                            </div>
+                            <span class="text-sm font-medium text-text-main">Help Center</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-surface-border ml-auto group-hover:text-text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Status Legend (Placeholder for future data) -->
+                <div class="bg-surface-main rounded-[16px] border border-surface-border shadow-card p-6 flex flex-col gap-4">
+                    <h3 class="text-sm font-medium text-text-muted uppercase tracking-wider">Status Legend</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-primary-light text-primary-blue border border-primary-blue/20">Draft</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-warning/10 text-status-warning border border-status-warning/20">Under Review</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">Approved</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-subtle text-text-muted border border-surface-border">Archived</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

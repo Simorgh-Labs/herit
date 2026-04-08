@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Error - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            blue: '#1D4ED8', // Matches reference accent blue
+                            light: '#EFF6FF',
+                        },
+                        surface: {
+                            main: '#FFFFFF',
+                            subtle: '#F9FAFB', // Reference background
+                            border: '#E5E7EB',
+                        },
+                        text: {
+                            main: '#111827',
+                            muted: '#6B7280',
+                        },
+                        status: {
+                            error: '#DC2626',
+                            errorLight: '#FEF2F2'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="m-0 p-0 bg-surface-subtle min-h-screen flex items-center justify-center font-sans antialiased text-text-main selection:bg-primary-blue selection:text-white">
+
+    <!-- Main Centered Container -->
+    <main id="auth-error-container" class="w-full max-w-md mx-auto px-6 py-12 flex flex-col items-center justify-center relative z-10">
+        
+        <!-- Brand Logo (Outside Card) -->
+        <div class="mb-8 flex flex-col items-center">
+            <div class="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center mb-3 shadow-soft border border-primary-blue/10">
+                <svg class="w-6 h-6 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m22 4v-4m-9-4h.01M9 20h6a2 2 0 002-2v-8a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2zm3-4v.01M12 8v.01M12 4v.01M4 4h16"></path>
+                </svg>
+            </div>
+            <span class="text-xl font-bold tracking-tight text-text-main">Herit</span>
+        </div>
+
+        <!-- Inner Card -->
+        <div class="bg-surface-main w-full rounded-[16px] shadow-card p-8 md:p-10 flex flex-col items-center text-center border border-surface-border/50 relative overflow-hidden">
+            
+            <!-- Subtle background decoration -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 50% -20%, #DC2626 0%, transparent 50%);"></div>
+
+            <!-- Error Icon -->
+            <div class="w-16 h-16 rounded-full bg-status-errorLight flex items-center justify-center mb-6 relative z-10">
+                <svg class="w-8 h-8 text-status-error" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+
+            <!-- Error Content -->
+            <div class="relative z-10 w-full mb-8">
+                <h1 class="text-2xl font-semibold text-text-main mb-3">We couldn’t sign you in</h1>
+                <p class="text-sm text-text-muted leading-relaxed mb-4">
+                    There was an issue connecting to your Google account. Please ensure your credentials are correct or try again.
+                </p>
+                <p class="text-sm text-text-muted">
+                    Need assistance? <a href="#" class="text-primary-blue hover:underline font-medium">Visit our Help Center</a>.
+                </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="w-full flex flex-col gap-3 relative z-10">
+                <button class="w-full bg-primary-blue hover:bg-primary-blue/90 text-white font-medium py-3 px-4 rounded-xl transition-colors duration-200 shadow-soft focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2">
+                    Try Again
+                </button>
+                <button class="w-full bg-surface-main hover:bg-surface-subtle text-text-main font-medium py-3 px-4 rounded-xl border border-surface-border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-surface-border focus:ring-offset-2">
+                    Return to Browse
+                </button>
+            </div>
+            
+        </div>
+        
+        <!-- Footer links -->
+        <div class="mt-8 text-center flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-text-muted">
+            <a href="#" class="hover:text-primary-blue transition-colors duration-200 font-medium">Support</a>
+            <span class="hidden sm:inline text-surface-border">•</span>
+            <a href="#" class="hover:text-primary-blue transition-colors duration-200 font-medium">Help Center</a>
+        </div>
+        
+        <div class="mt-8 text-xs text-text-muted/70 text-center">
+            &copy; 2026 Herit Platform. All rights reserved.
+        </div>
+    </main>
+
+</body>
+</html>
