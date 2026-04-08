@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signing In - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            blue: '#1D4ED8', // Matches reference accent blue
+                            light: '#EFF6FF',
+                        },
+                        surface: {
+                            main: '#FFFFFF',
+                            subtle: '#F9FAFB', // Reference background
+                            border: '#E5E7EB',
+                        },
+                        text: {
+                            main: '#111827',
+                            muted: '#6B7280',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 1.5s linear infinite',
+                        'pulse-subtle': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom spinner stroke */
+        .spinner-ring {
+            stroke-dasharray: 150;
+            stroke-dashoffset: 40;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 bg-surface-subtle min-h-screen flex items-center justify-center font-sans antialiased text-text-main selection:bg-primary-blue selection:text-white">
+
+    <!-- Main Centered Container -->
+    <main id="auth-loading-container" class="w-full max-w-md mx-auto px-6 py-12 flex flex-col items-center justify-center relative z-10">
+        
+        <!-- Inner Card (matching reference card style) -->
+        <div class="bg-surface-main w-full rounded-[16px] shadow-card p-10 flex flex-col items-center text-center border border-surface-border/50 relative overflow-hidden">
+            
+            <!-- Subtle background decoration (civic line art vibe) -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 50% -20%, #1D4ED8 0%, transparent 50%);"></div>
+
+            <!-- Brand Header -->
+            <header id="brand-header" class="mb-10 relative z-10">
+                <!-- Herit Logo Mark (Civic line-art style) -->
+                <div class="w-16 h-16 mx-auto bg-primary-light rounded-2xl flex items-center justify-center mb-6 shadow-soft border border-primary-blue/10">
+                    <svg class="w-8 h-8 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m22 4v-4m-9-4h.01M9 20h6a2 2 0 002-2v-8a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2zm3-4v.01M12 8v.01M12 4v.01M4 4h16"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-text-main">Herit</h1>
+                <p class="text-sm text-text-muted mt-1 font-medium">Civic Engagement Platform</p>
+            </header>
+
+            <!-- Loading Animation -->
+            <div id="loading-animation" class="relative w-20 h-20 mb-8 flex items-center justify-center">
+                <!-- Outer subtle ring -->
+                <svg class="absolute inset-0 w-full h-full text-surface-border" viewBox="0 0 50 50">
+                    <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                </svg>
+                <!-- Animated primary ring -->
+                <svg class="absolute inset-0 w-full h-full text-primary-blue animate-spin-slow" viewBox="0 0 50 50">
+                    <circle class="spinner-ring" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                </svg>
+                <!-- Inner pulse -->
+                <div class="w-6 h-6 bg-primary-blue/10 rounded-full animate-pulse-subtle"></div>
+            </div>
+
+            <!-- Status Message Region (Accessible) -->
+            <div id="status-region" role="status" aria-live="polite" class="flex flex-col items-center relative z-10 w-full">
+                <h2 class="text-lg font-semibold text-text-main mb-2">Signing you in</h2>
+                <p class="text-sm text-text-muted max-w-[250px] leading-relaxed">
+                    Securely connecting your Google account to your civic profile...
+                </p>
+            </div>
+
+            <!-- Security Trust Indicator -->
+            <div class="mt-10 flex items-center justify-center gap-2 text-xs text-text-muted/70 font-medium">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Encrypted Connection
+            </div>
+            
+        </div>
+        
+        <!-- Footer links for help (outside the main card to keep it clean) -->
+        <div class="mt-8 text-center">
+            <a href="#" class="text-sm text-text-muted hover:text-primary-blue transition-colors duration-200 font-medium">
+                Having trouble? Visit Help Center
+            </a>
+        </div>
+    </main>
+
+    <!-- Simulated redirect logic for completeness (optional, doesn't execute navigation) -->
+    <script>
+        // Accessibility and visual enhancement script
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusText = document.querySelector('#status-region h2');
+            const messages = [
+                "Signing you in",
+                "Verifying credentials",
+                "Preparing your dashboard"
+            ];
+            let msgIndex = 0;
+
+            // Subtle message rotation to show progress
+            setInterval(() => {
+                msgIndex = (msgIndex + 1) % messages.length;
+                // Add ellipsis animation
+                statusText.innerHTML = `${messages[msgIndex]}<span class="animate-pulse">...</span>`;
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

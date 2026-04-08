@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Detail (Ideation) - Herit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#1D4ED8', // Primary blue
+                            600: '#1e40af',
+                            700: '#1e3a8a',
+                            800: '#172554',
+                            900: '#0f172a',
+                        },
+                        surface: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        status: {
+                            draft: '#64748b',
+                            review: '#3b82f6',
+                            ideation: '#f59e0b',
+                            action: '#1D4ED8',
+                            approved: '#10b981',
+                            rejected: '#ef4444'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface-50 text-surface-800 m-0 p-0 min-h-screen flex flex-col">
+
+    <!-- Authenticated Navigation -->
+    <nav id="top-nav" class="bg-white border-b border-surface-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Left Side: Logo & Links -->
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center gap-2 mr-8">
+                        <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">
+                            H
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-surface-900">Herit</span>
+                    </a>
+                    <div class="hidden md:flex space-x-1">
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-surface-600 hover:text-brand-500 hover:bg-brand-50 transition-colors">Browse RFPs</a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-surface-600 hover:text-brand-500 hover:bg-brand-50 transition-colors">Public Proposals</a>
+                        <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-surface-600 hover:text-brand-500 hover:bg-brand-50 transition-colors">CFEOI Directory</a>
+                    </div>
+                </div>
+
+                <!-- Right Side: CTA & Avatar -->
+                <div class="flex items-center space-x-4">
+                    <button class="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-500 hover:bg-brand-600 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                        <i class="fa-solid fa-plus mr-2 text-xs"></i> Create Proposal
+                    </button>
+                    
+                    <!-- Profile dropdown -->
+                    <div class="relative ml-3">
+                        <div>
+                            <button type="button" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-brand-500 transition-colors" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-9 w-9 rounded-full object-cover shadow-sm" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" alt="User avatar">
+                            </button>
+                        </div>
+                        <!-- Dropdown menu (hidden by default, shown for structure) -->
+                        <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-surface-700 hover:bg-surface-50" role="menuitem" tabindex="-1" id="user-menu-item-0">My Dashboard</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-surface-700 hover:bg-surface-50" role="menuitem" tabindex="-1" id="user-menu-item-1">My Proposals</a>
+                            <div class="border-t border-surface-100 my-1"></div>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Success Banner -->
+            <div id="success-banner" class="mb-6 bg-[#ecfdf5] border border-[#10b981] rounded-lg p-4 flex items-center justify-between shadow-sm relative">
+                <div class="flex items-center gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#10b981] flex items-center justify-center text-white">
+                        <i class="fa-solid fa-check text-sm"></i>
+                    </div>
+                    <p class="text-sm font-medium text-[#065f46]">Proposal created! Your proposal has been saved as Private. Only you can see it until you change the visibility.</p>
+                </div>
+                <button type="button" class="text-[#059669] hover:text-[#047857] p-1 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#10b981] bg-[#ecfdf5]">
+                    <span class="sr-only">Dismiss</span>
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Breadcrumb Header -->
+            <div id="breadcrumb-header" class="mb-6">
+                <nav class="flex text-sm text-surface-500 mb-4" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                        <li class="inline-flex items-center">
+                            <a href="#" class="hover:text-brand-500 transition-colors">My Dashboard</a>
+                        </li>
+                        <li>
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-chevron-right text-[10px] mx-1"></i>
+                                <a href="#" class="hover:text-brand-500 transition-colors ml-1 md:ml-2">My Proposals</a>
+                            </div>
+                        </li>
+                        <li aria-current="page">
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-chevron-right text-[10px] mx-1"></i>
+                                <span class="text-surface-800 font-medium ml-1 md:ml-2">Urban Green Space Revitalization in District 4</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Layout: 2/3 Content, 1/3 Sidebar -->
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- Left Column: Proposal Content (2/3) -->
+                <div class="w-full lg:w-2/3 space-y-6">
+                    
+                    <!-- Title & Short Description -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6 sm:p-8">
+                        <h1 class="text-2xl sm:text-3xl font-bold text-surface-900 tracking-tight mb-4">Urban Green Space Revitalization in District 4</h1>
+                        
+                        <div class="flex items-center gap-2 mb-6 text-sm text-surface-600">
+                            <i class="fa-regular fa-building text-surface-400"></i>
+                            <span class="font-medium">Diaspora Health Network</span>
+                            <span class="text-surface-300 mx-1">•</span>
+                            <span class="text-surface-500">Created Oct 24, 2023</span>
+                        </div>
+
+                        <!-- RFP Context Banner (Optional) -->
+                        <div class="bg-brand-50 border border-brand-200 rounded-lg p-4 flex items-start gap-3 mb-6">
+                            <i class="fa-solid fa-link text-brand-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-sm font-medium text-brand-900">Response to: <a href="#" class="text-brand-600 hover:text-brand-800 hover:underline transition-colors font-semibold">Modernizing Diaspora Health Services</a></p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider">Short Description</h3>
+                            <p class="text-surface-700 text-base leading-relaxed">
+                                A comprehensive initiative to transform unused public lots in District 4 into sustainable community gardens and recreational spaces, promoting physical health and community engagement among diaspora families and local residents.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Long Description (Rich Text Display) -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6 sm:p-8">
+                        <h3 class="text-lg font-semibold text-surface-900 mb-6 border-b border-surface-200 pb-4">Detailed Proposal</h3>
+                        
+                        <div class="prose prose-sm sm:prose-base prose-surface max-w-none text-surface-700 space-y-6">
+                            <h4 class="text-surface-900 font-semibold text-lg mt-6 mb-3">1. Executive Summary</h4>
+                            <p>This proposal outlines a strategic approach to revitalize three major abandoned lots in District 4. By transforming these areas into functional green spaces, we aim to improve air quality, provide safe recreational zones, and foster a stronger sense of community.</p>
+                            
+                            <h4 class="text-surface-900 font-semibold text-lg mt-6 mb-3">2. Objectives</h4>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Convert 15,000 sq ft of unused land into usable park space.</li>
+                                <li>Install 3 community gardens managed by local diaspora volunteers.</li>
+                                <li>Reduce local urban heat island effect by 2% within the first year.</li>
+                            </ul>
+
+                            <h4 class="text-surface-900 font-semibold text-lg mt-6 mb-3">3. Implementation Plan</h4>
+                            <p>The project will be executed in three phases over 18 months, starting with site clearing and soil testing, followed by infrastructure development (pathways, lighting), and concluding with planting and community handover.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar (1/3) -->
+                <div class="w-full lg:w-1/3 space-y-6">
+                    
+                    <!-- Status Card -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6">
+                        <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider mb-4">Current Status</h3>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-[#fef3c7] flex items-center justify-center text-[#f59e0b]">
+                                <i class="fa-regular fa-lightbulb text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-[#fef3c7] text-[#b45309] border border-[#fde68a]">
+                                    Ideation
+                                </span>
+                                <p class="text-xs text-surface-500 mt-1">Proposal is currently being refined.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visibility Card -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider">Visibility</h3>
+                            <button class="text-xs font-medium text-brand-500 hover:text-brand-600 transition-colors">
+                                Change
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-surface-100 flex items-center justify-center text-surface-500">
+                                <i class="fa-solid fa-lock text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-surface-100 text-surface-700 border border-surface-200">
+                                    Private
+                                </span>
+                                <p class="text-xs text-surface-500 mt-1">Only visible to you and reviewers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organisation Card -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6">
+                        <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider mb-4">Associated Organisation</h3>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 flex-shrink-0">
+                                <i class="fa-solid fa-users text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-surface-900">Diaspora Health Network</h4>
+                                <p class="text-xs text-surface-500 mt-1">Civic Organisation • Registered</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Card -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6">
+                        <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider mb-4">Actions</h3>
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-500 hover:bg-brand-600 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                                <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Move to Resourcing
+                            </button>
+                            <button class="w-full flex items-center justify-center px-4 py-2.5 border border-surface-300 text-sm font-medium rounded-lg text-surface-700 bg-white hover:bg-surface-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                                <i class="fa-solid fa-pen mr-2"></i> Edit Proposal
+                            </button>
+                            <div class="pt-2 border-t border-surface-200 mt-2">
+                                <button class="w-full flex items-center justify-center px-4 py-2.5 border border-[#fecaca] text-sm font-medium rounded-lg text-[#dc2626] bg-white hover:bg-[#fef2f2] shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ef4444]">
+                                    <i class="fa-regular fa-trash-can mr-2"></i> Delete Proposal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Volunteer Roles (CFEOIs) Card -->
+                    <div class="bg-white rounded-xl shadow-soft border border-surface-200 p-6">
+                        <h3 class="text-sm font-semibold text-surface-800 uppercase tracking-wider mb-4">Volunteer Roles (CFEOIs)</h3>
+                        <div>
+                            <button disabled class="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-surface-500 bg-surface-100 opacity-50 cursor-not-allowed shadow-sm transition-colors">
+                                Publish a CFEOI
+                            </button>
+                            <p class="text-xs text-surface-500 mt-2 text-center flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-circle-info text-[10px]"></i> Move to Resourcing first
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
