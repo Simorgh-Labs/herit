@@ -3,12 +3,12 @@ import { useIsAuthenticated } from '@azure/msal-react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const isAuthenticated = useIsAuthenticated();
-  const { user, isLoading } = useCurrentUser();
+  const { user, isLoading, isNotFound } = useCurrentUser();
 
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
@@ -18,7 +18,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return null;
   }
 
-  if (user && !user.termsAcceptedAt) {
+  // 404 means authenticated in Entra but not yet registered in Herit
+  if (isNotFound || (user && !user.termsAcceptedAt)) {
     return <Navigate to="/auth/complete-profile" replace />;
   }
 
