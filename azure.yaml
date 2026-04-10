@@ -8,3 +8,8 @@ services:
     project: ./src/Herit.Api
     language: csharp
     host: appservice
+  web:
+    project: ./frontend/portal
+    language: js
+    host: appservice
+    dist: dist
