@@ -43,7 +43,6 @@ param sqlAdminPassword string
 param appUserPassword string
 param appUser string = 'appUser'
 
-@secure()
 @description('Microsoft Entra External ID client ID for the API app registration')
 param entraClientId string
 
@@ -59,7 +58,6 @@ param entraTenantId string
 @description('Microsoft Entra External ID authority base URL, e.g. https://<tenant>.ciamlogin.com')
 param entraAuthority string
 
-@secure()
 @description('Microsoft Entra External ID tenant domain, e.g. <tenant>.onmicrosoft.com')
 param entraTenant string
 var abbrs = loadJsonContent('./abbreviations.json')
@@ -297,3 +295,10 @@ output API_BASE_URL string = useAPIM ? apimApi.outputs.serviceApiUri : api.outpu
 output REACT_APP_WEB_BASE_URL string = web.outputs.SERVICE_WEB_URI
 output USE_APIM bool = useAPIM
 output SERVICE_API_ENDPOINTS array = useAPIM ? [apimApi.outputs.serviceApiUri, api.outputs.SERVICE_API_URI] : []
+
+// Frontend build-time env vars
+output VITE_API_BASE_URL string = '${api.outputs.SERVICE_API_URI}/api/v1'
+output VITE_REDIRECT_URI string = web.outputs.SERVICE_WEB_URI
+output VITE_AZURE_CLIENT_ID string = entraClientId
+output VITE_AZURE_TENANT_NAME string = split(entraTenant, '.')[0]
+output VITE_API_SCOPE string = 'api://${entraClientId}/access_as_user'
