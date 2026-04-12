@@ -10,7 +10,7 @@ export default function AuthErrorPage({ onRetry }: AuthErrorPageProps) {
 
   const handleTryAgain = async () => {
     onRetry?.();
-    await instance.loginRedirect({ scopes: apiScopes });
+    await instance.loginRedirect({ scopes: apiScopes, domainHint: 'google.com' });
   };
 
   const handleReturnToBrowsing = () => {

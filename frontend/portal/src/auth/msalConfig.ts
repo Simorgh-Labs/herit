@@ -1,10 +1,15 @@
 import { Configuration, LogLevel } from '@azure/msal-browser';
 
+const authority: string = import.meta.env.VITE_AZURE_AUTHORITY;
+// Extract the hostname (e.g. "heritdomain.ciamlogin.com") so MSAL knows to trust
+// this non-standard authority domain during endpoint discovery.
+const authorityHost = new URL(authority).hostname;
+
 export const msalConfig: Configuration = {
   auth: {
     clientId: import.meta.env.VITE_AZURE_CLIENT_ID,
-    authority: `https://${import.meta.env.VITE_AZURE_TENANT_NAME}.ciamlogin.com/${import.meta.env.VITE_AZURE_TENANT_NAME}.onmicrosoft.com/`,
-    knownAuthorities: [`${import.meta.env.VITE_AZURE_TENANT_NAME}.ciamlogin.com`],
+    authority,
+    knownAuthorities: [authorityHost],
     redirectUri: import.meta.env.VITE_REDIRECT_URI,
     postLogoutRedirectUri: '/',
   },
