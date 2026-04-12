@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Proposals | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#4B5563',
+                        surface: '#FFFFFF',
+                        background: '#F9FAFB',
+                        border: '#E5E7EB',
+                        brand: '#3B82F6',
+                        status: {
+                            blue: { bg: '#DBEAFE', text: '#1D4ED8' },
+                            amber: { bg: '#FEF3C7', text: '#B45309' },
+                            orange: { bg: '#FFEDD5', text: '#C2410C' },
+                            green: { bg: '#D1FAE5', text: '#047857' },
+                            red: { bg: '#FEE2E2', text: '#B91C1C' },
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F9FAFB; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+    </style>
+</head>
+<body class="font-sans text-primary h-screen flex overflow-hidden bg-background">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-[80px] bg-surface border-r border-border flex flex-col items-center py-6 h-full flex-shrink-0 z-20">
+        <div class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold text-xl mb-8">
+            H
+        </div>
+        
+        <nav class="flex flex-col gap-4 w-full px-3 flex-1">
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-house text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center bg-primary text-white shadow-md group relative">
+                <i class="fa-solid fa-file-lines text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-users text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-chart-simple text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-folder-open text-lg"></i>
+            </a>
+        </nav>
+
+        <div class="flex flex-col gap-4 w-full px-3 mt-auto">
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors">
+                <i class="fa-solid fa-gear text-lg"></i>
+            </a>
+            <button class="w-10 h-10 rounded-full overflow-hidden border-2 border-border mt-2">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" alt="User Profile" class="w-full h-full object-cover">
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 flex h-full overflow-hidden">
+        
+        <!-- Left Column: Proposals List (2/3 width) -->
+        <section id="proposals-list-section" class="flex-1 flex flex-col h-full border-r border-border bg-surface relative z-10">
+            
+            <!-- Header -->
+            <header id="list-header" class="px-8 py-6 border-b border-border flex items-center justify-between bg-surface sticky top-0 z-10">
+                <h1 class="text-2xl font-bold text-primary">My Proposals</h1>
+                
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" placeholder="Search proposals..." class="pl-9 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent w-64 bg-gray-50">
+                    </div>
+                    <button class="px-4 py-2 border border-border rounded-lg text-sm font-medium text-secondary hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i> Sort
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filter Tabs -->
+            <div id="filter-tabs" class="px-8 py-4 border-b border-border bg-gray-50/50">
+                <div class="flex items-center gap-2 bg-gray-100 p-1 rounded-xl w-max">
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium bg-white shadow-sm text-primary transition-all">
+                        All <span class="ml-1.5 text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-md">24</span>
+                    </button>
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-secondary hover:text-primary transition-all">
+                        Resourcing <span class="ml-1.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded-md shadow-sm">8</span>
+                    </button>
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-secondary hover:text-primary transition-all">
+                        Submitted <span class="ml-1.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded-md shadow-sm">5</span>
+                    </button>
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-secondary hover:text-primary transition-all">
+                        Under Review <span class="ml-1.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded-md shadow-sm">3</span>
+                    </button>
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-secondary hover:text-primary transition-all">
+                        Approved <span class="ml-1.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded-md shadow-sm">6</span>
+                    </button>
+                    <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-secondary hover:text-primary transition-all">
+                        Withdrawn <span class="ml-1.5 text-xs text-gray-400 bg-white px-1.5 py-0.5 rounded-md shadow-sm">2</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- List Content -->
+            <div id="proposals-list" class="flex-1 overflow-y-auto p-8 pb-24 bg-gradient-to-b from-transparent to-gray-50/30">
+                
+                <!-- Resourcing Group -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Resourcing</h2>
+                        <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-md">8</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3">
+                        <!-- Card 1 -->
+                        <div class="bg-white border border-border rounded-xl p-5 shadow-card hover:shadow-md transition-shadow cursor-pointer group">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-base font-semibold text-primary group-hover:text-brand transition-colors">Blockchain Identity Verification Pilot</h3>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-status-blue-bg text-status-blue-text whitespace-nowrap">Resourcing</span>
+                            </div>
+                            <p class="text-sm text-secondary mb-4 line-clamp-1">Implementing decentralized identity nodes across 3 regional hospitals.</p>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-clock"></i> 15 Days left
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paperclip"></i> 12 Docs
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-comment"></i> 4
+                                </div>
+                                <div class="ml-auto flex items-center gap-2">
+                                    <div class="flex -space-x-2">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-6 h-6 rounded-full border-2 border-white">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-6 h-6 rounded-full border-2 border-white">
+                                        <div class="w-6 h-6 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-600">+2</div>
+                                    </div>
+                                    <span class="text-gray-400">Team</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-white border border-border rounded-xl p-5 shadow-card hover:shadow-md transition-shadow cursor-pointer group">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-base font-semibold text-primary group-hover:text-brand transition-colors">EHR Interoperability Framework</h3>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-status-blue-bg text-status-blue-text whitespace-nowrap">Resourcing</span>
+                            </div>
+                            <p class="text-sm text-secondary mb-4 line-clamp-1">Standardizing data exchange protocols between legacy systems and new nodes.</p>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-clock"></i> 30 Days left
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paperclip"></i> 8 Docs
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-comment"></i> 1
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submitted Group -->
+                <div class="mb-8 relative">
+                    <div class="absolute -left-8 top-6 bottom-0 w-px bg-gradient-to-b from-gray-200 to-transparent"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Submitted</h2>
+                        <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-md">5</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3">
+                        <!-- Card 3 -->
+                        <div class="bg-white border border-border rounded-xl p-5 shadow-card hover:shadow-md transition-shadow cursor-pointer group">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-base font-semibold text-primary group-hover:text-brand transition-colors">Secure Patient Portal V2</h3>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-status-amber-bg text-status-amber-text whitespace-nowrap">Submitted</span>
+                            </div>
+                            <p class="text-sm text-secondary mb-4 line-clamp-1">Frontend revamp focusing on accessibility and zero-knowledge proof integration.</p>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <div class="flex items-center gap-1.5 text-amber-600">
+                                    <i class="fa-solid fa-check-circle"></i> Submitted 2 days ago
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paperclip"></i> 24 Docs
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-comment"></i> 12
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Under Review Group -->
+                 <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Under Review</h2>
+                        <span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-md">3</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3">
+                        <!-- Card 4 -->
+                        <div class="bg-white border border-border rounded-xl p-5 shadow-card hover:shadow-md transition-shadow cursor-pointer group relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-status-orange-text"></div>
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-base font-semibold text-primary group-hover:text-brand transition-colors">Smart Contract Audit Protocol</h3>
+                                <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-status-orange-bg text-status-orange-text whitespace-nowrap">Under Review</span>
+                            </div>
+                            <p class="text-sm text-secondary mb-4 line-clamp-1">Establishing automated verification for medical record access contracts.</p>
+                            <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-regular fa-calendar"></i> Review ends Oct 15
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-paperclip"></i> 5 Docs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Column: Context Panel (1/3 width) -->
+        <aside id="context-panel" class="w-[400px] bg-background flex flex-col h-full flex-shrink-0 overflow-y-auto border-l border-border shadow-[-4px_0_24px_-10px_rgba(0,0,0,0.05)]">
+            
+            <!-- Panel Header Actions -->
+            <div class="px-6 py-6 flex items-center justify-between sticky top-0 bg-background/95 backdrop-blur-sm z-10 border-b border-transparent">
+                <button class="w-full py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Create New Proposal
+                </button>
+            </div>
+
+            <div class="p-6 pt-2 flex flex-col gap-6">
+                
+                <!-- Quick Stats Widget -->
+                <div class="bg-white rounded-xl border border-border p-5 shadow-card relative overflow-hidden">
+                    <!-- Decorative background gradient -->
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand/10 rounded-full blur-2xl"></div>
+                    
+                    <h3 class="text-sm font-semibold text-primary mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-gray-400"></i> Proposal Overview
+                    </h3>
+                    
+                    <div class="flex items-end gap-3 mb-6">
+                        <span class="text-4xl font-bold text-primary">24</span>
+                        <span class="text-sm text-secondary mb-1">Total Active</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                                <span class="text-secondary">Resourcing</span>
+                            </div>
+                            <span class="font-medium">8</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                                <span class="text-secondary">Submitted</span>
+                            </div>
+                            <span class="font-medium">5</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-orange-500"></div>
+                                <span class="text-secondary">Under Review</span>
+                            </div>
+                            <span class="font-medium">3</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                                <span class="text-secondary">Approved</span>
+                            </div>
+                            <span class="font-medium">6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Feed -->
+                <div class="bg-white rounded-xl border border-border p-5 shadow-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-semibold text-primary flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-gray-400"></i> Recent Activity
+                        </h3>
+                        <button class="text-xs text-brand hover:underline">View All</button>
+                    </div>
+
+                    <div class="relative pl-4 space-y-6 before:absolute before:inset-y-2 before:left-[7px] before:w-px before:bg-gray-200">
+                        
+                        <!-- Activity Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[21px] top-1 w-3.5 h-3.5 rounded-full border-2 border-white bg-status-orange-text"></div>
+                            <p class="text-sm text-primary">Status changed to <span class="font-medium">Under Review</span></p>
+                            <p class="text-xs text-secondary mt-0.5">Smart Contract Audit Protocol</p>
+                            <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                        </div>
+
+                        <!-- Activity Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[21px] top-1 w-3.5 h-3.5 rounded-full border-2 border-white bg-status-blue-text"></div>
+                            <p class="text-sm text-primary">New document uploaded</p>
+                            <p class="text-xs text-secondary mt-0.5">Technical_Specs_v2.pdf by Dr. Smith</p>
+                            <p class="text-xs text-gray-400 mt-1">Yesterday at 14:30</p>
+                        </div>
+
+                        <!-- Activity Item -->
+                        <div class="relative">
+                            <div class="absolute -left-[21px] top-1 w-3.5 h-3.5 rounded-full border-2 border-white bg-gray-300"></div>
+                            <p class="text-sm text-primary">Comment added</p>
+                            <p class="text-xs text-secondary mt-0.5">"Please review section 4.2 regarding compliance."</p>
+                            <p class="text-xs text-gray-400 mt-1">Oct 10, 09:15 AM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources Card -->
+                <div class="bg-gradient-to-br from-[#F5F3FF] to-white rounded-xl border border-[#E0E7FF] p-5 shadow-sm">
+                    <h3 class="text-sm font-semibold text-primary mb-2">Need help with proposals?</h3>
+                    <p class="text-xs text-secondary mb-4 leading-relaxed">Check out our submission guidelines and templates to ensure your proposal meets all platform requirements.</p>
+                    <button class="w-full py-2 bg-white border border-[#E0E7FF] text-[#6366F1] rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                        View Guidelines
+                    </button>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+
+</body>
+</html>

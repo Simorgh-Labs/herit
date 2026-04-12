@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Detail - Under Review | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#111827',
+                        secondary: '#4B5563',
+                        surface: '#FFFFFF',
+                        background: '#F9FAFB',
+                        border: '#E5E7EB',
+                        brand: '#3B82F6',
+                        status: {
+                            blue: { bg: '#DBEAFE', text: '#1D4ED8' },
+                            amber: { bg: '#FEF3C7', text: '#B45309' },
+                            orange: { bg: '#FFEDD5', text: '#C2410C' },
+                            green: { bg: '#D1FAE5', text: '#047857' },
+                            red: { bg: '#FEE2E2', text: '#B91C1C' },
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F9FAFB; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+        
+        /* Timeline styling */
+        .timeline-connector {
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -24px;
+            width: 2px;
+            background-color: #E5E7EB;
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-connector {
+            display: none;
+        }
+    </style>
+</head>
+<body class="font-sans text-primary h-screen flex overflow-hidden bg-background m-0 p-0">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-[80px] bg-surface border-r border-border flex flex-col items-center py-6 h-full flex-shrink-0 z-20">
+        <div class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-bold text-xl mb-8">
+            H
+        </div>
+        
+        <nav class="flex flex-col gap-4 w-full px-3 flex-1">
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-house text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center bg-primary text-white shadow-md group relative">
+                <i class="fa-solid fa-file-lines text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-users text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-chart-simple text-lg"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors group relative">
+                <i class="fa-solid fa-folder-open text-lg"></i>
+            </a>
+        </nav>
+
+        <div class="flex flex-col gap-4 w-full px-3 mt-auto">
+            <a href="#" class="w-12 h-12 rounded-xl flex items-center justify-center text-secondary hover:bg-gray-50 transition-colors">
+                <i class="fa-solid fa-gear text-lg"></i>
+            </a>
+            <button class="w-10 h-10 rounded-full overflow-hidden border-2 border-border mt-2">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" alt="User Profile" class="w-full h-full object-cover">
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 flex h-full overflow-hidden">
+        
+        <!-- Left Column: Proposal Detail (2/3 width) -->
+        <section id="proposal-detail-section" class="flex-1 flex flex-col h-full border-r border-border bg-surface relative z-10 overflow-y-auto">
+            
+            <!-- Header & Breadcrumbs -->
+            <header id="detail-header" class="px-8 py-6 border-b border-border bg-surface sticky top-0 z-10">
+                <div class="flex items-center gap-2 text-sm text-secondary mb-3">
+                    <a href="#" class="hover:text-primary transition-colors">My Proposals</a>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <span class="text-primary font-medium">Blockchain Identity Verification Pilot</span>
+                </div>
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-primary mb-2">Blockchain Identity Verification Pilot</h1>
+                        <p class="text-secondary text-sm max-w-2xl">Implementing decentralized identity nodes across 3 regional hospitals to secure patient records and prevent data fraud.</p>
+                    </div>
+                </div>
+                
+                <!-- Read-only Banner (Under Review) -->
+                <div class="mt-4 bg-status-orange-bg border border-orange-200 rounded-lg p-3 flex items-start gap-3">
+                    <i class="fa-solid fa-magnifying-glass text-status-orange-text mt-0.5"></i>
+                    <div>
+                        <p class="text-sm font-medium text-status-orange-text">Proposal is currently under review</p>
+                        <p class="text-xs text-orange-700 mt-1">The review committee is evaluating your submission. Editing is disabled during this phase.</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Detail Content -->
+            <div class="p-8 space-y-10">
+                
+                <!-- Overview Section -->
+                <section id="overview-section">
+                    <h2 class="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-gray-400"></i> Proposal Overview
+                    </h2>
+                    
+                    <div class="bg-gray-50/50 rounded-xl border border-gray-200 p-6 space-y-6">
+                        <div>
+                            <h3 class="text-sm font-semibold text-primary mb-2">Problem Statement</h3>
+                            <textarea readonly disabled class="w-full bg-transparent text-sm text-secondary leading-relaxed resize-none border-none focus:ring-0 p-0 cursor-not-allowed h-20">Current patient identity verification relies on fragmented, centralized databases susceptible to breaches and discrepancies. This leads to duplicate records, medical errors, and delayed care across regional healthcare networks.</textarea>
+                        </div>
+                        
+                        <div class="w-full h-px bg-border"></div>
+                        
+                        <div>
+                            <h3 class="text-sm font-semibold text-primary mb-2">Proposed Solution</h3>
+                            <textarea readonly disabled class="w-full bg-transparent text-sm text-secondary leading-relaxed resize-none border-none focus:ring-0 p-0 cursor-not-allowed h-20">Deploy a blockchain-based decentralized identifier (DID) system across three pilot hospitals. Patients will control their identity credentials via a secure mobile wallet, granting temporary, verifiable access to healthcare providers without exposing underlying personal data.</textarea>
+                        </div>
+                        
+                        <div class="w-full h-px bg-border"></div>
+                        
+                        <div>
+                            <h3 class="text-sm font-semibold text-primary mb-2">Expected Outcomes</h3>
+                            <ul class="list-disc list-inside text-sm text-secondary space-y-2 opacity-80">
+                                <li>95% reduction in duplicate patient records within the pilot network.</li>
+                                <li>Zero-knowledge proof implementation ensuring compliance with regional health data privacy laws.</li>
+                                <li>Streamlined onboarding for new patients, reducing administrative time by an estimated 40%.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Team & Resourcing Section -->
+                <section id="team-resourcing-section">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-primary flex items-center gap-2">
+                            <i class="fa-solid fa-users-gear text-gray-400"></i> Published CFEOIs
+                        </h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Role Card 1 -->
+                        <div class="bg-gray-50/50 rounded-xl border border-gray-200 p-5 shadow-sm opacity-90">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-primary">Blockchain Architect</h3>
+                                <span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-md font-medium">Published</span>
+                            </div>
+                            <p class="text-xs text-secondary mb-4 line-clamp-2">Experience with Hyperledger Fabric and healthcare compliance required to design the core DID infrastructure.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex -space-x-2">
+                                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-6 h-6 rounded-full border-2 border-white grayscale opacity-70" alt="Team Member">
+                                    <div class="w-6 h-6 rounded-full border-2 border-dashed border-gray-300 bg-gray-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-user text-[10px] text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">15 hrs/wk</span>
+                            </div>
+                        </div>
+
+                        <!-- Role Card 2 -->
+                        <div class="bg-gray-50/50 rounded-xl border border-gray-200 p-5 shadow-sm opacity-90">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-primary">Healthcare Policy Expert</h3>
+                                <span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-md font-medium">Published</span>
+                            </div>
+                            <p class="text-xs text-secondary mb-4 line-clamp-2">Needed to ensure the proposed architecture aligns with current patient privacy regulations and data sharing laws.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex -space-x-2">
+                                    <div class="w-6 h-6 rounded-full border-2 border-dashed border-gray-300 bg-gray-100 flex items-center justify-center">
+                                        <i class="fa-solid fa-user text-[10px] text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">5 hrs/wk</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Documents Section -->
+                <section id="documents-section">
+                    <h2 class="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-paperclip text-gray-400"></i> Supporting Documents
+                    </h2>
+                    
+                    <div class="bg-gray-50/50 rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="flex items-center justify-between p-4 border-b border-gray-200 opacity-90">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-blue-50/50 flex items-center justify-center text-blue-400">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">Technical_Architecture_Draft.pdf</p>
+                                    <p class="text-xs text-gray-500">2.4 MB • Uploaded Oct 12</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 border-b border-gray-200 opacity-90">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-green-50/50 flex items-center justify-center text-green-400">
+                                    <i class="fa-solid fa-file-excel"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">Resource_Allocation_Estimate.xlsx</p>
+                                    <p class="text-xs text-gray-500">1.1 MB • Uploaded Oct 10</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </section>
+
+        <!-- Right Column: Context & Actions Panel (1/3 width) -->
+        <aside id="action-panel" class="w-[400px] bg-background flex flex-col h-full flex-shrink-0 overflow-y-auto border-l border-border shadow-[-4px_0_24px_-10px_rgba(0,0,0,0.05)]">
+            
+            <div class="p-6 flex flex-col gap-6">
+                
+                <!-- Status & Metadata Card (Orange for Under Review) -->
+                <div class="bg-white rounded-xl border border-border shadow-card overflow-hidden">
+                    <!-- Status Banner -->
+                    <div class="bg-status-orange-bg px-5 py-4 border-b border-orange-200 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-status-orange-text animate-pulse"></div>
+                            <span class="text-sm font-semibold text-status-orange-text">Under Review</span>
+                        </div>
+                        <span class="text-xs font-medium text-orange-700 bg-white/80 px-2 py-1 rounded-md shadow-sm">Locked</span>
+                    </div>
+                    
+                    <div class="p-5 space-y-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-secondary">Owner</span>
+                            <div class="flex items-center gap-2">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-5 h-5 rounded-full" alt="Owner">
+                                <span class="font-medium text-primary">Dr. Sarah Jenkins</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-secondary">Submitted On</span>
+                            <span class="font-medium text-primary">Oct 14, 2023</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-secondary">Version</span>
+                            <span class="font-medium text-primary bg-gray-100 px-2 py-0.5 rounded text-xs">v1.2 Final</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Stages / Timeline Component -->
+                <div class="bg-white rounded-xl border border-border p-5 shadow-card">
+                    <h3 class="text-sm font-semibold text-primary mb-4">Review Progress</h3>
+                    
+                    <div class="relative pl-1">
+                        <!-- Timeline Item 1: Submitted (Completed) -->
+                        <div class="relative pl-8 pb-6 timeline-item">
+                            <div class="timeline-connector"></div>
+                            <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-green-100 border-2 border-white flex items-center justify-center z-10">
+                                <i class="fa-solid fa-check text-[10px] text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary">Proposal Submitted</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Oct 14, 2023</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline Item 2: Eligibility Check (Completed) -->
+                        <div class="relative pl-8 pb-6 timeline-item">
+                            <div class="timeline-connector"></div>
+                            <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-green-100 border-2 border-white flex items-center justify-center z-10">
+                                <i class="fa-solid fa-check text-[10px] text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary">Eligibility Check</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Oct 16, 2023</p>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Item 3: Technical Assessment (In Progress - Orange) -->
+                        <div class="relative pl-8 pb-6 timeline-item">
+                            <div class="timeline-connector"></div>
+                            <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-status-orange-bg border-2 border-white flex items-center justify-center z-10 shadow-sm">
+                                <div class="w-2 h-2 rounded-full bg-status-orange-text animate-pulse"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-status-orange-text">Technical Assessment</p>
+                                <p class="text-xs text-secondary mt-1">Reviewing architecture and compliance.</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Started Oct 18, 2023</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline Item 4: Stakeholder Review (Pending) -->
+                        <div class="relative pl-8 timeline-item">
+                            <div class="timeline-connector"></div>
+                            <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center z-10">
+                                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-400">Stakeholder Review</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviewer Notes Preview -->
+                <div class="bg-white rounded-xl border border-border p-5 shadow-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-semibold text-primary">Reviewer Notes</h3>
+                        <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-medium">Visible to Owner</span>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px] font-bold">
+                                    TC
+                                </div>
+                                <span class="text-xs font-medium text-primary">Technical Committee</span>
+                                <span class="text-[10px] text-gray-400 ml-auto">Oct 19</span>
+                            </div>
+                            <p class="text-xs text-secondary leading-relaxed">The DID implementation strategy is solid. Requesting clarification on the fallback mechanism if a node goes offline during patient onboarding.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Stack (View-only utilities) -->
+                <div class="bg-white rounded-xl border border-border p-5 shadow-card space-y-3">
+                    <h3 class="text-sm font-semibold text-primary mb-4">Utilities</h3>
+                    
+                    <button class="w-full py-2.5 bg-white border border-border text-primary rounded-lg font-medium text-sm hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-download"></i> Download Full PDF
+                    </button>
+                    
+                    <button class="w-full py-2.5 bg-white border border-border text-primary rounded-lg font-medium text-sm hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-link"></i> Copy Read-Only Link
+                    </button>
+                </div>
+
+</body>
+</html>
