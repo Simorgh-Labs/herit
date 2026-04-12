@@ -54,7 +54,6 @@ param entraClientSecret string
 @description('Microsoft Entra External ID tenant ID')
 param entraTenantId string
 
-@secure()
 @description('Microsoft Entra External ID authority base URL, e.g. https://<tenant>.ciamlogin.com')
 param entraAuthority string
 
@@ -301,4 +300,5 @@ output VITE_API_BASE_URL string = '${api.outputs.SERVICE_API_URI}/api/v1'
 output VITE_REDIRECT_URI string = web.outputs.SERVICE_WEB_URI
 output VITE_AZURE_CLIENT_ID string = entraClientId
 output VITE_AZURE_TENANT_NAME string = split(entraTenant, '.')[0]
+output VITE_AZURE_AUTHORITY string = '${entraAuthority}/${entraTenant}/'
 output VITE_API_SCOPE string = 'api://${entraClientId}/access_as_user'
