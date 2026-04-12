@@ -62,6 +62,12 @@ param entraTenant string
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
+// Derive the CIAM subdomain from entraAuthority (e.g. "heritdomain" from
+// "https://heritdomain.ciamlogin.com"). This is the ground truth for the
+// CIAM tenant name. entraTenant may use a GUID-based onmicrosoft.com domain
+// (e.g. "72b4b7c4-…onmicrosoft.com") rather than the friendly subdomain,
+// so we must NOT use entraTenant to derive the CIAM subdomain.
+var ciamSubdomain = split(split(entraAuthority, '//')[1], '.')[0]
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -299,6 +305,6 @@ output SERVICE_API_ENDPOINTS array = useAPIM ? [apimApi.outputs.serviceApiUri, a
 output VITE_API_BASE_URL string = '${api.outputs.SERVICE_API_URI}/api/v1'
 output VITE_REDIRECT_URI string = web.outputs.SERVICE_WEB_URI
 output VITE_AZURE_CLIENT_ID string = entraClientId
-output VITE_AZURE_TENANT_NAME string = split(entraTenant, '.')[0]
-output VITE_AZURE_AUTHORITY string = '${entraAuthority}/${entraTenant}/'
+output VITE_AZURE_TENANT_NAME string = ciamSubdomain
+output VITE_AZURE_AUTHORITY string = '${entraAuthority}/${ciamSubdomain}.onmicrosoft.com/'
 output VITE_API_SCOPE string = 'api://${entraClientId}/access_as_user'
