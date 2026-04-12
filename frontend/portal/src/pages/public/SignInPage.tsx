@@ -16,7 +16,7 @@ export default function SignInPage() {
 
   const handleSignIn = async () => {
     try {
-      await instance.loginRedirect({ scopes: apiScopes });
+      await instance.loginRedirect({ scopes: apiScopes, domainHint: 'google.com' });
     } catch (error) {
       console.error('[Herit] loginRedirect failed:', error);
     }
