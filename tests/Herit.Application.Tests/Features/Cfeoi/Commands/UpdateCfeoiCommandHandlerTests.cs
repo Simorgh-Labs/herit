@@ -18,7 +18,7 @@ public class UpdateCfeoiCommandHandlerTests
     }
 
     private static CfeoiEntity CreateCfeoi(Guid id) =>
-        CfeoiEntity.Create(id, "Original Title", "Original Desc", CfeoiResourceType.Human, Guid.NewGuid(), "Dev", "C#", 1);
+        CfeoiEntity.Create(id, "Original Title", "Original Desc", CfeoiResourceType.Human, Guid.NewGuid());
 
     [Fact]
     public async Task Handle_HappyPath_UpdatesFieldsAndCallsUpdateAsync()
@@ -27,9 +27,7 @@ public class UpdateCfeoiCommandHandlerTests
         var cfeoi = CreateCfeoi(id);
         _cfeoiRepository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(cfeoi);
 
-        var command = new UpdateCfeoiCommand(
-            id, "New Title", "New Desc", CfeoiResourceType.NonHuman,
-            "Analyst", "Python", 3, DurationWeeks: 4, Location: "Remote");
+        var command = new UpdateCfeoiCommand(id, "New Title", "New Desc", CfeoiResourceType.NonHuman);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -37,11 +35,6 @@ public class UpdateCfeoiCommandHandlerTests
         Assert.Equal("New Title", cfeoi.Title);
         Assert.Equal("New Desc", cfeoi.Description);
         Assert.Equal(CfeoiResourceType.NonHuman, cfeoi.ResourceType);
-        Assert.Equal("Analyst", cfeoi.RoleTitle);
-        Assert.Equal("Python", cfeoi.Skills);
-        Assert.Equal(3, cfeoi.Slots);
-        Assert.Equal(4, cfeoi.DurationWeeks);
-        Assert.Equal("Remote", cfeoi.Location);
         await _cfeoiRepository.Received(1).UpdateAsync(cfeoi, Arg.Any<CancellationToken>());
     }
 
@@ -51,7 +44,7 @@ public class UpdateCfeoiCommandHandlerTests
         var id = Guid.NewGuid();
         _cfeoiRepository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns((CfeoiEntity?)null);
 
-        var command = new UpdateCfeoiCommand(id, "T", "D", CfeoiResourceType.Human, "R", "S", 1);
+        var command = new UpdateCfeoiCommand(id, "T", "D", CfeoiResourceType.Human);
 
         await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
         await _cfeoiRepository.DidNotReceive().UpdateAsync(Arg.Any<CfeoiEntity>(), Arg.Any<CancellationToken>());

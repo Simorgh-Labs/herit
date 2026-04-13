@@ -64,19 +64,11 @@ export interface Proposal {
 
 export interface Cfeoi {
   id: string;
-  title: string; // Short category label (e.g. "Technical Advisory")
+  title: string;
   description: string;
   resourceType: CfeoiResourceType;
   proposalId: string;
   status: CfeoiStatus;
-  roleTitle: string; // Specific role name (e.g. "Blockchain Architect")
-  skills: string; // Comma-separated
-  slots: number;
-  durationWeeks?: number;
-  location?: string;
-  compensation?: string;
-  deadline?: string; // ISO date string (DateOnly from backend)
-  externalLinks?: string;
 }
 
 export interface Eoi {
@@ -109,14 +101,6 @@ export interface PublishCfeoiRequest {
   description: string;
   resourceType: CfeoiResourceType;
   proposalId: string;
-  roleTitle: string;
-  skills: string;
-  slots: number;
-  durationWeeks?: number;
-  location?: string;
-  compensation?: string;
-  deadline?: string;
-  externalLinks?: string;
 }
 
 export interface SubmitEoiRequest {

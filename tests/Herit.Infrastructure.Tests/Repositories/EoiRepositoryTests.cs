@@ -29,7 +29,7 @@ public class EoiRepositoryTests : IDisposable
         => Eoi.Create(id ?? Guid.NewGuid(), Guid.NewGuid(), "Message", cfeoiId ?? Guid.NewGuid());
 
     private static Cfeoi CreateCfeoi(Guid? id = null, Guid? proposalId = null)
-        => Cfeoi.Create(id ?? Guid.NewGuid(), "Title", "Description", CfeoiResourceType.Human, proposalId ?? Guid.NewGuid(), "Engineer", "C#", 1);
+        => Cfeoi.Create(id ?? Guid.NewGuid(), "Title", "Description", CfeoiResourceType.Human, proposalId ?? Guid.NewGuid());
 
     [Fact]
     public async Task GetByIdAsync_ReturnsEoi_WhenExists()

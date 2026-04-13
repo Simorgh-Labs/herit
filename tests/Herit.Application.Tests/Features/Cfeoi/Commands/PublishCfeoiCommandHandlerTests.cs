@@ -20,7 +20,7 @@ public class PublishCfeoiCommandHandlerTests
     }
 
     private static PublishCfeoiCommand BuildCommand(Guid proposalId) =>
-        new("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId, "Engineer", "C#", 2);
+        new("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId);
 
     [Fact]
     public async Task Handle_HappyPath_ReturnsValidGuidAndCallsAddAsync()
@@ -35,10 +35,7 @@ public class PublishCfeoiCommandHandlerTests
         await _cfeoiRepository.Received(1).AddAsync(
             Arg.Is<CfeoiEntity>(c =>
                 c.Title == "CFEOI Title" &&
-                c.ProposalId == proposalId &&
-                c.RoleTitle == "Engineer" &&
-                c.Skills == "C#" &&
-                c.Slots == 2),
+                c.ProposalId == proposalId),
             Arg.Any<CancellationToken>());
     }
 
