@@ -18,7 +18,7 @@ public class UpdateCfeoiStatusCommandHandlerTests
     }
 
     private static CfeoiEntity CreateOpenCfeoi(Guid id)
-        => CfeoiEntity.Create(id, "Title", "Description", CfeoiResourceType.Human, Guid.NewGuid(), "Engineer", "C#", 1);
+        => CfeoiEntity.Create(id, "Title", "Description", CfeoiResourceType.Human, Guid.NewGuid());
 
     [Fact]
     public async Task Handle_OpenToClosed_CallsUpdateAsyncOnce()

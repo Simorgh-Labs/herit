@@ -7,7 +7,6 @@ import { getProposalById } from '../../api/proposals';
 import { apiScopes } from '../../auth/authScopes';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import StatusBadge from '../../components/StatusBadge';
-import SkillChips from '../../components/SkillChips';
 import SidebarCard from '../../components/SidebarCard';
 
 /** Sign In modal shown when unauthenticated user tries to express interest */
@@ -95,8 +94,8 @@ export default function CfeoiDetailPage() {
   if (isError || !cfeoi) {
     return (
       <div className="max-w-[1200px] mx-auto px-6 py-20 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Role not found</h2>
-        <p className="text-gray-600 mb-6">This role may have been removed or is no longer available.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Opportunity not found</h2>
+        <p className="text-gray-600 mb-6">This opportunity may have been removed or is no longer available.</p>
         <Link to="/cfeois" className="text-brand hover:underline font-medium">← Back to CFEOI Directory</Link>
       </div>
     );
@@ -121,7 +120,7 @@ export default function CfeoiDetailPage() {
               <li aria-current="page">
                 <div className="flex items-center">
                   <svg className="w-3 h-3 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                  <span className="text-gray-900 font-medium truncate max-w-[200px] md:max-w-none">{cfeoi.roleTitle}</span>
+                  <span className="text-gray-900 font-medium truncate max-w-[200px] md:max-w-none">{cfeoi.title}</span>
                 </div>
               </li>
             </ol>
@@ -131,7 +130,7 @@ export default function CfeoiDetailPage() {
 
       <div className="max-w-[1200px] mx-auto px-6 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Role Column */}
+          {/* Main Column */}
           <div className="w-full lg:w-[70%]">
             <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6 shadow-sm">
               <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -140,59 +139,10 @@ export default function CfeoiDetailPage() {
                   {cfeoi.title}
                 </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{cfeoi.roleTitle}</h1>
-              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 pb-6 border-b border-gray-200 mb-6">
-                {cfeoi.location && (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                    <span>{cfeoi.location}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>{cfeoi.slots} {cfeoi.slots === 1 ? 'Slot' : 'Slots'} Available</span>
-                </div>
-                {cfeoi.deadline && (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span>Closes {new Date(cfeoi.deadline).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                  </div>
-                )}
-                {cfeoi.durationWeeks && (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    <span>{cfeoi.durationWeeks} weeks</span>
-                  </div>
-                )}
-              </div>
 
               <div className="prose prose-blue max-w-none text-gray-600">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Role Overview</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Overview</h2>
                 <p className="mb-6 leading-relaxed">{cfeoi.description}</p>
-
-                {cfeoi.skills && (
-                  <>
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Required Skills &amp; Expertise</h2>
-                    <div className="mb-8">
-                      <SkillChips skills={cfeoi.skills} />
-                    </div>
-                  </>
-                )}
-
-                {cfeoi.compensation && (
-                  <>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Compensation</h2>
-                    <p className="mb-6 leading-relaxed">{cfeoi.compensation}</p>
-                  </>
-                )}
               </div>
             </div>
           </div>

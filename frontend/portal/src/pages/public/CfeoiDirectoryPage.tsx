@@ -29,9 +29,8 @@ export default function CfeoiDirectoryPage() {
   const filtered = (cfeois ?? []).filter((c) => {
     const query = search.toLowerCase();
     const matchesSearch =
-      c.roleTitle.toLowerCase().includes(query) ||
-      c.skills.toLowerCase().includes(query) ||
-      c.title.toLowerCase().includes(query);
+      c.title.toLowerCase().includes(query) ||
+      c.description.toLowerCase().includes(query);
     const matchesType = resourceTypeFilter === null || c.resourceType === resourceTypeFilter;
     return matchesSearch && matchesType;
   });
@@ -103,7 +102,7 @@ export default function CfeoiDirectoryPage() {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by role title or skills…"
+                  placeholder="Search by title or description…"
                   className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-lg text-sm focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
                 />
               </div>

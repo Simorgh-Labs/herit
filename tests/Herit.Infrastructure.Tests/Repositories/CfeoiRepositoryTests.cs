@@ -28,10 +28,7 @@ public class CfeoiRepositoryTests : IDisposable
             title,
             "Description",
             CfeoiResourceType.Human,
-            proposalId ?? Guid.NewGuid(),
-            "Engineer",
-            "C#",
-            1);
+            proposalId ?? Guid.NewGuid());
 
     [Fact]
     public async Task GetByIdAsync_ReturnsCfeoi_WhenExists()
