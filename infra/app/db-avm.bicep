@@ -37,6 +37,13 @@ module sqlServer 'br/public:avm/res/sql/server:0.2.0' = {
     databases: [
       {
         name: actualDatabaseName
+        sku: {
+          name: 'GP_S_Gen5_1'
+          tier: 'GeneralPurpose'
+        }
+        kind: 'v12.0,user,vcore,serverless'
+        autoPauseDelay: 60
+        minCapacity: '0.5'
       }
     ]
     firewallRules: [
