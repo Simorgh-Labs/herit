@@ -27,6 +27,13 @@ if (!string.IsNullOrEmpty(keyVaultEndpoint) && !builder.Environment.IsDevelopmen
 
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAd");
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()));
+
 builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg =>
@@ -90,6 +97,7 @@ if (enableSwagger)
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

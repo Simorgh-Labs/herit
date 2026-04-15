@@ -27,10 +27,12 @@ public class OrganisationsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> ListOrganisations(CancellationToken ct)
         => Ok(await _mediator.Send(new ListOrganisationsQuery(), ct));
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetOrganisationById(Guid id, CancellationToken ct)
         => Ok(await _mediator.Send(new GetOrganisationByIdQuery(id), ct));
 

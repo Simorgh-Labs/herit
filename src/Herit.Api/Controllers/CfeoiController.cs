@@ -20,10 +20,12 @@ public class CfeoiController : ControllerBase
     public CfeoiController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> List([FromQuery] CfeoiStatus? status, [FromQuery] Guid? proposalId, CancellationToken ct)
         => Ok(await _mediator.Send(new ListCfeoisQuery(status, proposalId), ct));
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
         => Ok(await _mediator.Send(new GetCfeoiByIdQuery(id), ct));
 
