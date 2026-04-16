@@ -37,13 +37,6 @@ module sqlServer 'br/public:avm/res/sql/server:0.2.0' = {
     databases: [
       {
         name: actualDatabaseName
-        sku: {
-          name: 'GP_S_Gen5_1'
-          tier: 'GeneralPurpose'
-        }
-        kind: 'v12.0,user,vcore,serverless'
-        autoPauseDelay: 60
-        minCapacity: '0.5'
       }
     ]
     firewallRules: [
@@ -54,6 +47,23 @@ module sqlServer 'br/public:avm/res/sql/server:0.2.0' = {
       }
     ]
   }
+}
+
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
+  name: '${sqlServiceName}/${actualDatabaseName}'
+  location: location
+  sku: {
+    name: 'GP_S_Gen5_1'
+    tier: 'GeneralPurpose'
+    capacity: 1
+    family: 'Gen5'
+  }
+  tags: tags
+  properties: {
+    autoPauseDelay: 60
+    minCapacity: json('0.5')
+  }
+  dependsOn: [sqlServer]
 }
 
 module deploymentScript 'br/public:avm/res/resources/deployment-script:0.1.3' = {
