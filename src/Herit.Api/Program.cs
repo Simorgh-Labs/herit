@@ -70,6 +70,7 @@ builder.Services.AddScoped<IAuthorizationHandler, RoleRequirementHandler>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddHostedService<DatabaseMigrationService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -84,12 +85,6 @@ if (enableSwagger)
 }
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<HeritDbContext>();
-    await db.Database.MigrateAsync();
-}
 
 if (enableSwagger)
 {
