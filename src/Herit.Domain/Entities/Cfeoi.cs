@@ -16,6 +16,7 @@ public class Cfeoi
     public CfeoiResourceType ResourceType { get; private set; }
     public Guid ProposalId { get; private set; }
     public CfeoiStatus Status { get; private set; }
+    public string? Tags { get; private set; }
 
     private Cfeoi() { }
 
@@ -24,7 +25,8 @@ public class Cfeoi
         string title,
         string description,
         CfeoiResourceType resourceType,
-        Guid proposalId)
+        Guid proposalId,
+        string? tags = null)
     {
         return new Cfeoi
         {
@@ -34,17 +36,20 @@ public class Cfeoi
             ResourceType = resourceType,
             ProposalId = proposalId,
             Status = CfeoiStatus.Open,
+            Tags = tags,
         };
     }
 
     public void Update(
         string title,
         string description,
-        CfeoiResourceType resourceType)
+        CfeoiResourceType resourceType,
+        string? tags = null)
     {
         Title = title;
         Description = description;
         ResourceType = resourceType;
+        Tags = tags;
     }
 
     public void TransitionStatus(CfeoiStatus newStatus)

@@ -31,13 +31,13 @@ public class CreateRfpCommandHandlerTests
         _organisationRepository.GetByIdAsync(organisationId, Arg.Any<CancellationToken>())
             .Returns(OrganisationEntity.Create(organisationId, "Test Org"));
 
-        var command = new CreateRfpCommand("Title", "Short", organisationId, "Long") with { AuthorId = authorId };
+        var command = new CreateRfpCommand("Title", "Short", organisationId, "Long", "heritage,culture") with { AuthorId = authorId };
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result);
         await _rfpRepository.Received(1).AddAsync(
-            Arg.Is<RfpEntity>(r => r.Title == "Title" && r.AuthorId == authorId && r.OrganisationId == organisationId),
+            Arg.Is<RfpEntity>(r => r.Title == "Title" && r.AuthorId == authorId && r.OrganisationId == organisationId && r.Tags == "heritage,culture"),
             Arg.Any<CancellationToken>());
     }
 

@@ -30,6 +30,9 @@ public class CfeoiConfiguration : IEntityTypeConfiguration<Cfeoi>
             .IsRequired()
             .HasConversion<int>();
 
+        builder.Property(c => c.Tags)
+            .HasMaxLength(1024);
+
         builder.HasOne<Proposal>()
             .WithMany()
             .HasForeignKey(c => c.ProposalId)

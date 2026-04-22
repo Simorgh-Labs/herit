@@ -9,7 +9,8 @@ public record CreateRfpCommand(
     string Title,
     string ShortDescription,
     Guid OrganisationId,
-    string LongDescription) : IRequest<Guid>
+    string LongDescription,
+    string? Tags = null) : IRequest<Guid>
 {
     public Guid AuthorId { get; init; }
 }
@@ -41,7 +42,7 @@ public class CreateRfpCommandHandler : IRequestHandler<CreateRfpCommand, Guid>
             throw new NotFoundException($"Organisation '{request.OrganisationId}' does not exist.");
 
         var id = Guid.NewGuid();
-        var rfp = RfpEntity.Create(id, request.Title, request.ShortDescription, request.AuthorId, request.OrganisationId, request.LongDescription);
+        var rfp = RfpEntity.Create(id, request.Title, request.ShortDescription, request.AuthorId, request.OrganisationId, request.LongDescription, request.Tags);
         await _rfpRepository.AddAsync(rfp, cancellationToken);
         return id;
     }

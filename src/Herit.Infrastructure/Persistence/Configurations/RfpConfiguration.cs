@@ -32,5 +32,8 @@ public class RfpConfiguration : IEntityTypeConfiguration<Rfp>
         builder.Property(r => r.Status)
             .IsRequired()
             .HasConversion<int>();
+
+        builder.Property(r => r.Tags)
+            .HasMaxLength(1024);
     }
 }

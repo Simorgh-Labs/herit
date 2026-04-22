@@ -8,7 +8,8 @@ public record UpdateRfpCommand(
     Guid Id,
     string Title,
     string ShortDescription,
-    string LongDescription) : IRequest<Unit>;
+    string LongDescription,
+    string? Tags = null) : IRequest<Unit>;
 
 public class UpdateRfpCommandHandler : IRequestHandler<UpdateRfpCommand, Unit>
 {
@@ -25,7 +26,7 @@ public class UpdateRfpCommandHandler : IRequestHandler<UpdateRfpCommand, Unit>
         if (rfp is null)
             throw new NotFoundException($"Rfp '{request.Id}' does not exist.");
 
-        rfp.Update(request.Title, request.ShortDescription, request.LongDescription);
+        rfp.Update(request.Title, request.ShortDescription, request.LongDescription, request.Tags);
         await _repository.UpdateAsync(rfp, cancellationToken);
         return Unit.Value;
     }

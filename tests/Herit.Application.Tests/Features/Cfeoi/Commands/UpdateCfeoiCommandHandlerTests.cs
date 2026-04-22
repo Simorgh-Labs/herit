@@ -27,7 +27,7 @@ public class UpdateCfeoiCommandHandlerTests
         var cfeoi = CreateCfeoi(id);
         _cfeoiRepository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(cfeoi);
 
-        var command = new UpdateCfeoiCommand(id, "New Title", "New Desc", CfeoiResourceType.NonHuman);
+        var command = new UpdateCfeoiCommand(id, "New Title", "New Desc", CfeoiResourceType.NonHuman, "music,dance");
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -35,6 +35,7 @@ public class UpdateCfeoiCommandHandlerTests
         Assert.Equal("New Title", cfeoi.Title);
         Assert.Equal("New Desc", cfeoi.Description);
         Assert.Equal(CfeoiResourceType.NonHuman, cfeoi.ResourceType);
+        Assert.Equal("music,dance", cfeoi.Tags);
         await _cfeoiRepository.Received(1).UpdateAsync(cfeoi, Arg.Any<CancellationToken>());
     }
 

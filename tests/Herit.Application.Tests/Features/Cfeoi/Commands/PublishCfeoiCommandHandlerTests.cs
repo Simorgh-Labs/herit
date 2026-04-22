@@ -19,8 +19,8 @@ public class PublishCfeoiCommandHandlerTests
         _handler = new PublishCfeoiCommandHandler(_cfeoiRepository, _proposalRepository);
     }
 
-    private static PublishCfeoiCommand BuildCommand(Guid proposalId) =>
-        new("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId);
+    private static PublishCfeoiCommand BuildCommand(Guid proposalId, string? tags = null) =>
+        new("CFEOI Title", "Description", CfeoiResourceType.Human, proposalId, tags);
 
     [Fact]
     public async Task Handle_HappyPath_ReturnsValidGuidAndCallsAddAsync()
@@ -29,13 +29,14 @@ public class PublishCfeoiCommandHandlerTests
         _proposalRepository.GetByIdAsync(proposalId, Arg.Any<CancellationToken>())
             .Returns(ProposalEntity.Create(proposalId, "Title", "Short", Guid.NewGuid(), Guid.NewGuid(), "Long"));
 
-        var result = await _handler.Handle(BuildCommand(proposalId), CancellationToken.None);
+        var result = await _handler.Handle(BuildCommand(proposalId, "heritage,culture"), CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result);
         await _cfeoiRepository.Received(1).AddAsync(
             Arg.Is<CfeoiEntity>(c =>
                 c.Title == "CFEOI Title" &&
-                c.ProposalId == proposalId),
+                c.ProposalId == proposalId &&
+                c.Tags == "heritage,culture"),
             Arg.Any<CancellationToken>());
     }
 
