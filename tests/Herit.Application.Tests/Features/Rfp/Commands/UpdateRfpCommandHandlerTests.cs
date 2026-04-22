@@ -23,13 +23,14 @@ public class UpdateRfpCommandHandlerTests
         var rfp = RfpEntity.Create(id, "Old Title", "Old Short", Guid.NewGuid(), Guid.NewGuid(), "Old Long");
         _repository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(rfp);
 
-        var command = new UpdateRfpCommand(id, "New Title", "New Short", "New Long");
+        var command = new UpdateRfpCommand(id, "New Title", "New Short", "New Long", "music,dance");
         var result = await _handler.Handle(command, CancellationToken.None);
 
         Assert.Equal(MediatR.Unit.Value, result);
         Assert.Equal("New Title", rfp.Title);
         Assert.Equal("New Short", rfp.ShortDescription);
         Assert.Equal("New Long", rfp.LongDescription);
+        Assert.Equal("music,dance", rfp.Tags);
         await _repository.Received(1).UpdateAsync(rfp, Arg.Any<CancellationToken>());
     }
 

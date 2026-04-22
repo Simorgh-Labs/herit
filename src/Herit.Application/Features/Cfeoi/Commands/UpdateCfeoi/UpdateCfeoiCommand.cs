@@ -9,7 +9,8 @@ public record UpdateCfeoiCommand(
     Guid Id,
     string Title,
     string Description,
-    CfeoiResourceType ResourceType) : IRequest<Unit>;
+    CfeoiResourceType ResourceType,
+    string? Tags = null) : IRequest<Unit>;
 
 public class UpdateCfeoiCommandHandler : IRequestHandler<UpdateCfeoiCommand, Unit>
 {
@@ -29,7 +30,8 @@ public class UpdateCfeoiCommandHandler : IRequestHandler<UpdateCfeoiCommand, Uni
         cfeoi.Update(
             request.Title,
             request.Description,
-            request.ResourceType);
+            request.ResourceType,
+            request.Tags);
 
         await _cfeoiRepository.UpdateAsync(cfeoi, cancellationToken);
         return Unit.Value;

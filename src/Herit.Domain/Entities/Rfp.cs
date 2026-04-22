@@ -18,10 +18,11 @@ public class Rfp
     public Guid OrganisationId { get; private set; }
     public string LongDescription { get; private set; } = default!;
     public RfpStatus Status { get; private set; }
+    public string? Tags { get; private set; }
 
     private Rfp() { }
 
-    public static Rfp Create(Guid id, string title, string shortDescription, Guid authorId, Guid organisationId, string longDescription)
+    public static Rfp Create(Guid id, string title, string shortDescription, Guid authorId, Guid organisationId, string longDescription, string? tags = null)
     {
         return new Rfp
         {
@@ -31,15 +32,17 @@ public class Rfp
             AuthorId = authorId,
             OrganisationId = organisationId,
             LongDescription = longDescription,
-            Status = RfpStatus.Draft
+            Status = RfpStatus.Draft,
+            Tags = tags,
         };
     }
 
-    public void Update(string title, string shortDescription, string longDescription)
+    public void Update(string title, string shortDescription, string longDescription, string? tags = null)
     {
         Title = title;
         ShortDescription = shortDescription;
         LongDescription = longDescription;
+        Tags = tags;
     }
 
     public void TransitionStatus(RfpStatus newStatus)

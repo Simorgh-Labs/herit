@@ -10,7 +10,8 @@ public record PublishCfeoiCommand(
     string Title,
     string Description,
     CfeoiResourceType ResourceType,
-    Guid ProposalId) : IRequest<Guid>;
+    Guid ProposalId,
+    string? Tags = null) : IRequest<Guid>;
 
 public class PublishCfeoiCommandHandler : IRequestHandler<PublishCfeoiCommand, Guid>
 {
@@ -35,7 +36,8 @@ public class PublishCfeoiCommandHandler : IRequestHandler<PublishCfeoiCommand, G
             request.Title,
             request.Description,
             request.ResourceType,
-            request.ProposalId);
+            request.ProposalId,
+            request.Tags);
         await _cfeoiRepository.AddAsync(cfeoi, cancellationToken);
         return id;
     }

@@ -121,6 +121,19 @@ export default function RfpDetailPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Project Overview</h2>
                 <p className="mb-6 leading-relaxed">{rfp.longDescription}</p>
               </div>
+
+              {rfp.tags && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {rfp.tags.split(',').map((tag) => tag.trim()).filter(Boolean).map((tag) => (
+                      <span key={tag} className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-md">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Sidebar (30%) */}

@@ -48,6 +48,7 @@ export interface Rfp {
   status: RfpStatus;
   organisationId: string;
   authorId: string;
+  tags?: string;
 }
 
 export interface Proposal {
@@ -69,6 +70,7 @@ export interface Cfeoi {
   resourceType: CfeoiResourceType;
   proposalId: string;
   status: CfeoiStatus;
+  tags?: string;
 }
 
 export interface Eoi {
@@ -101,6 +103,22 @@ export interface PublishCfeoiRequest {
   description: string;
   resourceType: CfeoiResourceType;
   proposalId: string;
+  tags?: string;
+}
+
+export interface CreateRfpRequest {
+  title: string;
+  shortDescription: string;
+  organisationId: string;
+  longDescription: string;
+  tags?: string;
+}
+
+export interface UpdateRfpRequest {
+  title: string;
+  shortDescription: string;
+  longDescription: string;
+  tags?: string;
 }
 
 export interface SubmitEoiRequest {

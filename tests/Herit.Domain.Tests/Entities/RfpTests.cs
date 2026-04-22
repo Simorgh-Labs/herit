@@ -5,8 +5,26 @@ namespace Herit.Domain.Tests.Entities;
 
 public class RfpTests
 {
-    private static Rfp CreateDraftRfp() =>
-        Rfp.Create(Guid.NewGuid(), "Title", "Short", Guid.NewGuid(), Guid.NewGuid(), "Long");
+    private static Rfp CreateDraftRfp(string? tags = null) =>
+        Rfp.Create(Guid.NewGuid(), "Title", "Short", Guid.NewGuid(), Guid.NewGuid(), "Long", tags);
+
+    // Create tests
+
+    [Fact]
+    public void Create_WithTags_SetsTags()
+    {
+        var rfp = CreateDraftRfp(tags: "heritage,culture");
+
+        Assert.Equal("heritage,culture", rfp.Tags);
+    }
+
+    [Fact]
+    public void Create_WithNullTags_TagsIsNull()
+    {
+        var rfp = CreateDraftRfp();
+
+        Assert.Null(rfp.Tags);
+    }
 
     // Update tests
 
@@ -15,11 +33,22 @@ public class RfpTests
     {
         var rfp = CreateDraftRfp();
 
-        rfp.Update("New Title", "New Short", "New Long");
+        rfp.Update("New Title", "New Short", "New Long", "music,dance");
 
         Assert.Equal("New Title", rfp.Title);
         Assert.Equal("New Short", rfp.ShortDescription);
         Assert.Equal("New Long", rfp.LongDescription);
+        Assert.Equal("music,dance", rfp.Tags);
+    }
+
+    [Fact]
+    public void Update_WithNullTags_ClearsTags()
+    {
+        var rfp = CreateDraftRfp(tags: "old-tag");
+
+        rfp.Update("Title", "Short", "Long", null);
+
+        Assert.Null(rfp.Tags);
     }
 
     // TransitionStatus — legal transitions
