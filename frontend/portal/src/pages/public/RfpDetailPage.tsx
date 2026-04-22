@@ -107,7 +107,33 @@ export default function RfpDetailPage() {
               <span className="font-medium text-gray-900">{org.name}</span>
             </div>
           )}
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">{rfp.title}</h1>
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-4">{rfp.title}</h1>
+
+          {rfp.tags && (() => {
+            const tagColors = [
+              'text-blue-800 bg-blue-50 border-blue-200',
+              'text-green-800 bg-green-50 border-green-200',
+              'text-purple-800 bg-purple-50 border-purple-200',
+              'text-orange-800 bg-orange-50 border-orange-200',
+              'text-indigo-800 bg-indigo-50 border-indigo-200',
+            ];
+            const tags = rfp.tags.split(',').map((t) => t.trim()).filter(Boolean);
+            return (
+              <div className="flex flex-wrap items-center gap-2">
+                {tags.map((tag, i) => (
+                  <span
+                    key={tag}
+                    className={`inline-flex items-center px-3 py-1.5 text-sm font-medium border rounded-full ${tagColors[i % tagColors.length]}`}
+                  >
+                    <svg className="w-3 h-3 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M17.707 9.293l-7-7A1 1 0 0010 2H4a2 2 0 00-2 2v6a1 1 0 00.293.707l7 7a1 1 0 001.414 0l6-6a1 1 0 000-1.414z" clipRule="evenodd" />
+                    </svg>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
@@ -121,19 +147,6 @@ export default function RfpDetailPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Project Overview</h2>
                 <p className="mb-6 leading-relaxed">{rfp.longDescription}</p>
               </div>
-
-              {rfp.tags && (
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {rfp.tags.split(',').map((tag) => tag.trim()).filter(Boolean).map((tag) => (
-                      <span key={tag} className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-md">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Right Sidebar (30%) */}
