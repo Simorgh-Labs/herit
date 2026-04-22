@@ -8,6 +8,13 @@ import EmptyState from '../../components/EmptyState';
 
 export default function RfpListPage() {
   const [search, setSearch] = useState('');
+  const [selectedOrgs, setSelectedOrgs] = useState<string[]>([]);
+
+  const toggleOrg = (name: string) => {
+    setSelectedOrgs((prev) =>
+      prev.includes(name) ? prev.filter((o) => o !== name) : [...prev, name]
+    );
+  };
 
   // TODO: replace with server-side filtering once backend supports query parameters
   const { data: rfps, isLoading, isError } = useQuery({
@@ -25,10 +32,12 @@ export default function RfpListPage() {
 
   const filtered = (rfps ?? []).filter((rfp) => {
     const query = search.toLowerCase();
-    return (
+    const matchesSearch =
       rfp.title.toLowerCase().includes(query) ||
-      (orgMap[rfp.organisationId] ?? '').toLowerCase().includes(query)
-    );
+      (orgMap[rfp.organisationId] ?? '').toLowerCase().includes(query);
+    const matchesOrg =
+      selectedOrgs.length === 0 || selectedOrgs.includes(orgMap[rfp.organisationId]);
+    return matchesSearch && matchesOrg;
   });
 
   return (
@@ -70,7 +79,7 @@ export default function RfpListPage() {
                   <h3 className="font-bold text-gray-900">Filters</h3>
                   <button
                     className="text-sm text-brand hover:underline"
-                    onClick={() => setSearch('')}
+                    onClick={() => { setSearch(''); setSelectedOrgs([]); }}
                   >
                     Clear all
                   </button>
@@ -82,6 +91,8 @@ export default function RfpListPage() {
                       <label key={name} className="flex items-center gap-3 cursor-pointer group">
                         <input
                           type="checkbox"
+                          checked={selectedOrgs.includes(name)}
+                          onChange={() => toggleOrg(name)}
                           className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
                         />
                         <span className="text-sm text-gray-600 group-hover:text-gray-900">{name}</span>
