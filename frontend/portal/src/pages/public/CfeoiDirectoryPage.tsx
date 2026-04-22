@@ -3,14 +3,12 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { listCfeois } from '../../api/cfeois';
 import { listProposals } from '../../api/proposals';
-import type { CfeoiResourceType } from '../../types';
 import CfeoiCard from '../../components/CfeoiCard';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
 
 export default function CfeoiDirectoryPage() {
   const [search, setSearch] = useState('');
-  const [resourceTypeFilter, setResourceTypeFilter] = useState<CfeoiResourceType | null>(null);
 
   // TODO: replace with server-side filtering once backend supports query parameters
   const { data: cfeois, isLoading, isError } = useQuery({
@@ -28,11 +26,10 @@ export default function CfeoiDirectoryPage() {
 
   const filtered = (cfeois ?? []).filter((c) => {
     const query = search.toLowerCase();
-    const matchesSearch =
+    return (
       c.title.toLowerCase().includes(query) ||
-      c.description.toLowerCase().includes(query);
-    const matchesType = resourceTypeFilter === null || c.resourceType === resourceTypeFilter;
-    return matchesSearch && matchesType;
+      (c.tags ?? '').toLowerCase().includes(query)
+    );
   });
 
   return (
@@ -59,32 +56,26 @@ export default function CfeoiDirectoryPage() {
           {/* Sidebar Filters */}
           <aside className="w-full lg:w-64 flex-shrink-0">
             <div className="bg-white rounded-xl border border-gray-200 p-5 sticky top-24 shadow-sm">
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Filters</h2>
-
-              {/* Resource Type Filter */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Resource Type</h3>
-                <div className="space-y-2">
-                  {(['Human', 'NonHuman'] as CfeoiResourceType[]).map((type) => (
-                    <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                      <input
-                        type="checkbox"
-                        checked={resourceTypeFilter === type}
-                        onChange={() => setResourceTypeFilter(resourceTypeFilter === type ? null : type)}
-                        className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
-                      />
-                      <span className="text-sm text-gray-700">{type === 'NonHuman' ? 'Non-Human' : type}</span>
-                    </label>
-                  ))}
-                </div>
+              <div className="mb-6 pb-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-900">Filters</h2>
+                <button
+                  onClick={() => setSearch('')}
+                  className="text-sm text-brand hover:underline"
+                >
+                  Clear all
+                </button>
               </div>
 
-              <button
-                onClick={() => { setSearch(''); setResourceTypeFilter(null); }}
-                className="text-sm text-gray-500 hover:text-brand transition-colors"
-              >
-                Clear All Filters
-              </button>
+              {/* Status Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Status</h3>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" checked readOnly className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand" />
+                    <span className="text-sm text-gray-700">Open</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </aside>
 
@@ -102,7 +93,7 @@ export default function CfeoiDirectoryPage() {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by title or description…"
+                  placeholder="Search by title or tags…"
                   className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-lg text-sm focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand outline-none transition-all"
                 />
               </div>
