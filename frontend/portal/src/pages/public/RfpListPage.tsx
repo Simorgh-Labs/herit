@@ -34,7 +34,8 @@ export default function RfpListPage() {
     const query = search.toLowerCase();
     const matchesSearch =
       rfp.title.toLowerCase().includes(query) ||
-      (orgMap[rfp.organisationId] ?? '').toLowerCase().includes(query);
+      (orgMap[rfp.organisationId] ?? '').toLowerCase().includes(query) ||
+      (rfp.tags ?? '').toLowerCase().includes(query);
     const matchesOrg =
       selectedOrgs.length === 0 || selectedOrgs.includes(orgMap[rfp.organisationId]);
     return matchesSearch && matchesOrg;
@@ -60,7 +61,7 @@ export default function RfpListPage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by title or organisation…"
+                placeholder="Search by title, organisation, or tags…"
                 className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-shadow"
               />
             </div>
