@@ -135,28 +135,30 @@ export default function CfeoiDetailPage() {
             <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6 shadow-sm">
               <div className="flex flex-wrap items-center gap-3 mb-4">
                 <StatusBadge type="cfeoi" status={cfeoi.status} />
-                <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-gray-100 text-gray-800 rounded-md">
-                  {cfeoi.title}
-                </span>
               </div>
+
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{cfeoi.title}</h1>
 
               <div className="prose prose-blue max-w-none text-gray-600">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Overview</h2>
-                <p className="mb-6 leading-relaxed">{cfeoi.description}</p>
-              </div>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Role Overview</h2>
+                <p className="mb-8 leading-relaxed">{cfeoi.description}</p>
 
-              {cfeoi.tags && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {cfeoi.tags.split(',').map((tag) => tag.trim()).filter(Boolean).map((tag) => (
-                      <span key={tag} className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-md">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+                {cfeoi.tags && (() => {
+                  const tags = cfeoi.tags.split(',').map((t) => t.trim()).filter(Boolean);
+                  return tags.length > 0 ? (
+                    <>
+                      <h2 className="text-xl font-bold text-gray-900 mb-4">Tags</h2>
+                      <div className="flex flex-wrap gap-3 mb-8">
+                        {tags.map((tag) => (
+                          <span key={tag} className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm font-medium text-gray-700">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  ) : null;
+                })()}
+              </div>
             </div>
           </div>
 
