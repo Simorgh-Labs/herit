@@ -1,16 +1,19 @@
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useIsAuthenticated } from '@azure/msal-react';
 import { useMsal } from '@azure/msal-react';
-import { getProposalById } from '../../api/proposals';
+import { getProposalById, deleteProposal, updateProposalStatus, setProposalVisibility } from '../../api/proposals';
 import { getOrganisationById } from '../../api/organisations';
 import { getRfpById } from '../../api/rfps';
 import { listCfeois } from '../../api/cfeois';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { apiScopes } from '../../auth/authScopes';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import StatusBadge from '../../components/StatusBadge';
 import CfeoiCard from '../../components/CfeoiCard';
 import SidebarCard from '../../components/SidebarCard';
+import type { ProposalVisibility } from '../../types';
 
 const GoogleIcon = () => (
   <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
@@ -21,10 +24,43 @@ const GoogleIcon = () => (
   </svg>
 );
 
+const LockIcon = () => (
+  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+  </svg>
+);
+
+const visibilityConfig: Record<ProposalVisibility, { label: string; description: string; badgeClass: string }> = {
+  Private: {
+    label: 'Private',
+    description: 'Only you can see this',
+    badgeClass: 'bg-gray-100 text-gray-700 border-gray-200',
+  },
+  Shared: {
+    label: 'Shared',
+    description: 'Visible to signed-in users',
+    badgeClass: 'bg-blue-100 text-blue-700 border-blue-200',
+  },
+  Public: {
+    label: 'Public',
+    description: 'Visible to everyone',
+    badgeClass: 'bg-green-100 text-green-700 border-green-200',
+  },
+};
+
 export default function ProposalDetailPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const isAuthenticated = useIsAuthenticated();
   const { instance } = useMsal();
+  const { user: currentUser } = useCurrentUser();
+  const queryClient = useQueryClient();
+
+  const [showSuccessBanner, setShowSuccessBanner] = useState(searchParams.get('created') === 'true');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showVisibilityModal, setShowVisibilityModal] = useState(false);
+  const [pendingVisibility, setPendingVisibility] = useState<ProposalVisibility | ''>('');
 
   const { data: proposal, isLoading, isError } = useQuery({
     queryKey: ['proposals', proposalId],
@@ -44,12 +80,29 @@ export default function ProposalDetailPage() {
     enabled: !!proposal?.rfpId,
   });
 
-  // TODO: replace with server-side filtering once backend supports query parameters
   const { data: cfeois } = useQuery({
     queryKey: ['cfeois'],
     queryFn: () => listCfeois(),
     select: (data) => data.filter((c) => c.status === 'Open' && c.proposalId === proposalId),
     enabled: !!proposalId,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteProposal(proposalId!),
+    onSuccess: () => navigate('/my-proposals'),
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: () => updateProposalStatus(proposalId!, 'Resourcing'),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] }),
+  });
+
+  const visibilityMutation = useMutation({
+    mutationFn: (v: ProposalVisibility) => setProposalVisibility(proposalId!, v),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] });
+      setShowVisibilityModal(false);
+    },
   });
 
   const handleSignIn = async () => {
@@ -82,8 +135,38 @@ export default function ProposalDetailPage() {
     );
   }
 
+  const isOwner = !!currentUser && currentUser.id === proposal.authorId;
+  const visInfo = visibilityConfig[proposal.visibility];
+
   return (
     <div className="w-full pb-16">
+      {/* Success banner */}
+      {showSuccessBanner && (
+        <div className="bg-emerald-50 border-b border-emerald-200 px-6 py-3">
+          <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white flex-shrink-0">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-sm font-medium text-emerald-900">
+                Proposal created! Your proposal has been saved as Private. Only you can see it until you change the visibility.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSuccessBanner(false)}
+              className="text-emerald-600 hover:text-emerald-800 p-1 rounded transition-colors flex-shrink-0"
+              aria-label="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-4">
         <div className="max-w-[1200px] mx-auto px-6">
@@ -114,6 +197,12 @@ export default function ProposalDetailPage() {
             <div className="flex-grow max-w-3xl">
               <div className="flex items-center gap-3 mb-4">
                 <StatusBadge type="proposal" status={proposal.status} />
+                {isOwner && (
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border ${visInfo.badgeClass}`}>
+                    <LockIcon />
+                    {visInfo.label}
+                  </span>
+                )}
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
                 {proposal.title}
@@ -167,29 +256,128 @@ export default function ProposalDetailPage() {
             {/* Right Sidebar (30%) */}
             <aside className="w-full lg:w-[30%] flex-shrink-0">
               <div className="sticky top-24 space-y-6">
-                {/* Join the Team */}
-                <SidebarCard className="bg-gray-50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-200 text-gray-400">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
+
+                {/* Owner: Actions card */}
+                {isOwner && (
+                  <SidebarCard>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Actions</h3>
+                    <div className="space-y-3">
+                      {proposal.status === 'Ideation' && (
+                        <>
+                          <button
+                            onClick={() => statusMutation.mutate()}
+                            disabled={statusMutation.isPending}
+                            className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-60"
+                          >
+                            Move to Resourcing
+                          </button>
+                          <Link
+                            to={`/proposals/${proposalId}/edit`}
+                            className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                          >
+                            Edit Proposal
+                          </Link>
+                          <div className="pt-2 border-t border-gray-200">
+                            <button
+                              onClick={() => setShowDeleteModal(true)}
+                              className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                            >
+                              Delete Proposal
+                            </button>
+                          </div>
+                        </>
+                      )}
+                      {proposal.status === 'Resourcing' && (
+                        <>
+                          <Link
+                            to={`/proposals/${proposalId}/cfeois/new`}
+                            className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors"
+                          >
+                            Publish a CFEOI
+                          </Link>
+                          <Link
+                            to={`/proposals/${proposalId}/edit`}
+                            className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                          >
+                            Edit Proposal
+                          </Link>
+                        </>
+                      )}
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Join the Team</h3>
-                      <p className="text-xs text-gray-500">Sign in to interact with this proposal</p>
+                  </SidebarCard>
+                )}
+
+                {/* Owner: Visibility card */}
+                {isOwner && (
+                  <SidebarCard>
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Visibility</h3>
+                      <button
+                        onClick={() => {
+                          setPendingVisibility(proposal.visibility);
+                          setShowVisibilityModal(true);
+                        }}
+                        className="text-xs font-medium text-brand hover:text-brand-dark transition-colors"
+                      >
+                        Change
+                      </button>
                     </div>
-                  </div>
-                  {!isAuthenticated && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 flex-shrink-0">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border ${visInfo.badgeClass}`}>
+                          {visInfo.label}
+                        </span>
+                        <p className="text-xs text-gray-500 mt-1">{visInfo.description}</p>
+                      </div>
+                    </div>
+                  </SidebarCard>
+                )}
+
+                {/* Owner: CFEOIs card (Ideation — disabled) */}
+                {isOwner && proposal.status === 'Ideation' && (
+                  <SidebarCard>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Volunteer Roles (CFEOIs)</h3>
                     <button
-                      onClick={handleSignIn}
-                      className="w-full flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white bg-brand rounded-xl hover:bg-brand-dark transition-colors"
+                      disabled
+                      title="Move to Resourcing first to publish a CFEOI"
+                      className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-gray-400 bg-gray-100 cursor-not-allowed shadow-sm"
                     >
-                      <GoogleIcon />
-                      Sign in with Google
+                      Publish a CFEOI
                     </button>
-                  )}
-                </SidebarCard>
+                    <p className="text-xs text-gray-500 mt-2 text-center">Move to Resourcing first</p>
+                  </SidebarCard>
+                )}
+
+                {/* Non-owner: Join the Team */}
+                {!isOwner && (
+                  <SidebarCard className="bg-gray-50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-200 text-gray-400">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">Join the Team</h3>
+                        <p className="text-xs text-gray-500">Sign in to interact with this proposal</p>
+                      </div>
+                    </div>
+                    {!isAuthenticated && (
+                      <button
+                        onClick={handleSignIn}
+                        className="w-full flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white bg-brand rounded-xl hover:bg-brand-dark transition-colors"
+                      >
+                        <GoogleIcon />
+                        Sign in with Google
+                      </button>
+                    )}
+                  </SidebarCard>
+                )}
 
                 {/* Related CFEOIs */}
                 {cfeois && cfeois.length > 0 && (
@@ -221,6 +409,81 @@ export default function ProposalDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Delete confirmation modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Delete Proposal</h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Are you sure you want to delete <strong>{proposal.title}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteMutation.mutate()}
+                disabled={deleteMutation.isPending}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change visibility modal */}
+      {showVisibilityModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Change Visibility</h2>
+            <div className="space-y-2 mb-6">
+              {(['Private', 'Shared', 'Public'] as ProposalVisibility[]).map((v) => (
+                <label
+                  key={v}
+                  className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${pendingVisibility === v ? 'border-brand bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
+                >
+                  <input
+                    type="radio"
+                    name="visibility"
+                    value={v}
+                    checked={pendingVisibility === v}
+                    onChange={() => setPendingVisibility(v)}
+                    className="mt-0.5 accent-brand"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{v}</p>
+                    <p className="text-xs text-gray-500">{visibilityConfig[v].description}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+            {visibilityMutation.isError && (
+              <p className="text-sm text-red-600 mb-4">Something went wrong. Please try again.</p>
+            )}
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowVisibilityModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => pendingVisibility && visibilityMutation.mutate(pendingVisibility as ProposalVisibility)}
+                disabled={visibilityMutation.isPending || !pendingVisibility}
+                className="px-4 py-2 text-sm font-medium text-white bg-brand border border-transparent rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-60"
+              >
+                {visibilityMutation.isPending ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
