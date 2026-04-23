@@ -23,5 +23,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/auth/complete-profile" replace />;
   }
 
+  // Any other error (e.g. 422, 500) means we cannot verify the user — send to error page
+  if (error) {
+    return <Navigate to="/auth/error" replace />;
+  }
+
   return <>{children}</>;
 }
