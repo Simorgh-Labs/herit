@@ -18,7 +18,7 @@ export default function CompleteProfilePage() {
 
   const mutation = useMutation({
     mutationFn: () =>
-      updateUserProfile(account?.localAccountId ?? '', {
+      updateUserProfile({
         nationality: nationality || undefined,
         location: location || undefined,
         expertiseTags: expertiseTags || undefined,
@@ -81,7 +81,7 @@ export default function CompleteProfilePage() {
                     <input
                       id="email"
                       type="email"
-                      value={account?.username ?? ''}
+                      value={(account?.idTokenClaims?.email as string) ?? account?.username ?? ''}
                       disabled
                       className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-500 text-sm cursor-not-allowed focus:outline-none"
                     />
