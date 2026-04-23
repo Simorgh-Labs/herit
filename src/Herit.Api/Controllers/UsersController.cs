@@ -6,6 +6,7 @@ using Herit.Application.Features.User.Commands.UpdateStaffUser;
 using Herit.Application.Features.User.Commands.UpdateUserProfile;
 using Herit.Application.Features.User.Queries.GetUserById;
 using Herit.Application.Features.User.Queries.ListUsers;
+using Herit.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,25 @@ namespace Herit.Api.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUserService _currentUserService;
 
-    public UsersController(IMediator mediator) => _mediator = mediator;
+    public UsersController(IMediator mediator, ICurrentUserService currentUserService)
+    {
+        _mediator = mediator;
+        _currentUserService = currentUserService;
+    }
+
+    [HttpGet("me")]
+    public async Task<IActionResult> GetMe(CancellationToken ct)
+        => Ok(await _currentUserService.GetCurrentUserAsync(ct));
+
+    [HttpPatch("me/profile")]
+    public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileCommand command, CancellationToken ct)
+    {
+        var user = await _currentUserService.GetCurrentUserAsync(ct);
+        await _mediator.Send(command with { Id = user.Id }, ct);
+        return NoContent();
+    }
 
     [HttpGet]
     [Authorize(Policy = "AdminOrSuperAdmin")]

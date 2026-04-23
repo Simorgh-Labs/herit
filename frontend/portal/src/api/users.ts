@@ -12,5 +12,5 @@ export const getUserById = (id: string): Promise<User> =>
 export const getCurrentUser = (): Promise<User> =>
   apiClient.get('/Users/me').then((r) => r.data);
 
-export const updateUserProfile = (id: string, data: Partial<RegisterExpatRequest>): Promise<void> =>
-  apiClient.patch(`/Users/${id}/profile`, data).then((r) => r.data);
+export const updateUserProfile = (data: Partial<RegisterExpatRequest>): Promise<void> =>
+  apiClient.patch('/Users/me/profile', data).then((r) => r.data);
