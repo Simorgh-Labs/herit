@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const isAuthenticated = useIsAuthenticated();
-  const { user, isLoading, isNotFound } = useCurrentUser();
+  const { user, isLoading, isNotFound, error } = useCurrentUser();
 
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
@@ -21,6 +21,11 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   // 404 means authenticated in Entra but not yet registered in Herit
   if (isNotFound || (user && !user.termsAcceptedAt)) {
     return <Navigate to="/auth/complete-profile" replace />;
+  }
+
+  // Any other error (e.g. 422, 500) means we cannot verify the user — send to error page
+  if (error) {
+    return <Navigate to="/auth/error" replace />;
   }
 
   return <>{children}</>;

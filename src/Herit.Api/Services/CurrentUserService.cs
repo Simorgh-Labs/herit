@@ -30,10 +30,12 @@ public class CurrentUserService : ICurrentUserService
         var claimsPrincipal = _httpContextAccessor.HttpContext?.User
             ?? throw new UnauthorizedAccessException("No HTTP context available.");
 
+        static string? NonEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
+
         var externalId =
-            claimsPrincipal.FindFirst("oid")?.Value
-            ?? claimsPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value
-            ?? claimsPrincipal.FindFirst("sub")?.Value
+            NonEmpty(claimsPrincipal.FindFirst("oid")?.Value)
+            ?? NonEmpty(claimsPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value)
+            ?? NonEmpty(claimsPrincipal.FindFirst("sub")?.Value)
             ?? throw new UnauthorizedAccessException("Subject claim could not be determined.");
 
         var user = await _userRepository.GetByExternalIdAsync(externalId, ct);
