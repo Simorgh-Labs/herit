@@ -26,7 +26,7 @@ export default function CompleteProfilePage() {
         termsAcceptedAt: new Date().toISOString(),
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      await queryClient.refetchQueries({ queryKey: ['currentUser'], type: 'all' });
       navigate('/dashboard', { replace: true });
     },
   });
