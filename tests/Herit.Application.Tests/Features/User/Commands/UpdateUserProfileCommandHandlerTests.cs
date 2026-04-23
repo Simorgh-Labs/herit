@@ -28,7 +28,7 @@ public class UpdateUserProfileCommandHandlerTests
         _userRepository.GetByIdAsync(id, Arg.Any<CancellationToken>()).Returns(user);
         var termsAt = DateTimeOffset.UtcNow;
 
-        var command = new UpdateUserProfileCommand(id, "Australian", "Sydney, AU", "C#,Azure", termsAt);
+        var command = new UpdateUserProfileCommand(id, Nationality: "Australian", Location: "Sydney, AU", ExpertiseTags: "C#,Azure", TermsAcceptedAt: termsAt);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 

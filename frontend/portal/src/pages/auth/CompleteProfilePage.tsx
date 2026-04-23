@@ -19,6 +19,7 @@ export default function CompleteProfilePage() {
   const mutation = useMutation({
     mutationFn: () =>
       updateUserProfile({
+        email: (account?.idTokenClaims?.email as string) || account?.username || undefined,
         nationality: nationality || undefined,
         location: location || undefined,
         expertiseTags: expertiseTags || undefined,

@@ -6,6 +6,7 @@ namespace Herit.Application.Features.User.Commands.UpdateUserProfile;
 
 public record UpdateUserProfileCommand(
     Guid Id,
+    string? Email = null,
     string? Nationality = null,
     string? Location = null,
     string? ExpertiseTags = null,
@@ -27,6 +28,7 @@ public class UpdateUserProfileCommandHandler : IRequestHandler<UpdateUserProfile
             throw new NotFoundException($"User with ID '{request.Id}' was not found.");
 
         user.UpdateProfile(
+            request.Email,
             request.Nationality,
             request.Location,
             request.ExpertiseTags,
