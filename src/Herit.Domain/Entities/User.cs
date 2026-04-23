@@ -51,11 +51,14 @@ public class User
     }
 
     public void UpdateProfile(
+        string? email = null,
         string? nationality = null,
         string? location = null,
         string? expertiseTags = null,
         DateTimeOffset? termsAcceptedAt = null)
     {
+        if (!string.IsNullOrWhiteSpace(email))
+            Email = email;
         Nationality = nationality;
         Location = location;
         ExpertiseTags = expertiseTags;

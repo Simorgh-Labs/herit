@@ -68,7 +68,7 @@ public class UserTests
         var user = User.Create(Guid.NewGuid(), "ext-1", "user@example.com", "Jane Doe", UserRole.Expat);
         var termsAt = DateTimeOffset.UtcNow;
 
-        user.UpdateProfile("Australian", "Sydney, AU", "C#,Azure", termsAt);
+        user.UpdateProfile(nationality: "Australian", location: "Sydney, AU", expertiseTags: "C#,Azure", termsAcceptedAt: termsAt);
 
         Assert.Equal("Australian", user.Nationality);
         Assert.Equal("Sydney, AU", user.Location);
@@ -95,7 +95,7 @@ public class UserTests
     {
         var user = User.Create(Guid.NewGuid(), "ext-1", "user@example.com", "Jane Doe", UserRole.Expat);
 
-        user.UpdateProfile("Australian");
+        user.UpdateProfile(nationality: "Australian");
 
         Assert.Equal("user@example.com", user.Email);
         Assert.Equal("Jane Doe", user.FullName);
