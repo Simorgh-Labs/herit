@@ -112,6 +112,7 @@ module api './app/api-appservice-avm.bicep' = {
       AzureAd__Domain: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant)'
       AzureAd__TenantId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant-id)'
       AzureAd__ClientId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-client-id)'
+      AllowedOrigins__0: web.outputs.SERVICE_WEB_URI
     }
     appInsightResourceId: monitoring.outputs.applicationInsightsResourceId
     allowedOrigins: [web.outputs.SERVICE_WEB_URI]
