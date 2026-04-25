@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publish Success - Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#F9FAFB',
+                        surface: '#FFFFFF',
+                        surfaceHover: '#F9FAFB',
+                        primary: '#3B82F6',
+                        primaryHover: '#2563EB',
+                        textMain: '#111827',
+                        textMuted: '#6B7280',
+                        border: '#E5E7EB',
+                        inputBg: '#F9FAFB',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        infoBanner: '#DBEAFE',
+                        infoBannerText: '#1E40AF',
+                        'primary-blue': '#1D4ED8',
+                        'primary-light': '#EFF6FF',
+                        'surface-main': '#FFFFFF',
+                        'surface-subtle': '#F9FAFB',
+                        'surface-border': '#E5E7EB',
+                        'text-main': '#111827',
+                        'text-muted': '#6B7280',
+                        'status-error': '#DC2626',
+                        'status-errorLight': '#FEF2F2',
+                    },
+                    boxShadow: {
+                        'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                        'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F9FAFB;
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E5E7EB;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #D1D5DB;
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden min-h-screen flex flex-col">
+
+    <!-- Top Navigation -->
+    <header id="header"
+      class="bg-surface-main border-b border-surface-border shadow-nav sticky top-0 z-50 h-16 flex items-center justify-between px-6">
+      <!-- Left Nav -->
+      <div class="flex items-center gap-8"><a href="#"
+          class="flex items-center gap-2 group">
+          <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">
+            H
+          </div><span
+            class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6"><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse
+            RFPs</a><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public
+            Proposals</a><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI
+            Directory</a></nav>
+      </div><!-- Right Nav -->
+      <div class="flex items-center gap-4"><button
+          class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i
+            class="fa-solid fa-plus text-xs"></i>
+          Create Proposal
+        </button>
+        <div class="relative group cursor-pointer">
+          <div class="flex items-center gap-2"><img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+              alt="User Avatar"
+              class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i
+              class="fa-solid fa-chevron-down text-xs text-text-muted group-hover:text-text-main transition-colors"></i>
+          </div>
+          <div
+            class="absolute right-0 mt-2 w-48 bg-surface-main rounded-xl shadow-card border border-surface-border py-1 hidden group-hover:block z-50">
+            <a href="#"
+              class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Dashboard</a>
+            <a href="#"
+              class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Proposals</a>
+            <div class="h-px bg-surface-border my-1"></div><a href="#"
+              class="block px-4 py-2 text-sm text-status-error hover:bg-status-errorLight transition-colors">Sign
+              Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center justify-center min-h-[calc(100vh-140px)]">
+        
+        <div class="w-full max-w-[640px] flex flex-col items-center text-center gap-8">
+            
+            <div id="success-icon" class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center border border-success/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                <i class="fa-solid fa-check text-3xl text-success"></i>
+            </div>
+
+            <div id="success-header" class="flex flex-col gap-3">
+                <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">CFEOI Published Successfully</h1>
+                <p class="text-textMuted text-base max-w-md mx-auto">Your Call for Expression of Interest is now live and accepting applications from the diaspora network.</p>
+            </div>
+
+            <div id="summary-banner" class="w-full bg-infoBanner rounded-xl p-6 text-left border border-infoBannerText/20 shadow-lg mt-4">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/20 border border-success/30 text-success text-xs font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                        Open
+                    </span>
+                    <span class="text-infoBannerText font-medium text-sm">ID: CFE-2026-089</span>
+                </div>
+                
+                <h2 class="text-xl font-bold text-infoBannerText mb-2">Lead System Architect</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-infoBannerText/10">
+                    <div>
+                        <p class="text-infoBannerText/70 text-xs uppercase tracking-wider font-semibold mb-1">Category</p>
+                        <p class="text-infoBannerText font-medium text-sm">Technology & IT</p>
+                    </div>
+                    <div>
+                        <p class="text-infoBannerText/70 text-xs uppercase tracking-wider font-semibold mb-1">Application Deadline</p>
+                        <p class="text-infoBannerText font-medium text-sm">October 15, 2026</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="action-footer" class="flex flex-col sm:flex-row items-center gap-4 w-full mt-4">
+                <a href="#" class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-medium py-3 px-6 rounded-lg transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary">
+                    View CFEOI Details
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </a>
+                <a href="#" class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 bg-surface hover:bg-surfaceHover text-textMain font-medium py-3 px-6 rounded-lg border border-border/50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary">
+                    Return to Proposal
+                </a>
+            </div>
+
+            <nav class="flex text-sm text-textMuted mt-8" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center">
+                        <a href="#" class="hover:text-textMain transition-colors">My Proposals</a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-chevron-right text-[10px] mx-2"></i>
+                            <a href="#" class="hover:text-textMain transition-colors">Digital Health Infrastructure Upgrade</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-chevron-right text-[10px] mx-2"></i>
+                            <span class="text-textMuted">Publish CFEOI</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-chevron-right text-[10px] mx-2"></i>
+                            <span class="text-success font-medium">Success</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+        </div>
+
+    </main>
+
+    <footer id="footer" class="w-full text-center text-xs text-textMuted/50 py-6 mt-auto relative z-10">
+        &copy; 2026 Herit Civic Platform. All rights reserved.
+    </footer>
+
+</body>
+</html>
