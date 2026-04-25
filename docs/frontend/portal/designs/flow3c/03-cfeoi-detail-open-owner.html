@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFEOI Detail - Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#F9FAFB',
+                        surface: '#FFFFFF',
+                        surfaceHover: '#F9FAFB',
+                        primary: '#3B82F6',
+                        primaryHover: '#2563EB',
+                        textMain: '#111827',
+                        textMuted: '#6B7280',
+                        border: '#E5E7EB',
+                        inputBg: '#F9FAFB',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        infoBanner: '#DBEAFE',
+                        infoBannerText: '#1E40AF',
+                        'primary-blue': '#1D4ED8',
+                        'primary-light': '#EFF6FF',
+                        'surface-main': '#FFFFFF',
+                        'surface-subtle': '#F9FAFB',
+                        'surface-border': '#E5E7EB',
+                        'text-main': '#111827',
+                        'text-muted': '#6B7280',
+                        'status-error': '#DC2626',
+                        'status-errorLight': '#FEF2F2',
+                    },
+                    boxShadow: {
+                        'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                        'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F9FAFB;
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E5E7EB;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #D1D5DB;
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden min-h-screen flex flex-col">
+
+    <!-- Top Navigation -->
+    <header id="header"
+      class="bg-surface-main border-b border-surface-border shadow-nav sticky top-0 z-50 h-16 flex items-center justify-between px-6">
+      <!-- Left Nav -->
+      <div class="flex items-center gap-8"><a href="#"
+          class="flex items-center gap-2 group">
+          <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">
+            H
+          </div><span
+            class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6"><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse
+            RFPs</a><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public
+            Proposals</a><a href="#"
+            class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI
+            Directory</a></nav>
+      </div><!-- Right Nav -->
+      <div class="flex items-center gap-4"><button
+          class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i
+            class="fa-solid fa-plus text-xs"></i>
+          Create Proposal
+        </button>
+        <div class="relative group cursor-pointer">
+          <div class="flex items-center gap-2"><img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+              alt="User Avatar"
+              class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i
+              class="fa-solid fa-chevron-down text-xs text-text-muted group-hover:text-text-main transition-colors"></i>
+          </div>
+          <div
+            class="absolute right-0 mt-2 w-48 bg-surface-main rounded-xl shadow-card border border-surface-border py-1 hidden group-hover:block z-50">
+            <a href="#"
+              class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Dashboard</a>
+            <a href="#"
+              class="block px-4 py-2 text-sm text-text-main bg-surface-subtle font-medium">My Proposals</a>
+            <div class="h-px bg-surface-border my-1"></div><a href="#"
+              class="block px-4 py-2 text-sm text-status-error hover:bg-status-errorLight transition-colors">Sign
+              Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Breadcrumb -->
+        <nav class="flex text-sm text-textMuted mb-8" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" class="hover:text-textMain transition-colors">My Proposals</a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-chevron-right text-[10px] mx-2"></i>
+                        <a href="#" class="hover:text-textMain transition-colors">Digital Health Infrastructure Upgrade</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-chevron-right text-[10px] mx-2"></i>
+                        <span class="text-textMain font-medium">Lead System Architect</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Column: Main Content (2/3) -->
+            <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                
+                <!-- Header Section -->
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium">
+                            <span class="w-2 h-2 rounded-full bg-success"></span>
+                            Open
+                        </span>
+                        <span class="text-textMuted text-sm">ID: CFE-2026-089</span>
+                    </div>
+                    
+                    <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect</h1>
+                    
+                    <div class="flex flex-wrap items-center gap-2 mt-2">
+                        <span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium">
+                            <i class="fa-solid fa-layer-group text-textMuted mr-2"></i>
+                            Technology & IT
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium">
+                            <i class="fa-regular fa-user text-textMuted mr-2"></i>
+                            Individual Consultant
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                    <h2 class="text-xl font-bold text-textMain">Role Description</h2>
+                    
+                    <div class="prose prose-invert max-w-none text-textMuted leading-relaxed">
+                        <p class="mb-4">We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure. This role involves working closely with the Ministry of Health and international tech partners to ensure a robust, scalable, and secure system.</p>
+                        
+                        <p class="mb-4"><strong>Key Responsibilities:</strong></p>
+                        <ul class="list-disc pl-5 mb-4 space-y-2">
+                            <li>Design end-to-end architecture for the national health data exchange.</li>
+                            <li>Ensure compliance with international healthcare data standards (HL7, FHIR).</li>
+                            <li>Lead a team of senior developers and data engineers.</li>
+                            <li>Evaluate and select appropriate cloud infrastructure providers.</li>
+                        </ul>
+                        
+                        <p>The ideal candidate will have a strong background in public sector IT transformations and a deep understanding of healthcare informatics.</p>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="mt-4 pt-6 border-t border-border/50">
+                        <h3 class="text-sm font-semibold text-textMain uppercase tracking-wider mb-3">Required Skills</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted hover:text-textMain hover:border-border transition-colors cursor-default">System Architecture</span>
+                            <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted hover:text-textMain hover:border-border transition-colors cursor-default">Cloud Infrastructure</span>
+                            <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted hover:text-textMain hover:border-border transition-colors cursor-default">HL7/FHIR</span>
+                            <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted hover:text-textMain hover:border-border transition-colors cursor-default">Team Leadership</span>
+                            <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted hover:text-textMain hover:border-border transition-colors cursor-default">Healthcare Informatics</span>
+                        </div>
+                    </div>
+                    
+                    <!-- External Links -->
+                    <div class="mt-2 pt-6 border-t border-border/50">
+                        <h3 class="text-sm font-semibold text-textMain uppercase tracking-wider mb-3">Reference Documents</h3>
+                        <div class="flex flex-col gap-2">
+                            <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-primaryHover transition-colors text-sm w-fit">
+                                <i class="fa-solid fa-link text-xs"></i>
+                                Preliminary Architecture Draft (PDF)
+                            </a>
+                            <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-primaryHover transition-colors text-sm w-fit">
+                                <i class="fa-solid fa-link text-xs"></i>
+                                Ministry of Health Digital Strategy 2025-2030
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-textMain mb-6">Role Details</h2>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-6">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-semibold text-textMuted uppercase tracking-wider">Available Slots</span>
+                            <span class="text-textMain font-medium text-lg">1 Position</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-semibold text-textMuted uppercase tracking-wider">Duration</span>
+                            <span class="text-textMain font-medium text-lg">24 Weeks</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-semibold text-textMuted uppercase tracking-wider">Location</span>
+                            <span class="text-textMain font-medium text-lg">Hybrid (Capital City / Remote)</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-semibold text-textMuted uppercase tracking-wider">Compensation</span>
+                            <span class="text-textMain font-medium text-lg">$120,000 - $150,000 USD</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-1 sm:col-span-2 pt-4 border-t border-border/50">
+                            <span class="text-xs font-semibold text-textMuted uppercase tracking-wider">Application Deadline</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                <i class="fa-regular fa-calendar text-primary"></i>
+                                <span class="text-textMain font-medium text-lg">October 15, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Sidebar (1/3) -->
+            <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                
+                <!-- Owner Actions Card -->
+                <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+                    <h3 class="text-lg font-bold text-textMain mb-4">Manage CFEOI</h3>
+                    
+                    <div class="flex flex-col gap-3">
+                        <button class="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-surfaceHover text-textMain font-medium py-2.5 px-4 rounded-lg border border-border/50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-border">
+                            <i class="fa-solid fa-pen text-sm"></i>
+                            Edit Details
+                        </button>
+                        
+                        <button class="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-danger/10 text-danger font-medium py-2.5 px-4 rounded-lg border border-danger/50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-danger">
+                            <i class="fa-solid fa-ban text-sm"></i>
+                            Close CFEOI
+                        </button>
+                    </div>
+                    <p class="text-xs text-textMuted mt-4 text-center">Closing is irreversible and stops new applications.</p>
+                </div>
+
+                <!-- EOI Stats Card -->
+                <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                    <h3 class="text-lg font-bold text-textMain mb-2">Expressions of Interest</h3>
+                    <p class="text-sm text-textMuted mb-6">Current applications received for this role.</p>
+                    
+                    <div class="flex items-end justify-between mb-6">
+                        <div class="flex flex-col">
+                            <span class="text-4xl font-bold text-textMain leading-none">12</span>
+                            <span class="text-sm text-textMuted mt-1">Total Received</span>
+                        </div>
+                        <div class="flex -space-x-2">
+                            <img class="w-8 h-8 rounded-full border-2 border-surface object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" alt="Applicant">
+                            <img class="w-8 h-8 rounded-full border-2 border-surface object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Applicant">
+                            <img class="w-8 h-8 rounded-full border-2 border-surface object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Applicant">
+                            <div class="w-8 h-8 rounded-full border-2 border-surface bg-inputBg flex items-center justify-center text-xs font-medium text-textMuted">+9</div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-medium py-2.5 px-4 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary">
+                        View All EOIs
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- Parent Proposal Card -->
+                <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                    <h3 class="text-sm font-semibold text-textMuted uppercase tracking-wider mb-4">Part of Proposal</h3>
+                    
+                    <div class="flex flex-col gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-inputBg border border-border/50 flex items-center justify-center text-primary">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-bold text-textMain mb-1">Digital Health Infrastructure Upgrade</h4>
+                            <p class="text-sm text-textMuted mb-4">Ministry of Health • Ref: PRJ-2026-04</p>
+                        </div>
+                        
+                        <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-primaryHover transition-colors text-sm font-medium w-fit">
+                            View Parent Proposal
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer id="footer" class="w-full text-center text-xs text-textMuted/50 py-6 mt-auto relative z-10 border-t border-border/50 bg-background">
+        &copy; 2026 Herit Civic Platform. All rights reserved.
+    </footer>
+
+</body>
+</html>

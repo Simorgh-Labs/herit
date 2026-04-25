@@ -16,11 +16,8 @@ export default function AuthLoadingPage() {
 
           {/* Brand */}
           <header className="mb-10 relative z-10">
-            <div className="w-16 h-16 mx-auto bg-brand-light rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-brand/10">
-              <svg className="w-8 h-8 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M3 21v-4m0 0h4m-4 0l4-4m14 4v-4m0 4h-4m4 0l-4-4M9 20h6a2 2 0 002-2v-8a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2zm3-4v.01M12 8V7m0-3v.01M4 4h16" />
-              </svg>
+            <div className="w-16 h-16 mx-auto bg-brand rounded-2xl flex items-center justify-center text-white font-bold text-5xl shadow-sm mb-6">
+              H
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">Herit</h1>
             <p className="text-sm text-gray-500 mt-1 font-medium">Civic Engagement Platform</p>

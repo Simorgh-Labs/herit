@@ -7,8 +7,8 @@ import { useCurrentUser } from '../../hooks/useCurrentUser';
 
 const HeritLogo = () => (
   <Link to="/" className="flex items-center gap-2 group">
-    <div className="w-8 h-8 bg-brand-light rounded-lg flex items-center justify-center border border-blue-200 group-hover:bg-blue-100 transition-colors">
-      <span className="text-brand font-bold text-sm">H</span>
+    <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">
+      H
     </div>
     <span className="text-lg font-bold tracking-tight text-gray-900 group-hover:text-brand transition-colors">
       Herit
