@@ -48,6 +48,8 @@ const visibilityConfig: Record<ProposalVisibility, { label: string; description:
   },
 };
 
+const STATUSES_WITH_VISIBILITY_CONTROL = new Set(['Ideation', 'Resourcing', 'Approved']);
+
 export default function ProposalDetailPage() {
   const { proposalId } = useParams<{ proposalId: string }>();
   const [searchParams] = useSearchParams();
@@ -60,6 +62,8 @@ export default function ProposalDetailPage() {
   const [showSuccessBanner, setShowSuccessBanner] = useState(searchParams.get('created') === 'true');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showVisibilityModal, setShowVisibilityModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [withdrawConfirmed, setWithdrawConfirmed] = useState(false);
   const [pendingVisibility, setPendingVisibility] = useState<ProposalVisibility | ''>('');
 
   const { data: proposal, isLoading, isError } = useQuery({
@@ -92,9 +96,23 @@ export default function ProposalDetailPage() {
     onSuccess: () => navigate('/my-proposals'),
   });
 
-  const statusMutation = useMutation({
+  const moveToResourcingMutation = useMutation({
     mutationFn: () => updateProposalStatus(proposalId!, 'Resourcing'),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] }),
+  });
+
+  const submitMutation = useMutation({
+    mutationFn: () => updateProposalStatus(proposalId!, 'Submitted'),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] }),
+  });
+
+  const withdrawMutation = useMutation({
+    mutationFn: () => updateProposalStatus(proposalId!, 'Withdrawn'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['proposals', proposalId] });
+      setShowWithdrawModal(false);
+      setWithdrawConfirmed(false);
+    },
   });
 
   const visibilityMutation = useMutation({
@@ -137,6 +155,7 @@ export default function ProposalDetailPage() {
 
   const isOwner = !!currentUser && currentUser.id === proposal.authorId;
   const visInfo = visibilityConfig[proposal.visibility];
+  const showVisibilityCard = isOwner && STATUSES_WITH_VISIBILITY_CONTROL.has(proposal.status);
 
   return (
     <div className="w-full pb-16">
@@ -258,57 +277,138 @@ export default function ProposalDetailPage() {
               <div className="sticky top-24 space-y-6">
 
                 {/* Owner: Actions card */}
-                {isOwner && (
+                {isOwner && proposal.status === 'Ideation' && (
                   <SidebarCard>
                     <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Actions</h3>
                     <div className="space-y-3">
-                      {proposal.status === 'Ideation' && (
-                        <>
-                          <button
-                            onClick={() => statusMutation.mutate()}
-                            disabled={statusMutation.isPending}
-                            className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-60"
-                          >
-                            Move to Resourcing
-                          </button>
-                          <Link
-                            to={`/proposals/${proposalId}/edit`}
-                            className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
-                          >
-                            Edit Proposal
-                          </Link>
-                          <div className="pt-2 border-t border-gray-200">
-                            <button
-                              onClick={() => setShowDeleteModal(true)}
-                              className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
-                            >
-                              Delete Proposal
-                            </button>
-                          </div>
-                        </>
-                      )}
-                      {proposal.status === 'Resourcing' && (
-                        <>
-                          <Link
-                            to={`/proposals/${proposalId}/cfeois/new`}
-                            className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors"
-                          >
-                            Publish a CFEOI
-                          </Link>
-                          <Link
-                            to={`/proposals/${proposalId}/edit`}
-                            className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
-                          >
-                            Edit Proposal
-                          </Link>
-                        </>
-                      )}
+                      <button
+                        onClick={() => moveToResourcingMutation.mutate()}
+                        disabled={moveToResourcingMutation.isPending}
+                        className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-60"
+                      >
+                        Move to Resourcing
+                      </button>
+                      <Link
+                        to={`/proposals/${proposalId}/edit`}
+                        className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                      >
+                        Edit Proposal
+                      </Link>
+                      <div className="pt-2 border-t border-gray-200">
+                        <button
+                          onClick={() => setShowDeleteModal(true)}
+                          className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                        >
+                          Delete Proposal
+                        </button>
+                      </div>
                     </div>
                   </SidebarCard>
                 )}
 
-                {/* Owner: Visibility card */}
-                {isOwner && (
+                {isOwner && proposal.status === 'Resourcing' && (
+                  <SidebarCard>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Actions</h3>
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => submitMutation.mutate()}
+                        disabled={submitMutation.isPending}
+                        className="w-full flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand hover:bg-brand-dark shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-60"
+                      >
+                        {submitMutation.isPending ? 'Submitting...' : 'Submit to Organisation'}
+                      </button>
+                      <Link
+                        to={`/proposals/${proposalId}/edit`}
+                        className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                      >
+                        Edit Proposal
+                      </Link>
+                      <Link
+                        to={`/proposals/${proposalId}/cfeois/new`}
+                        className="w-full flex items-center justify-center px-4 py-2.5 border border-brand/30 text-sm font-medium rounded-lg text-brand bg-brand-light hover:bg-brand/10 shadow-sm transition-colors"
+                      >
+                        Publish a CFEOI
+                      </Link>
+                      <div className="pt-2 border-t border-gray-200">
+                        <button
+                          onClick={() => setShowDeleteModal(true)}
+                          className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                        >
+                          Delete Proposal
+                        </button>
+                      </div>
+                    </div>
+                  </SidebarCard>
+                )}
+
+                {isOwner && proposal.status === 'Submitted' && (
+                  <SidebarCard>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Actions</h3>
+                    <button
+                      onClick={() => setShowWithdrawModal(true)}
+                      className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                    >
+                      Withdraw Proposal
+                    </button>
+                  </SidebarCard>
+                )}
+
+                {isOwner && proposal.status === 'UnderReview' && (
+                  <SidebarCard>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-4 h-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-orange-700 mb-1">Under Review</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                          Your proposal is currently being reviewed by the organisation. No changes can be made at this time.
+                        </p>
+                      </div>
+                    </div>
+                  </SidebarCard>
+                )}
+
+                {isOwner && proposal.status === 'Approved' && (
+                  <SidebarCard>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-emerald-700 mb-1">Proposal Approved</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                          Congratulations! Your proposal has been approved by the organisation.
+                        </p>
+                      </div>
+                    </div>
+                  </SidebarCard>
+                )}
+
+                {isOwner && proposal.status === 'Withdrawn' && (
+                  <SidebarCard>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700 mb-1">Proposal Withdrawn</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                          This proposal has been withdrawn and is kept as a historical record. No further actions are available.
+                        </p>
+                      </div>
+                    </div>
+                  </SidebarCard>
+                )}
+
+                {/* Owner: Visibility card — only for statuses that allow it */}
+                {showVisibilityCard && (
                   <SidebarCard>
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Visibility</h3>
@@ -431,6 +531,59 @@ export default function ProposalDetailPage() {
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
               >
                 {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Withdraw confirmation modal */}
+      {showWithdrawModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden">
+            <div className="px-6 pt-6 pb-4 flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4 border border-red-100">
+                <svg className="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">Withdraw proposal?</h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                This action will remove the proposal from active review and resourcing. It will be kept as a historical record, but cannot be reactivated.
+              </p>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 border-y border-gray-200">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={withdrawConfirmed}
+                  onChange={(e) => setWithdrawConfirmed(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-brand border-gray-300 rounded"
+                />
+                <span className="text-sm text-gray-700">
+                  I understand that withdrawing this proposal is a permanent action and cannot be undone.
+                </span>
+              </label>
+            </div>
+            {withdrawMutation.isError && (
+              <p className="text-sm text-red-600 px-6 pt-4">Something went wrong. Please try again.</p>
+            )}
+            <div className="px-6 py-4 flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowWithdrawModal(false);
+                  setWithdrawConfirmed(false);
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => withdrawMutation.mutate()}
+                disabled={!withdrawConfirmed || withdrawMutation.isPending}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
+              >
+                {withdrawMutation.isPending ? 'Withdrawing...' : 'Withdraw Proposal'}
               </button>
             </div>
           </div>
