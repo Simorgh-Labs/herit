@@ -166,8 +166,8 @@
                 
                 <section id="role-identity" class="flex flex-col gap-5 border-b border-border/50 pb-8">
                     <div>
-                        <h2 class="text-lg font-semibold text-textMain">Role Identity</h2>
-                        <p class="text-sm text-textMuted mt-1">Basic information about the role you are publishing.</p>
+                        <h2 id="role-identity-heading" class="text-lg font-semibold text-textMain">Role Identity</h2>
+                        <p id="role-identity-desc" class="text-sm text-textMuted mt-1">Basic information about the role you are publishing.</p>
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -176,37 +176,37 @@
                             <input type="text" placeholder="e.g. Lead System Architect Search" class="w-full bg-inputBg border border-border/50 rounded-lg py-3 px-4 text-lg font-semibold text-textMain placeholder-textMuted/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                         </div>
 
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-sm font-medium text-textMain">Role Title</label>
-                            <input type="text" placeholder="e.g. Lead System Architect" class="w-full bg-inputBg border border-border/50 rounded-lg py-2.5 px-4 text-sm text-textMain placeholder-textMuted/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-                        </div>
-
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-textMain">Resource Type</label>
                             <div class="flex flex-wrap gap-4">
                                 <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="radio" name="resource_type" class="hidden peer" checked>
+                                    <input type="radio" name="resource_type" id="resource-type-human" class="hidden peer" checked onchange="updateResourceTypeFraming()">
                                     <div class="w-4 h-4 rounded-full border border-border/50 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
                                         <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                                     </div>
-                                    <span class="text-sm text-textMuted group-hover:text-textMain peer-checked:text-textMain transition-colors">Individual Expert</span>
+                                    <span class="text-sm text-textMuted group-hover:text-textMain peer-checked:text-textMain transition-colors">Human <span class="text-textMuted/70">(skills & expertise)</span></span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="radio" name="resource_type" class="hidden peer">
+                                    <input type="radio" name="resource_type" id="resource-type-non-human" class="hidden peer" onchange="updateResourceTypeFraming()">
                                     <div class="w-4 h-4 rounded-full border border-border/50 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-colors">
                                         <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                                     </div>
-                                    <span class="text-sm text-textMuted group-hover:text-textMain peer-checked:text-textMain transition-colors">Advisory Firm</span>
+                                    <span class="text-sm text-textMuted group-hover:text-textMain peer-checked:text-textMain transition-colors">Non-Human <span class="text-textMuted/70">(infrastructure, real estate, equipment, financial support)</span></span>
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label id="role-title-label" class="text-sm font-medium text-textMain">Role Title</label>
+                            <input id="role-title-input" type="text" placeholder="e.g. Lead System Architect" class="w-full bg-inputBg border border-border/50 rounded-lg py-2.5 px-4 text-sm text-textMain placeholder-textMuted/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                         </div>
                     </div>
                 </section>
 
                 <section id="role-requirements" class="flex flex-col gap-5 border-b border-border/50 pb-8">
                     <div>
-                        <h2 class="text-lg font-semibold text-textMain">Role Requirements</h2>
-                        <p class="text-sm text-textMuted mt-1">Detailed description and required skills for this role.</p>
+                        <h2 id="role-requirements-heading" class="text-lg font-semibold text-textMain">Role Requirements</h2>
+                        <p id="role-requirements-desc" class="text-sm text-textMuted mt-1">Detailed description and required skills for this role.</p>
                     </div>
 
                     <div class="flex flex-col gap-4">
@@ -225,7 +225,7 @@
                         </div>
 
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-sm font-medium text-textMain">Skills (comma separated)</label>
+                            <label id="skills-label" class="text-sm font-medium text-textMain">Skills (comma separated)</label>
                             <div class="bg-inputBg border border-border/50 rounded-lg p-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all flex flex-wrap gap-2">
                                 <div class="flex items-center gap-1.5 bg-surfaceHover px-2.5 py-1 rounded-md border border-border">
                                     <span class="text-xs text-textMain">System Architecture</span>
@@ -235,7 +235,7 @@
                                     <span class="text-xs text-textMain">HL7 Integration</span>
                                     <button type="button" class="text-textMuted hover:text-danger transition-colors"><i class="fa-solid fa-xmark text-[10px]"></i></button>
                                 </div>
-                                <input type="text" placeholder="Type a skill and press comma..." class="flex-1 bg-transparent border-none text-sm text-textMain placeholder-textMuted/50 focus:outline-none min-w-[150px] py-1 px-2">
+                                <input id="skills-input" type="text" placeholder="Type a skill and press comma..." class="flex-1 bg-transparent border-none text-sm text-textMain placeholder-textMuted/50 focus:outline-none min-w-[150px] py-1 px-2">
                             </div>
                         </div>
 
@@ -298,6 +298,28 @@
     <footer id="footer" class="w-full text-center text-xs text-textMuted/50 py-6 mt-auto relative z-10">
         &copy; 2026 Herit Civic Platform. All rights reserved.
     </footer>
+
+    <script>
+        function updateResourceTypeFraming() {
+            const isHuman = document.getElementById('resource-type-human').checked;
+
+            document.getElementById('role-identity-heading').textContent = isHuman ? 'Role Identity' : 'Resource Identity';
+            document.getElementById('role-identity-desc').textContent = isHuman
+                ? 'Basic information about the role you are publishing.'
+                : 'Basic information about the resource you are requesting.';
+
+            document.getElementById('role-title-label').textContent = isHuman ? 'Role Title' : 'Resource Name';
+            document.getElementById('role-title-input').placeholder = isHuman ? 'e.g. Lead System Architect' : 'e.g. Field Vehicles (4x4)';
+
+            document.getElementById('role-requirements-heading').textContent = isHuman ? 'Role Requirements' : 'Resource Requirements';
+            document.getElementById('role-requirements-desc').textContent = isHuman
+                ? 'Detailed description and required skills for this role.'
+                : 'Detailed description and specifications for this resource.';
+
+            document.getElementById('skills-label').textContent = isHuman ? 'Skills (comma separated)' : 'Specifications (comma separated)';
+            document.getElementById('skills-input').placeholder = isHuman ? 'Type a skill and press comma...' : 'Type a specification and press comma...';
+        }
+    </script>
 
 </body>
 </html>

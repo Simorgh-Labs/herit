@@ -170,19 +170,14 @@
             <!-- Section 1: Role Identity -->
             <div id="section-role-identity" class="bg-surface rounded-xl border border-border/50 overflow-hidden shadow-lg">
                 <div class="px-6 py-4 border-b border-border/50 bg-surface flex items-center justify-between">
-                    <h2 class="text-base font-semibold text-textMain">Role Identity</h2>
+                    <h2 id="role-identity-heading" class="text-base font-semibold text-textMain">Role Identity</h2>
                     <button type="button" class="text-textMuted hover:text-textMain transition-colors"><i class="fa-solid fa-chevron-down text-sm"></i></button>
                 </div>
                 <div class="p-6 flex flex-col gap-6">
-                    
+
                     <div class="flex flex-col gap-2">
                         <label for="title" class="text-sm font-medium text-textMain">Title <span class="text-danger">*</span></label>
                         <input type="text" id="title" value="Lead System Architect Search" class="w-full bg-inputBg border border-border/50 rounded-lg px-4 py-2.5 text-textMain text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    </div>
-
-                    <div class="flex flex-col gap-2">
-                        <label for="role-title" class="text-sm font-medium text-textMain">Role Title <span class="text-danger">*</span></label>
-                        <input type="text" id="role-title" value="Lead System Architect" class="w-full bg-inputBg border border-border/50 rounded-lg px-4 py-2.5 text-textMain text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
 
                     <div class="flex flex-col gap-3">
@@ -190,21 +185,26 @@
                         <div class="flex flex-col sm:flex-row gap-4">
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <div class="relative flex items-center justify-center w-5 h-5">
-                                    <input type="radio" name="resource-type" value="individual" class="peer sr-only" checked>
+                                    <input type="radio" name="resource-type" id="resource-type-human" value="human" class="peer sr-only" checked onchange="updateResourceTypeFraming()">
                                     <div class="w-5 h-5 rounded-full border border-border/50 bg-inputBg peer-checked:border-primary peer-checked:bg-primary transition-colors"></div>
                                     <div class="absolute w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                                 </div>
-                                <span class="text-sm text-textMuted group-hover:text-textMain transition-colors">Individual Consultant</span>
+                                <span class="text-sm text-textMuted group-hover:text-textMain transition-colors">Human <span class="text-textMuted/70">(skills & expertise)</span></span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <div class="relative flex items-center justify-center w-5 h-5">
-                                    <input type="radio" name="resource-type" value="firm" class="peer sr-only">
+                                    <input type="radio" name="resource-type" id="resource-type-non-human" value="non-human" class="peer sr-only" onchange="updateResourceTypeFraming()">
                                     <div class="w-5 h-5 rounded-full border border-border/50 bg-inputBg peer-checked:border-primary peer-checked:bg-primary transition-colors"></div>
                                     <div class="absolute w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                                 </div>
-                                <span class="text-sm text-textMuted group-hover:text-textMain transition-colors">Firm / Organization</span>
+                                <span class="text-sm text-textMuted group-hover:text-textMain transition-colors">Non-Human <span class="text-textMuted/70">(infrastructure, real estate, equipment, financial support)</span></span>
                             </label>
                         </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="role-title" class="text-sm font-medium text-textMain"><span id="role-title-label">Role Title</span> <span class="text-danger">*</span></label>
+                        <input type="text" id="role-title" value="Lead System Architect" class="w-full bg-inputBg border border-border/50 rounded-lg px-4 py-2.5 text-textMain text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
 
                 </div>
@@ -213,7 +213,7 @@
             <!-- Section 2: Role Requirements -->
             <div id="section-role-requirements" class="bg-surface rounded-xl border border-border/50 overflow-hidden shadow-lg">
                 <div class="px-6 py-4 border-b border-border/50 bg-surface flex items-center justify-between">
-                    <h2 class="text-base font-semibold text-textMain">Role Requirements</h2>
+                    <h2 id="role-requirements-heading" class="text-base font-semibold text-textMain">Role Requirements</h2>
                     <button type="button" class="text-textMuted hover:text-textMain transition-colors"><i class="fa-solid fa-chevron-down text-sm"></i></button>
                 </div>
                 <div class="p-6 flex flex-col gap-6">
@@ -245,7 +245,7 @@ The ideal candidate will have a strong background in public sector IT transforma
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label for="skills" class="text-sm font-medium text-textMain">Skills (comma separated) <span class="text-danger">*</span></label>
+                        <label for="skills" class="text-sm font-medium text-textMain"><span id="skills-label">Skills (comma separated)</span> <span class="text-danger">*</span></label>
                         <input type="text" id="skills" value="System Architecture, Cloud Infrastructure, HL7/FHIR, Team Leadership, Healthcare Informatics" class="w-full bg-inputBg border border-border/50 rounded-lg px-4 py-2.5 text-textMain text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         <div class="flex flex-wrap gap-2 mt-2">
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border border-border/50 rounded-full text-xs text-textMuted">
@@ -326,6 +326,18 @@ https://example.gov/digital-strategy-2025</textarea>
     <footer id="footer" class="w-full text-center text-xs text-textMuted/50 py-6 mt-auto relative z-10 border-t border-border/50 bg-background">
         &copy; 2026 Herit Civic Platform. All rights reserved.
     </footer>
+
+    <script>
+        function updateResourceTypeFraming() {
+            const isHuman = document.getElementById('resource-type-human').checked;
+
+            document.getElementById('role-identity-heading').textContent = isHuman ? 'Role Identity' : 'Resource Identity';
+            document.getElementById('role-requirements-heading').textContent = isHuman ? 'Role Requirements' : 'Resource Requirements';
+
+            document.getElementById('role-title-label').textContent = isHuman ? 'Role Title' : 'Resource Name';
+            document.getElementById('skills-label').textContent = isHuman ? 'Skills (comma separated)' : 'Specifications (comma separated)';
+        }
+    </script>
 
 </body>
 </html>
