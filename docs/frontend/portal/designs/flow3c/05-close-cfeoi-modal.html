@@ -232,14 +232,14 @@
     <!-- Modal Overlay (Active Layer) -->
     <div id="modal-overlay" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute inset-0 bg-textMain/40 backdrop-blur-sm transition-opacity"></div>
 
         <!-- Modal Panel -->
-        <div class="relative bg-surface rounded-[14px] border border-border/50 shadow-2xl w-full max-w-md transform transition-all flex flex-col overflow-hidden">
-            
+        <div class="relative bg-surface rounded-2xl border border-border/50 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] w-full max-w-lg transform transition-all flex flex-col overflow-hidden">
+
             <!-- Modal Header / Icon -->
             <div class="px-6 pt-8 pb-4 flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full bg-danger/10 border border-danger/20 flex items-center justify-center mb-5 shadow-sm">
+                <div class="w-14 h-14 rounded-full bg-danger/10 border border-danger/20 flex items-center justify-center mb-5 shadow-sm">
                     <i class="fa-solid fa-triangle-exclamation text-3xl text-danger"></i>
                 </div>
                 <h2 id="modal-title" class="text-xl font-bold text-textMain mb-2 tracking-tight">Close CFEOI?</h2>
