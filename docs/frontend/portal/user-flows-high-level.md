@@ -89,8 +89,9 @@
 - Outcome: CFEOI appears on the proposal page and in CFEOI browse lists, scoped by the parent proposal's visibility
 - End: CFEOI `Open` (or `Closed` after owner closes it)
 
-### 3d) Manage Incoming EOIs on a Proposal (owner actions within supported scope)
-- Start: Owner opens Proposal → EOIs tab/Inbox
+### 3d) Manage Incoming EOIs on a CFEOI (owner actions within supported scope)
+- Start: Owner opens CFEOI Detail (see flow 3c) → "View All EOIs" → EOI Inbox for that CFEOI
+  - Note: EOIs are associated with a CFEOI, not directly with a Proposal (see the EOI entity, §5.4). A Proposal may have multiple CFEOIs, so the inbox is scoped per-CFEOI rather than aggregated at the proposal level.
 - Node: EOI List (filters: **Pending**, **Approved**, **Rejected**)
   - Note: These are the only three EOI statuses (`EoiStatus` enum: `Pending`, `Approved`, `Rejected`). There is no "reviewed" or "withdrawn" status. An EOI that has been withdrawn by its submitter is deleted from the system (`WithdrawEoi` deletes the record); it will no longer appear in this list.
 - For each EOI:
