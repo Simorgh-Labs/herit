@@ -23,7 +23,7 @@
 - Branch: From landing or RFP list → Public Proposals List
   - Note: The current `GET /api/v1/Proposals` endpoint returns all proposals with no server-side visibility or status filtering. Until query parameters are added to the backend, the frontend must filter client-side to show only proposals with `Visibility = Public`.
 - Node 3: Proposal Detail (public) — summary, status, visible CFEOIs
-- Node 4: CFEOI Detail (public) — resource type, role title, skills required, slots, duration, location, deadline, external links
+- Node 4: CFEOI Detail (public) — title, description, resource type, tags
 - Decision: Attempt to interact (Express Interest / Apply / Bookmark)?
   - If Yes → Prompt: Sign in with Google (link to Authentication flow)
   - If No → End (continue browsing)
@@ -78,8 +78,8 @@
 - Precondition: Proposal must be in **Resourcing** status (or later) to publish a CFEOI
 - Start: From Proposal Detail (owner) click "Publish CFEOI"
 - Node: CFEOI Form
-  - **Required fields**: title, description, resource type (`Human` / `Non-Human`), role title, skills required, number of slots
-  - **Optional fields**: duration (weeks), location, compensation, deadline, external links
+  - **Required fields**: title, description, resource type (`Human` / `Non-Human`)
+  - **Optional fields**: tags (free-text, comma-separated; used to convey required skills/expertise for a Human resource, or specifications for a Non-Human one)
   - Note: CFEOI has no independent visibility setting — it inherits the parent proposal's visibility automatically. Do not include a visibility control in this form.
   - Note: Attachments and CFEOI drafts are out-of-scope. Publishing immediately creates an `Open` CFEOI via `POST /api/v1/Cfeoi`.
 - Action: Publish CFEOI → immediate creation of an `Open` CFEOI; show in-app confirmation and placeholder: Future email notification to subscribers/department (no current backend dependency)
@@ -136,7 +136,7 @@
 - Visibility terminology for EOIs uses: `Private` / `Shared`. "Private" means visible to the submitter only; "Shared" means visible to the submitter and relevant staff/proposal owner.
 - No "Draft" status appears for proposals; proposal-editing actions occur within `Ideation` or `Resourcing` states.
 - CFEOI flows do not include draft saving; publishing creates an `Open` CFEOI immediately. CFEOI has no visibility field; it inherits visibility from its parent proposal. CFEOI `Closed` status is terminal.
-- CFEOI forms include all required fields (title, description, resource type, role title, skills, slots) and all optional fields (duration in weeks, location, compensation, deadline, external links). No "visibility" control appears on the CFEOI form.
+- CFEOI forms include all required fields (title, description, resource type) and the optional tags field. No "visibility" control appears on the CFEOI form.
 - EOI withdrawal is shown as a deletion action, not a status transition. Withdrawn EOIs do not appear in any list.
 - EOI status filter options in the owner's inbox are: `Pending`, `Approved`, `Rejected` — no other values.
 - Notification actions are shown only as clearly labelled placeholders (future infrastructure), not as required dependencies.
