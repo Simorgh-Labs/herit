@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { getCfeoiById } from '../../api/cfeois';
 import { getProposalById } from '../../api/proposals';
+import { listEoisByCfeoi } from '../../api/eois';
 import { apiScopes } from '../../auth/authScopes';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -98,6 +99,14 @@ export default function CfeoiDetailPage() {
     enabled: !!cfeoi?.proposalId,
   });
 
+  const isOwner = !!currentUser && !!proposal && currentUser.id === proposal.authorId;
+
+  const { data: eois } = useQuery({
+    queryKey: ['eois', 'cfeoi', cfeoiId],
+    queryFn: () => listEoisByCfeoi(cfeoiId!),
+    enabled: isOwner && !!cfeoiId,
+  });
+
   if (isLoading) return <LoadingSpinner className="py-32" />;
 
   if (isError || !cfeoi) {
@@ -110,11 +119,23 @@ export default function CfeoiDetailPage() {
     );
   }
 
-  const isOwner = !!currentUser && !!proposal && currentUser.id === proposal.authorId;
-
   return (
     <div className="w-full pb-16 bg-gray-50">
       {showSignInModal && <SignInModal onClose={() => setShowSignInModal(false)} />}
+
+      {/* Closed-state banner (owner only) */}
+      {isOwner && cfeoi.status === 'Closed' && (
+        <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
+          <div className="max-w-[1200px] mx-auto flex items-start sm:items-center gap-3">
+            <svg className="w-4 h-4 text-blue-700 mt-0.5 sm:mt-0 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-sm text-blue-900">
+              <span className="font-semibold">This CFEOI is now closed.</span> It is no longer accepting new expressions of interest. You can still review submitted applications below.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Success banner */}
       {showSuccessBanner && (
@@ -205,11 +226,56 @@ export default function CfeoiDetailPage() {
             {isOwner && cfeoi.status === 'Open' && (
               <SidebarCard>
                 <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Manage CFEOI</h3>
+                <div className="flex flex-col gap-3">
+                  <Link
+                    to={`/cfeois/${cfeoiId}/edit`}
+                    className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                  >
+                    Edit Details
+                  </Link>
+                  <button
+                    onClick={() => {
+                      // TODO: implement Close CFEOI confirmation modal — see Flow 3c, "Close CFEOI"
+                    }}
+                    className="w-full flex items-center justify-center px-4 py-2.5 border border-red-200 text-sm font-medium rounded-lg text-red-600 bg-white hover:bg-red-50 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                  >
+                    Close CFEOI
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-4 text-center">Closing is irreversible and stops new applications.</p>
+              </SidebarCard>
+            )}
+
+            {isOwner && cfeoi.status === 'Closed' && (
+              <SidebarCard>
+                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Manage CFEOI</h3>
+                <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <svg className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <p className="text-sm text-gray-600">This CFEOI is closed. Editing and closing are no longer available — closure is a terminal state.</p>
+                </div>
+              </SidebarCard>
+            )}
+
+            {isOwner && (
+              <SidebarCard>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Expressions of Interest</h3>
+                <p className="text-sm text-gray-500 mb-6">Current applications received for this role.</p>
+                <div className="flex items-end justify-between mb-6">
+                  <div className="flex flex-col">
+                    <span className="text-4xl font-bold text-gray-900 leading-none">{eois?.length ?? 0}</span>
+                    <span className="text-sm text-gray-500 mt-1">Total Received</span>
+                  </div>
+                </div>
                 <Link
-                  to={`/cfeois/${cfeoiId}/edit`}
-                  className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                  to={`/cfeois/${cfeoiId}/eois`}
+                  className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
                 >
-                  Edit Details
+                  View All EOIs
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </Link>
               </SidebarCard>
             )}
