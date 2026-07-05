@@ -21,6 +21,7 @@ import CreateProposalPage from '../pages/app/CreateProposalPage';
 import MyProposalsPage from '../pages/app/MyProposalsPage';
 import MyEoisPage from '../pages/app/MyEoisPage';
 import CfeoiEoiInboxPage from '../pages/app/CfeoiEoiInboxPage';
+import PublishCfeoiPage from '../pages/app/PublishCfeoiPage';
 
 // Layouts
 import PublicLayout from '../components/layout/PublicLayout';
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
       { path: '/my-proposals', element: <MyProposalsPage /> },
       { path: '/proposals/new', element: <CreateProposalPage /> },
       { path: '/my-eois', element: <MyEoisPage /> },
+      { path: '/proposals/:proposalId/cfeois/new', element: <PublishCfeoiPage /> },
       { path: '/cfeois/:cfeoiId/eois', element: <CfeoiEoiInboxPage /> },
     ],
   },
