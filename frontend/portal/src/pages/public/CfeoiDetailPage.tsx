@@ -5,6 +5,7 @@ import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { getCfeoiById } from '../../api/cfeois';
 import { getProposalById } from '../../api/proposals';
 import { apiScopes } from '../../auth/authScopes';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import StatusBadge from '../../components/StatusBadge';
 import SidebarCard from '../../components/SidebarCard';
@@ -76,8 +77,14 @@ export default function CfeoiDetailPage() {
   const { cfeoiId } = useParams<{ cfeoiId: string }>();
   const [searchParams] = useSearchParams();
   const isAuthenticated = useIsAuthenticated();
+  const { user: currentUser } = useCurrentUser();
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showSuccessBanner, setShowSuccessBanner] = useState(searchParams.get('published') === 'true');
+  const [showSuccessBanner, setShowSuccessBanner] = useState(
+    searchParams.get('published') === 'true' || searchParams.get('updated') === 'true'
+  );
+  const successMessage = searchParams.get('updated') === 'true'
+    ? 'CFEOI updated successfully.'
+    : 'CFEOI published successfully. It is now live and accepting expressions of interest from the diaspora network.';
 
   const { data: cfeoi, isLoading, isError } = useQuery({
     queryKey: ['cfeois', cfeoiId],
@@ -103,6 +110,8 @@ export default function CfeoiDetailPage() {
     );
   }
 
+  const isOwner = !!currentUser && !!proposal && currentUser.id === proposal.authorId;
+
   return (
     <div className="w-full pb-16 bg-gray-50">
       {showSignInModal && <SignInModal onClose={() => setShowSignInModal(false)} />}
@@ -118,7 +127,7 @@ export default function CfeoiDetailPage() {
                 </svg>
               </div>
               <p className="text-sm font-medium text-emerald-900">
-                CFEOI published successfully. It is now live and accepting expressions of interest from the diaspora network.
+                {successMessage}
               </p>
             </div>
             <button
@@ -192,8 +201,20 @@ export default function CfeoiDetailPage() {
           </div>
 
           {/* Right Sidebar Action */}
-          <div className="w-full lg:w-[30%]">
-            <SidebarCard className="sticky top-24">
+          <div className="w-full lg:w-[30%] flex flex-col gap-6 sticky top-24">
+            {isOwner && cfeoi.status === 'Open' && (
+              <SidebarCard>
+                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Manage CFEOI</h3>
+                <Link
+                  to={`/cfeois/${cfeoiId}/edit`}
+                  className="w-full flex items-center justify-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-colors"
+                >
+                  Edit Details
+                </Link>
+              </SidebarCard>
+            )}
+
+            <SidebarCard>
               <div className="text-center mb-6">
                 <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
