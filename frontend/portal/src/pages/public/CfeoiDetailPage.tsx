@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { getCfeoiById, updateCfeoiStatus } from '../../api/cfeois';
 import { getProposalById } from '../../api/proposals';
-import { listEoisByCfeoi } from '../../api/eois';
+import { listEoisByCfeoi, listMyEois } from '../../api/eois';
 import { apiScopes } from '../../auth/authScopes';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -110,6 +110,14 @@ export default function CfeoiDetailPage() {
     enabled: isOwner && !!cfeoiId,
   });
 
+  const { data: myEois } = useQuery({
+    queryKey: ['eois', 'my'],
+    queryFn: listMyEois,
+    enabled: !isOwner && isAuthenticated && !!cfeoiId,
+  });
+
+  const myEoi = myEois?.find((eoi) => eoi.cfeoiId === cfeoiId);
+
   const closeMutation = useMutation({
     mutationFn: () => updateCfeoiStatus(cfeoiId!, 'Closed'),
     onSuccess: () => {
@@ -135,15 +143,18 @@ export default function CfeoiDetailPage() {
     <div className="w-full pb-16 bg-gray-50">
       {showSignInModal && <SignInModal onClose={() => setShowSignInModal(false)} />}
 
-      {/* Closed-state banner (owner only) */}
-      {isOwner && cfeoi.status === 'Closed' && (
+      {/* Closed-state banner */}
+      {cfeoi.status === 'Closed' && (
         <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
           <div className="max-w-[1200px] mx-auto flex items-start sm:items-center gap-3">
             <svg className="w-4 h-4 text-blue-700 mt-0.5 sm:mt-0 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-sm text-blue-900">
-              <span className="font-semibold">This CFEOI is now closed.</span> It is no longer accepting new expressions of interest. You can still review submitted applications below.
+              <span className="font-semibold">This CFEOI is now closed.</span>{' '}
+              {isOwner
+                ? 'It is no longer accepting new expressions of interest. You can still review submitted applications below.'
+                : 'It is no longer accepting new expressions of interest.'}
             </p>
           </div>
         </div>
@@ -290,63 +301,114 @@ export default function CfeoiDetailPage() {
               </SidebarCard>
             )}
 
-            <SidebarCard>
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Express Interest</h3>
-                <p className="text-sm text-gray-500">
-                  {isAuthenticated
-                    ? 'Connect with the project team and formally express your interest in this volunteer role.'
-                    : 'Sign in to connect with the project team and formally express your interest in this volunteer role.'}
-                </p>
-              </div>
-
-              {isAuthenticated ? (
-                <button
-                  onClick={() => {
-                    // TODO: implement EOI submission modal — see Flow 3e
-                  }}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition-colors mb-4"
-                >
-                  Express Interest
-                </button>
-              ) : (
-                <button
-                  onClick={() => setShowSignInModal(true)}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition-colors mb-4"
-                >
-                  Sign In to Express Interest
-                </button>
-              )}
-
-              <p className="text-xs text-center text-gray-400 mb-6">
-                Secure authentication via Google Workspace. We do not post on your behalf.
-              </p>
-
-              {proposal && (
-                <div className="border-t border-gray-200 pt-6">
-                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">
-                    Related Context
-                  </h4>
-                  <Link
-                    to={`/proposals/${proposal.id}`}
-                    className="block p-4 rounded-lg border border-gray-200 hover:border-brand hover:bg-blue-50 transition-colors group"
-                  >
-                    <span className="text-xs text-gray-500 block mb-1">Parent Proposal</span>
-                    <span className="text-sm font-medium text-brand group-hover:underline flex items-center justify-between">
-                      {proposal.title}
+            {!isOwner && (
+              <SidebarCard>
+                {cfeoi.status === 'Closed' ? (
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">This role is closed</h3>
+                    <p className="text-sm text-gray-500">
+                      The team is no longer accepting expressions of interest for this role. Browse other open opportunities in the directory.
+                    </p>
+                    <Link
+                      to="/cfeois"
+                      className="mt-6 w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-900 font-medium py-2.5 px-4 rounded-lg border border-gray-200 transition-colors"
+                    >
+                      Back to CFEOI Directory
+                    </Link>
+                  </div>
+                ) : myEoi ? (
+                  <div className="text-center mb-6">
+                    <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">You've expressed interest</h3>
+                    <p className="text-sm text-gray-500 mb-4">
+                      You submitted an expression of interest for this role. It's currently {myEoi.status === 'Pending' ? 'awaiting review' : `marked as ${myEoi.status.toLowerCase()}`}.
+                    </p>
+                    <div className="flex items-center justify-center mb-6">
+                      <StatusBadge type="eoi" status={myEoi.status} />
+                    </div>
+                    <Link
+                      to="/my-eois"
+                      className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+                    >
+                      View in My EOIs
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                    </span>
-                  </Link>
-                </div>
-              )}
-            </SidebarCard>
+                    </Link>
+                    <p className="text-xs text-center text-gray-400 mt-4">
+                      You can change its visibility or withdraw it from My EOIs.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center mb-6">
+                    <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Express Interest</h3>
+                    <p className="text-sm text-gray-500">
+                      {isAuthenticated
+                        ? 'Connect with the project team and formally express your interest in this volunteer role.'
+                        : 'Sign in to connect with the project team and formally express your interest in this volunteer role.'}
+                    </p>
+                  </div>
+                )}
+
+                {cfeoi.status === 'Open' && !myEoi && (
+                  isAuthenticated ? (
+                    <Link
+                      to={`/cfeois/${cfeoiId}/eois/new`}
+                      className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition-colors mb-4"
+                    >
+                      Express Interest
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => setShowSignInModal(true)}
+                      className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-brand text-white font-medium rounded-lg hover:bg-brand-dark transition-colors mb-4"
+                    >
+                      Sign In to Express Interest
+                    </button>
+                  )
+                )}
+
+                {cfeoi.status === 'Open' && !myEoi && (
+                  <p className="text-xs text-center text-gray-400 mb-6">
+                    Secure authentication via Google Workspace. We do not post on your behalf.
+                  </p>
+                )}
+
+                {proposal && (
+                  <div className="border-t border-gray-200 pt-6">
+                    <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">
+                      Related Context
+                    </h4>
+                    <Link
+                      to={`/proposals/${proposal.id}`}
+                      className="block p-4 rounded-lg border border-gray-200 hover:border-brand hover:bg-blue-50 transition-colors group"
+                    >
+                      <span className="text-xs text-gray-500 block mb-1">Parent Proposal</span>
+                      <span className="text-sm font-medium text-brand group-hover:underline flex items-center justify-between">
+                        {proposal.title}
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </Link>
+                  </div>
+                )}
+              </SidebarCard>
+            )}
           </div>
         </div>
       </div>
