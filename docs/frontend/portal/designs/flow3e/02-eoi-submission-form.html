@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOI Submission Form | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans: ['Inter', 'sans-serif'] },
+                colors: {
+                    background: '#F9FAFB', surface: '#FFFFFF', surfaceHover: '#F9FAFB',
+                    primary: '#1D4ED8', primaryHover: '#1E40AF', brand: '#1D4ED8',
+                    textMain: '#111827', textMuted: '#6B7280', border: '#E5E7EB', inputBg: '#F9FAFB',
+                    success: '#10B981', danger: '#EF4444', infoBanner: '#DBEAFE', infoBannerText: '#1E40AF',
+                    'primary-blue': '#1D4ED8', 'primary-light': '#EFF6FF', 'surface-main': '#FFFFFF',
+                    'surface-subtle': '#F9FAFB', 'surface-border': '#E5E7EB', 'text-main': '#111827',
+                    'text-muted': '#6B7280', 'status-error': '#DC2626', 'status-errorLight': '#FEF2F2',
+                },
+                boxShadow: {
+                    'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                    'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                    'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                }
+            } }
+        }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F9FAFB; color: #111827; font-family: 'Inter', sans-serif; }
+        .anno { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+
+    <!-- ANNOTATION DOC HEADER -->
+    <div class="bg-textMain text-white px-6 py-5">
+        <div class="max-w-[1440px] mx-auto">
+            <p class="anno text-[11px] uppercase tracking-widest text-white/50 mb-1">Flow 3e · Deliverable 02</p>
+            <h1 class="text-xl font-bold">EOI Submission Form</h1>
+            <p class="text-sm text-white/60 mt-1 max-w-3xl">Single input — message / cover note (required). <span class="text-white/80">Decision: a dedicated page</span> (not a modal). Rationale below. Post-submit confirmation is shown inline as a banner on return to the CFEOI detail (Block B), matching <span class="anno">flow3c/02</span>.</p>
+        </div>
+    </div>
+
+    <!-- Rationale note -->
+    <div class="max-w-[1440px] mx-auto px-6 pt-6">
+        <div class="anno inline-flex flex-wrap items-start gap-3 rounded-lg border border-dashed border-indigo-300 bg-indigo-50 px-4 py-2 text-sm text-indigo-900 max-w-3xl">
+            <span class="font-bold rounded bg-indigo-600 text-white px-2 py-0.5 text-xs whitespace-nowrap">DECISION</span>
+            <span><strong>Page over modal.</strong> The EOI route is linkable and the cover note deserves a calm, full-width writing space; a page keeps parity with the app's other create surfaces (proposal / CFEOI editors) and makes Cancel → back-to-CFEOI unambiguous. <em>A modal on the detail page would also be acceptable for such a small form.</em></span>
+        </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- BLOCK A — The submission form                                  -->
+    <!-- ============================================================= -->
+    <div class="max-w-[1440px] mx-auto px-6 pt-8">
+        <div class="anno mb-2 inline-flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
+            <span class="font-bold rounded bg-slate-700 text-white px-2 py-0.5 text-xs">BLOCK A</span>
+            Submission form
+        </div>
+    </div>
+
+    <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+      <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+      </div>
+      <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+        <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+      </div>
+    </header>
+
+    <main class="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="flex text-sm text-textMuted mb-8" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                <li class="inline-flex items-center"><a href="#" class="hover:text-textMain">CFEOI Directory</a></li>
+                <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><a href="01-cfeoi-detail-contributor-states.html" class="hover:text-textMain">Lead System Architect Search</a></div></li>
+                <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Express Interest</span></div></li>
+            </ol>
+        </nav>
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-textMain tracking-tight mb-2">Express Interest</h1>
+            <p class="text-textMuted">Introduce yourself to the proposal team. Your note is the only thing they'll see with your expression of interest.</p>
+        </div>
+
+        <!-- Context strip: which CFEOI -->
+        <div class="bg-primary-light border border-primary/15 rounded-xl p-4 flex items-start gap-3 mb-8">
+            <div class="w-10 h-10 rounded-lg bg-surface border border-border/50 flex items-center justify-center text-primary flex-shrink-0"><i class="fa-solid fa-bullhorn"></i></div>
+            <div>
+                <p class="text-xs text-primary/70 font-medium uppercase tracking-wider mb-0.5">You're expressing interest in</p>
+                <p class="text-sm font-bold text-textMain">Lead System Architect Search</p>
+                <p class="text-xs text-textMuted mt-0.5">Digital Health Infrastructure Upgrade · Ministry of Health</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form class="bg-surface rounded-xl border border-border/50 shadow-card overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <label for="message" class="block text-sm font-semibold text-textMain mb-1">Cover note <span class="text-danger">*</span></label>
+                <p class="text-sm text-textMuted mb-3">Tell the team why you're a good fit — relevant experience, motivation, and how you'd like to contribute.</p>
+                <textarea id="message" name="message" rows="9" required placeholder="e.g. I'm a solutions architect with 12 years in public-sector health IT, including two national FHIR rollouts. I'd love to help shape the data-exchange architecture for this programme…" class="w-full rounded-lg border border-border bg-inputBg px-4 py-3 text-sm text-textMain placeholder:text-textMuted/60 leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-y"></textarea>
+                <div class="flex items-center justify-between mt-2">
+                    <p class="text-xs text-textMuted"><i class="fa-solid fa-circle-info mr-1"></i> Required. This note is all the proposal owner will see.</p>
+                    <span class="text-xs text-textMuted/70">0 / 2000</span>
+                </div>
+            </div>
+
+            <!-- Visibility note (visibility is set on My EOIs after submit; new EOIs default to Private) -->
+            <div class="px-6 sm:px-8 pb-6">
+                <div class="flex items-start gap-3 bg-background border border-border/50 rounded-lg p-4">
+                    <i class="fa-solid fa-lock text-textMuted mt-0.5"></i>
+                    <p class="text-sm text-textMuted">Your EOI starts as <span class="font-semibold text-textMain">Private</span> — visible only to you. You can switch it to <span class="font-semibold text-textMain">Shared</span> (visible to the proposal owner and relevant staff) later from My EOIs.</p>
+                </div>
+            </div>
+
+            <!-- Footer actions -->
+            <div class="px-6 sm:px-8 py-4 bg-background border-t border-border flex flex-col-reverse sm:flex-row items-center sm:justify-end gap-3">
+                <a href="01-cfeoi-detail-contributor-states.html" class="w-full sm:w-auto text-center px-5 py-2.5 bg-surface border border-border text-textMain rounded-lg font-medium text-sm hover:bg-surfaceHover transition-colors shadow-sm">Cancel</a>
+                <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-primary hover:bg-primaryHover text-white rounded-lg font-medium text-sm transition-colors shadow-sm flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane text-xs"></i> Submit expression of interest</button>
+            </div>
+        </form>
+
+        <p class="text-xs text-textMuted/70 text-center mt-4"><span class="anno">Future:</span> an email confirmation will be sent to you and the proposal owner once notifications are available.</p>
+    </main>
+
+    <!-- ============================================================= -->
+    <!-- BLOCK B — Post-submit inline confirmation on the CFEOI detail  -->
+    <!-- ============================================================= -->
+    <div class="border-t-8 border-background mt-8">
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
+                <span class="font-bold rounded bg-slate-700 text-white px-2 py-0.5 text-xs">BLOCK B</span>
+                On submit → redirect back to the CFEOI detail with an inline success banner (no separate success page)
+            </div>
+        </div>
+
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+          </div>
+        </header>
+
+        <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-success/10 border border-success/30 rounded-lg p-4 flex items-start sm:items-center gap-3 shadow-sm mb-8">
+                <i class="fa-solid fa-circle-check text-success mt-0.5 sm:mt-0"></i>
+                <div class="flex-1 text-sm text-success"><span class="font-semibold">Your expression of interest was submitted.</span> The proposal owner will review it. Track or withdraw it any time from <a href="03-my-eois.html" class="underline font-semibold">My EOIs</a>.</div>
+                <button class="text-success/70 hover:text-success transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <nav class="flex text-sm text-textMuted mb-8"><ol class="inline-flex items-center space-x-1 md:space-x-2"><li class="inline-flex items-center"><a href="#" class="hover:text-textMain">CFEOI Directory</a></li><li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Lead System Architect Search</span></div></li></ol></nav>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium"><span class="w-2 h-2 rounded-full bg-success"></span> Open</span></div>
+                        <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect Search</h1>
+                    </div>
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                        <h2 class="text-xl font-bold text-textMain">Description</h2>
+                        <div class="prose max-w-none text-textMuted leading-relaxed"><p>We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure, working with the Ministry of Health and international tech partners.</p></div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                        <div class="text-center mb-6">
+                            <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4 text-success"><i class="fa-solid fa-circle-check text-lg"></i></div>
+                            <h3 class="text-lg font-bold text-textMain mb-2">You've expressed interest</h3>
+                            <p class="text-sm text-textMuted">It's currently awaiting review.</p>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 mb-6"><span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-gray-100 text-gray-700 border-gray-200">Pending</span></div>
+                        <a href="03-my-eois.html" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-medium py-2.5 px-4 rounded-lg transition-colors">View in My EOIs <i class="fa-solid fa-arrow-right text-sm"></i></a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="w-full text-center text-xs text-textMuted/50 py-6 border-t border-border/50 bg-background">
+        &copy; 2026 Herit Civic Platform. All rights reserved.
+    </footer>
+
+    <script>
+        // character counter
+        const ta = document.getElementById('message');
+        const counter = ta && ta.closest('form').querySelector('span.text-xs');
+        if (ta && counter) {
+            ta.addEventListener('input', () => { counter.textContent = ta.value.length + ' / 2000'; });
+        }
+    </script>
+</body>
+</html>

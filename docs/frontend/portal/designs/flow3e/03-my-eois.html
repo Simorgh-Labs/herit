@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My EOIs | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans: ['Inter', 'sans-serif'] },
+                colors: {
+                    background: '#F9FAFB', surface: '#FFFFFF', surfaceHover: '#F9FAFB',
+                    primary: '#1D4ED8', primaryHover: '#1E40AF', brand: '#1D4ED8',
+                    textMain: '#111827', textMuted: '#6B7280', border: '#E5E7EB', inputBg: '#F9FAFB',
+                    success: '#10B981', danger: '#EF4444', infoBanner: '#DBEAFE', infoBannerText: '#1E40AF',
+                    'primary-blue': '#1D4ED8', 'primary-light': '#EFF6FF', 'surface-main': '#FFFFFF',
+                    'surface-subtle': '#F9FAFB', 'surface-border': '#E5E7EB', 'text-main': '#111827',
+                    'text-muted': '#6B7280', 'status-error': '#DC2626', 'status-errorLight': '#FEF2F2',
+                },
+                boxShadow: {
+                    'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                    'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                    'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                }
+            } }
+        }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F9FAFB; color: #111827; font-family: 'Inter', sans-serif; }
+        .anno { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+        .vis-btn.active { background:#FFFFFF; color:#111827; box-shadow:0 1px 2px 0 rgba(0,0,0,0.06); }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+
+    <!-- ANNOTATION DOC HEADER -->
+    <div class="bg-textMain text-white px-6 py-5">
+        <div class="max-w-[1440px] mx-auto">
+            <p class="anno text-[11px] uppercase tracking-widest text-white/50 mb-1">Flow 3e · Deliverable 03</p>
+            <h1 class="text-xl font-bold">My EOIs</h1>
+            <p class="text-sm text-white/60 mt-1 max-w-3xl">One entry per EOI: parent CFEOI (linked) &amp; proposal, status badge, Private/Shared visibility toggle, and Withdraw. Includes the empty state (Block B).</p>
+        </div>
+    </div>
+
+    <!-- Open question 1 recommendation -->
+    <div class="max-w-[1440px] mx-auto px-6 pt-6">
+        <div class="anno inline-flex flex-wrap items-start gap-3 rounded-lg border border-dashed border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
+            <span class="font-bold rounded bg-emerald-600 text-white px-2 py-0.5 text-xs whitespace-nowrap">DECISION</span>
+            <span><strong>Withdraw / delete an EOI:</strong> <strong>Pending</strong> and <strong>Approved</strong> rows show <strong>Withdraw</strong>; <strong>Rejected</strong> rows show the same destructive action labeled <strong>Delete</strong>. Withdrawal is the user's only way to remove their record, so it stays available in every state (the backend permits deletion throughout). Both routes go through the same permanent-delete confirmation.</span>
+        </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- BLOCK A — Populated list                                       -->
+    <!-- ============================================================= -->
+    <div class="max-w-[1440px] mx-auto px-6 pt-8">
+        <div class="anno mb-2 inline-flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
+            <span class="font-bold rounded bg-slate-700 text-white px-2 py-0.5 text-xs">BLOCK A</span>
+            Populated list
+        </div>
+    </div>
+
+    <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+      <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+      </div>
+      <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+        <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+      </div>
+    </header>
+
+    <main class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page header -->
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-textMain">My EOIs</h1>
+                <p class="text-sm text-textMuted mt-1">Expressions of interest you've submitted to Calls for Expression of Interest.</p>
+            </div>
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-textMuted text-sm"></i>
+                <input type="text" placeholder="Search my EOIs..." class="pl-9 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-64 bg-inputBg">
+            </div>
+        </div>
+
+        <!-- Client-side filter note -->
+        <div class="bg-infoBanner/50 border border-primary/15 rounded-lg px-4 py-2.5 flex items-center gap-2 mb-6">
+            <i class="fa-solid fa-circle-info text-infoBannerText text-xs"></i>
+            <p class="text-xs text-infoBannerText">Filters are applied client-side — server-side status filtering isn't implemented yet.</p>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="flex items-center gap-2 bg-gray-100 p-1 rounded-xl w-max mb-6">
+            <button class="px-4 py-1.5 rounded-lg text-sm font-medium bg-white shadow-sm text-textMain transition-all">All <span class="ml-1.5 text-xs text-textMuted bg-gray-100 px-1.5 py-0.5 rounded-md">3</span></button>
+            <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-textMuted hover:text-textMain transition-all">Pending <span class="ml-1.5 text-xs text-textMuted bg-white px-1.5 py-0.5 rounded-md shadow-sm">1</span></button>
+            <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-textMuted hover:text-textMain transition-all">Approved <span class="ml-1.5 text-xs text-textMuted bg-white px-1.5 py-0.5 rounded-md shadow-sm">1</span></button>
+            <button class="px-4 py-1.5 rounded-lg text-sm font-medium text-textMuted hover:text-textMain transition-all">Rejected <span class="ml-1.5 text-xs text-textMuted bg-white px-1.5 py-0.5 rounded-md shadow-sm">1</span></button>
+        </div>
+
+        <!-- EOI rows -->
+        <div class="flex flex-col gap-4">
+
+            <!-- Row: Pending -->
+            <div class="bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-3 mb-1.5">
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-gray-100 text-gray-700 border-gray-200">Pending</span>
+                        </div>
+                        <a href="01-cfeoi-detail-contributor-states.html" class="text-lg font-semibold text-textMain hover:text-primary transition-colors">Lead System Architect Search <i class="fa-solid fa-arrow-up-right-from-square text-xs text-textMuted ml-0.5"></i></a>
+                        <p class="text-sm text-textMuted mt-0.5"><i class="fa-solid fa-folder-open text-textMuted/70 mr-1.5"></i> Digital Health Infrastructure Upgrade · Ministry of Health</p>
+                        <p class="text-sm text-textMuted mt-3 line-clamp-2 max-w-xl">"I'm a solutions architect with 12 years in public-sector health IT, including two national FHIR rollouts. I'd love to help shape the data-exchange architecture…"</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
+                        <!-- Visibility toggle -->
+                        <div>
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-textMuted mb-1 md:text-right">Visibility</p>
+                            <div class="inline-flex items-center bg-gray-100 p-1 rounded-lg" role="group" aria-label="EOI visibility">
+                                <button class="vis-btn active flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Private"><i class="fa-solid fa-lock text-[10px]"></i> Private</button>
+                                <button class="vis-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Shared"><i class="fa-solid fa-users text-[10px]"></i> Shared</button>
+                            </div>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 bg-surface border border-danger/40 text-danger rounded-lg font-medium text-sm hover:bg-danger/10 transition-colors"><i class="fa-solid fa-trash-can text-xs"></i> Withdraw</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row: Approved -->
+            <div class="bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-3 mb-1.5">
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-green-100 text-green-700 border-green-200">Approved</span>
+                        </div>
+                        <a href="#" class="text-lg font-semibold text-textMain hover:text-primary transition-colors">Community Health Data Analyst <i class="fa-solid fa-arrow-up-right-from-square text-xs text-textMuted ml-0.5"></i></a>
+                        <p class="text-sm text-textMuted mt-0.5"><i class="fa-solid fa-folder-open text-textMuted/70 mr-1.5"></i> Rural Telemedicine Expansion · Ministry of Health</p>
+                        <p class="text-sm text-textMuted mt-3 line-clamp-2 max-w-xl">"I've built dashboards for three regional health authorities and can start immediately. Happy to work alongside the existing analytics team…"</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
+                        <div>
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-textMuted mb-1 md:text-right">Visibility</p>
+                            <div class="inline-flex items-center bg-gray-100 p-1 rounded-lg" role="group" aria-label="EOI visibility">
+                                <button class="vis-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Private"><i class="fa-solid fa-lock text-[10px]"></i> Private</button>
+                                <button class="vis-btn active flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Shared"><i class="fa-solid fa-users text-[10px]"></i> Shared</button>
+                            </div>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 bg-surface border border-danger/40 text-danger rounded-lg font-medium text-sm hover:bg-danger/10 transition-colors"><i class="fa-solid fa-trash-can text-xs"></i> Withdraw</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row: Rejected (Delete action — same withdraw endpoint, relabelled) -->
+            <div class="bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-3 mb-1.5">
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-red-100 text-red-600 border-red-200">Rejected</span>
+                        </div>
+                        <a href="#" class="text-lg font-semibold text-textMain hover:text-primary transition-colors">Cloud Migration Specialist <i class="fa-solid fa-arrow-up-right-from-square text-xs text-textMuted ml-0.5"></i></a>
+                        <p class="text-sm text-textMuted mt-0.5"><i class="fa-solid fa-folder-open text-textMuted/70 mr-1.5"></i> National Records Digitisation · Ministry of Interior</p>
+                        <p class="text-sm text-textMuted mt-3 line-clamp-2 max-w-xl">"I led the AWS migration for a mid-size municipality and can advise on cost governance and phased cutover…"</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-3 flex-shrink-0">
+                        <div>
+                            <p class="text-[11px] font-semibold uppercase tracking-wider text-textMuted mb-1 md:text-right">Visibility</p>
+                            <div class="inline-flex items-center bg-gray-100 p-1 rounded-lg" role="group" aria-label="EOI visibility">
+                                <button class="vis-btn active flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Private"><i class="fa-solid fa-lock text-[10px]"></i> Private</button>
+                                <button class="vis-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-textMuted" data-vis="Shared"><i class="fa-solid fa-users text-[10px]"></i> Shared</button>
+                            </div>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 bg-surface border border-danger/40 text-danger rounded-lg font-medium text-sm hover:bg-danger/10 transition-colors"><i class="fa-solid fa-trash-can text-xs"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ============================================================= -->
+    <!-- BLOCK B — Empty state                                          -->
+    <!-- ============================================================= -->
+    <div class="border-t-8 border-background mt-8">
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
+                <span class="font-bold rounded bg-slate-700 text-white px-2 py-0.5 text-xs">BLOCK B</span>
+                Empty state
+            </div>
+        </div>
+
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+          </div>
+        </header>
+
+        <main class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-textMain">My EOIs</h1>
+                <p class="text-sm text-textMuted mt-1">Expressions of interest you've submitted to Calls for Expression of Interest.</p>
+            </div>
+            <div class="bg-surface border border-border rounded-xl shadow-card px-6 py-16 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-primary mb-5"><i class="fa-solid fa-hand-holding-heart text-2xl"></i></div>
+                <h2 class="text-lg font-bold text-textMain mb-2">No expressions of interest yet</h2>
+                <p class="text-sm text-textMuted max-w-sm mb-6">When you express interest in a Call for Expression of Interest, it'll appear here so you can track its status, manage visibility, or withdraw it.</p>
+                <a href="#" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primaryHover text-white rounded-lg font-medium text-sm transition-colors shadow-sm"><i class="fa-solid fa-magnifying-glass text-xs"></i> Browse the CFEOI Directory</a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="w-full text-center text-xs text-textMuted/50 py-6 border-t border-border/50 bg-background">
+        &copy; 2026 Herit Civic Platform. All rights reserved.
+    </footer>
+
+    <script>
+        // Visibility segmented toggle
+        document.querySelectorAll('[role="group"][aria-label="EOI visibility"]').forEach(group => {
+            group.querySelectorAll('.vis-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    group.querySelectorAll('.vis-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

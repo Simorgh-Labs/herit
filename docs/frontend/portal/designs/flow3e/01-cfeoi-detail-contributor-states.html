@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFEOI Detail — Contributor States | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#F9FAFB',
+                        surface: '#FFFFFF',
+                        surfaceHover: '#F9FAFB',
+                        primary: '#1D4ED8',
+                        primaryHover: '#1E40AF',
+                        brand: '#1D4ED8',
+                        textMain: '#111827',
+                        textMuted: '#6B7280',
+                        border: '#E5E7EB',
+                        inputBg: '#F9FAFB',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        infoBanner: '#DBEAFE',
+                        infoBannerText: '#1E40AF',
+                        'primary-blue': '#1D4ED8',
+                        'primary-light': '#EFF6FF',
+                        'surface-main': '#FFFFFF',
+                        'surface-subtle': '#F9FAFB',
+                        'surface-border': '#E5E7EB',
+                        'text-main': '#111827',
+                        'text-muted': '#6B7280',
+                        'status-error': '#DC2626',
+                        'status-errorLight': '#FEF2F2',
+                    },
+                    boxShadow: {
+                        'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                        'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F9FAFB;
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+        }
+        .anno {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+
+    <!-- ============================================================= -->
+    <!-- ANNOTATION DOC HEADER                                          -->
+    <!-- ============================================================= -->
+    <div class="bg-textMain text-white px-6 py-5">
+        <div class="max-w-[1440px] mx-auto">
+            <p class="anno text-[11px] uppercase tracking-widest text-white/50 mb-1">Flow 3e · Deliverable 01</p>
+            <h1 class="text-xl font-bold">CFEOI Detail — Contributor-facing states</h1>
+            <p class="text-sm text-white/60 mt-1 max-w-3xl">Annotated variants of the existing CFEOI detail page (<span class="anno">flow3c/03</span>, <span class="anno">CfeoiDetailPage.tsx</span>). The page itself is not redesigned — only the contributor sidebar and banners change per state. Each block below is one full page render.</p>
+        </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- STATE 1A — Open + authenticated non-owner                      -->
+    <!-- ============================================================= -->
+    <div class="border-b-8 border-background">
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex items-center gap-3 rounded-lg border border-dashed border-indigo-300 bg-indigo-50 px-4 py-2 text-sm text-indigo-900">
+                <span class="font-bold rounded bg-indigo-600 text-white px-2 py-0.5 text-xs">STATE 1A</span>
+                Open · authenticated non-owner — Express Interest available
+            </div>
+        </div>
+
+        <!-- Top Navigation -->
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer">
+              <div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted group-hover:text-text-main transition-colors"></i></div>
+            </div>
+          </div>
+        </header>
+
+        <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Breadcrumb -->
+            <nav class="flex text-sm text-textMuted mb-8" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center"><a href="#" class="hover:text-textMain transition-colors">CFEOI Directory</a></li>
+                    <li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Lead System Architect Search</span></div></li>
+                </ol>
+            </nav>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Left Column -->
+                <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium"><span class="w-2 h-2 rounded-full bg-success"></span> Open</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect Search</h1>
+                        <div class="flex flex-wrap items-center gap-2 mt-2">
+                            <span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium"><i class="fa-regular fa-user text-textMuted mr-2"></i> Human resource</span>
+                        </div>
+                    </div>
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                        <h2 class="text-xl font-bold text-textMain">Description</h2>
+                        <div class="prose max-w-none text-textMuted leading-relaxed">
+                            <p class="mb-4">We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure. This role involves working closely with the Ministry of Health and international tech partners to ensure a robust, scalable, and secure system.</p>
+                            <p class="mb-4"><strong>Key Responsibilities:</strong></p>
+                            <ul class="list-disc pl-5 mb-4 space-y-2">
+                                <li>Design end-to-end architecture for the national health data exchange.</li>
+                                <li>Ensure compliance with international healthcare data standards (HL7, FHIR).</li>
+                                <li>Lead a team of senior developers and data engineers.</li>
+                                <li>Evaluate and select appropriate cloud infrastructure providers.</li>
+                            </ul>
+                            <p>The ideal candidate will have a strong background in public sector IT transformations and a deep understanding of healthcare informatics.</p>
+                        </div>
+                        <div class="mt-4 pt-6 border-t border-border/50">
+                            <h3 class="text-sm font-semibold text-textMain uppercase tracking-wider mb-3">Tags</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted cursor-default">System Architecture</span>
+                                <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted cursor-default">Cloud Infrastructure</span>
+                                <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted cursor-default">HL7/FHIR</span>
+                                <span class="px-3 py-1.5 bg-inputBg border border-border/50 rounded-full text-sm text-textMuted cursor-default">Team Leadership</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Contributor sidebar -->
+                <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                    <!-- Express Interest Card -->
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                        <div class="text-center mb-6">
+                            <div class="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-4 text-primary"><i class="fa-solid fa-hand-holding-heart text-lg"></i></div>
+                            <h3 class="text-lg font-bold text-textMain mb-2">Express Interest</h3>
+                            <p class="text-sm text-textMuted">Connect with the project team and formally express your interest in this volunteer role.</p>
+                        </div>
+                        <a href="02-eoi-submission-form.html" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-medium py-3 px-4 rounded-lg transition-colors">Express Interest</a>
+                        <p class="text-xs text-center text-textMuted/70 mt-4">You'll add a short cover note. Nothing is sent until you submit.</p>
+                        <!-- Parent proposal -->
+                        <div class="border-t border-border/50 mt-6 pt-6">
+                            <h4 class="text-xs font-bold text-textMain uppercase tracking-wider mb-3">Related Context</h4>
+                            <a href="#" class="block p-4 rounded-lg border border-border/50 hover:border-primary hover:bg-primary-light transition-colors group">
+                                <span class="text-xs text-textMuted block mb-1">Parent Proposal</span>
+                                <span class="text-sm font-medium text-primary group-hover:underline flex items-center justify-between">Digital Health Infrastructure Upgrade <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- STATE 1B — Open + unauthenticated (sign-in modal)              -->
+    <!-- ============================================================= -->
+    <div class="border-b-8 border-background">
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-indigo-300 bg-indigo-50 px-4 py-2 text-sm text-indigo-900">
+                <span class="font-bold rounded bg-indigo-600 text-white px-2 py-0.5 text-xs">STATE 1B</span>
+                Open · unauthenticated — Sign-in modal (pattern from <span class="not-italic">flow1/08</span> · <span class="not-italic">CfeoiDetailPage.SignInModal</span>) triggered by Express Interest
+            </div>
+        </div>
+
+        <div class="relative">
+            <!-- Header (signed-out variant) -->
+            <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+              <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+                  <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+              </div>
+              <div class="flex items-center gap-3">
+                <button class="flex items-center gap-2 bg-primary hover:bg-primaryHover text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft"><i class="fa-brands fa-google text-xs"></i> Sign in with Google</button>
+              </div>
+            </header>
+
+            <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 blur-[2px] pointer-events-none select-none">
+                <nav class="flex text-sm text-textMuted mb-8"><ol class="inline-flex items-center space-x-1 md:space-x-2"><li class="inline-flex items-center"><a href="#" class="hover:text-textMain">CFEOI Directory</a></li><li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Lead System Architect Search</span></div></li></ol></nav>
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center gap-3"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium"><span class="w-2 h-2 rounded-full bg-success"></span> Open</span></div>
+                            <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect Search</h1>
+                            <div class="flex flex-wrap items-center gap-2 mt-2"><span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium"><i class="fa-regular fa-user text-textMuted mr-2"></i> Human resource</span></div>
+                        </div>
+                        <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                            <h2 class="text-xl font-bold text-textMain">Description</h2>
+                            <div class="prose max-w-none text-textMuted leading-relaxed"><p>We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure, working with the Ministry of Health and international tech partners.</p></div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                        <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                            <div class="text-center mb-6">
+                                <div class="w-12 h-12 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-4 text-primary"><i class="fa-solid fa-hand-holding-heart text-lg"></i></div>
+                                <h3 class="text-lg font-bold text-textMain mb-2">Express Interest</h3>
+                                <p class="text-sm text-textMuted">Sign in to connect with the project team and formally express your interest in this volunteer role.</p>
+                            </div>
+                            <button class="w-full flex items-center justify-center gap-2 bg-primary text-white font-medium py-3 px-4 rounded-lg">Sign In to Express Interest</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Sign-in modal overlay -->
+            <div class="absolute inset-0 z-40 flex items-center justify-center bg-textMain/40 backdrop-blur-sm p-4 sm:p-6" role="dialog" aria-modal="true">
+                <div class="bg-surface w-full max-w-md rounded-xl shadow-lg flex flex-col overflow-hidden">
+                    <div class="p-8 flex flex-col items-center text-center">
+                        <div class="w-14 h-14 bg-primary-light rounded-full flex items-center justify-center mb-5 ring-8 ring-primary-light/50 text-primary"><i class="fa-solid fa-lock text-lg"></i></div>
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold text-textMain mb-2">Sign in required</h2>
+                            <p class="text-sm text-textMuted leading-relaxed max-w-[280px] mx-auto">To express interest in volunteer roles or submit proposals, you need to sign in with your Google account.</p>
+                        </div>
+                        <div class="w-full flex flex-col gap-3">
+                            <button class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primaryHover transition-all shadow-sm"><i class="fa-brands fa-google"></i> Sign in with Google</button>
+                            <button class="w-full px-4 py-3 text-sm font-medium text-textMuted hover:text-textMain bg-surface border border-border rounded-lg hover:bg-surfaceHover transition-colors">Continue browsing</button>
+                        </div>
+                    </div>
+                    <div class="bg-background px-8 py-4 border-t border-border text-center">
+                        <p class="text-xs text-textMuted">Secure authentication via Google Workspace.<br>We do not post on your behalf.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- STATE 1C — Open + already submitted by this user              -->
+    <!-- ============================================================= -->
+    <div class="border-b-8 border-background">
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-indigo-300 bg-indigo-50 px-4 py-2 text-sm text-indigo-900">
+                <span class="font-bold rounded bg-indigo-600 text-white px-2 py-0.5 text-xs">STATE 1C</span>
+                Open · already submitted by this user — Express Interest replaced by "You've expressed interest"
+            </div>
+            <div class="anno mb-2 inline-flex flex-wrap items-start gap-3 rounded-lg border border-dashed border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
+                <span class="font-bold rounded bg-emerald-600 text-white px-2 py-0.5 text-xs whitespace-nowrap">DECISION</span>
+                <span><strong>Duplicate EOIs — adopted:</strong> the backend allows multiple EOIs per user per CFEOI, but the UI <strong>discourages duplicates</strong>. After a first submission the Express Interest CTA is replaced by this confirmation + a link to the EOI in My EOIs.</span>
+            </div>
+        </div>
+
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+          </div>
+        </header>
+
+        <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Post-submit confirmation banner (returning to detail after submit) -->
+            <div class="bg-success/10 border border-success/30 rounded-lg p-4 flex items-start sm:items-center gap-3 shadow-sm mb-8">
+                <i class="fa-solid fa-circle-check text-success mt-0.5 sm:mt-0"></i>
+                <div class="flex-1 text-sm text-success"><span class="font-semibold">Your expression of interest was submitted.</span> The proposal owner will review it. You can track or withdraw it from <a href="03-my-eois.html" class="underline font-semibold">My EOIs</a>.</div>
+                <button class="text-success/70 hover:text-success transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <nav class="flex text-sm text-textMuted mb-8"><ol class="inline-flex items-center space-x-1 md:space-x-2"><li class="inline-flex items-center"><a href="#" class="hover:text-textMain">CFEOI Directory</a></li><li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Lead System Architect Search</span></div></li></ol></nav>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 border border-success/20 text-success text-sm font-medium"><span class="w-2 h-2 rounded-full bg-success"></span> Open</span></div>
+                        <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect Search</h1>
+                        <div class="flex flex-wrap items-center gap-2 mt-2"><span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium"><i class="fa-regular fa-user text-textMuted mr-2"></i> Human resource</span></div>
+                    </div>
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                        <h2 class="text-xl font-bold text-textMain">Description</h2>
+                        <div class="prose max-w-none text-textMuted leading-relaxed"><p>We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure, working with the Ministry of Health and international tech partners.</p></div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                    <!-- Already-submitted card -->
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                        <div class="text-center mb-6">
+                            <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4 text-success"><i class="fa-solid fa-circle-check text-lg"></i></div>
+                            <h3 class="text-lg font-bold text-textMain mb-2">You've expressed interest</h3>
+                            <p class="text-sm text-textMuted">You submitted an expression of interest for this role. It's currently awaiting review.</p>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 mb-6">
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-gray-100 text-gray-700 border-gray-200">Pending</span>
+                        </div>
+                        <a href="03-my-eois.html" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primaryHover text-white font-medium py-2.5 px-4 rounded-lg transition-colors">View in My EOIs <i class="fa-solid fa-arrow-right text-sm"></i></a>
+                        <p class="text-xs text-center text-textMuted/70 mt-4">You can change its visibility or withdraw it from My EOIs.</p>
+                        <div class="border-t border-border/50 mt-6 pt-6">
+                            <h4 class="text-xs font-bold text-textMain uppercase tracking-wider mb-3">Related Context</h4>
+                            <a href="#" class="block p-4 rounded-lg border border-border/50 hover:border-primary hover:bg-primary-light transition-colors group">
+                                <span class="text-xs text-textMuted block mb-1">Parent Proposal</span>
+                                <span class="text-sm font-medium text-primary group-hover:underline flex items-center justify-between">Digital Health Infrastructure Upgrade <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- STATE 1D — Closed                                              -->
+    <!-- ============================================================= -->
+    <div>
+        <div class="max-w-[1440px] mx-auto px-6 pt-8">
+            <div class="anno mb-2 inline-flex items-center gap-3 rounded-lg border border-dashed border-indigo-300 bg-indigo-50 px-4 py-2 text-sm text-indigo-900">
+                <span class="font-bold rounded bg-indigo-600 text-white px-2 py-0.5 text-xs">STATE 1D</span>
+                Closed — no Express Interest; contributor sees closed notice
+            </div>
+        </div>
+
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+          </div>
+        </header>
+
+        <!-- Closed banner -->
+        <div class="bg-infoBanner/60 border-b border-primary/20">
+            <div class="max-w-[1440px] mx-auto px-6 py-3 flex items-start sm:items-center gap-3">
+                <i class="fa-solid fa-circle-info text-infoBannerText mt-0.5 sm:mt-0"></i>
+                <p class="text-sm text-infoBannerText"><span class="font-semibold">This CFEOI is closed.</span> It is no longer accepting new expressions of interest.</p>
+            </div>
+        </div>
+
+        <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <nav class="flex text-sm text-textMuted mb-8"><ol class="inline-flex items-center space-x-1 md:space-x-2"><li class="inline-flex items-center"><a href="#" class="hover:text-textMain">CFEOI Directory</a></li><li><div class="flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mx-2"></i><span class="text-textMain font-medium">Lead System Architect Search</span></div></li></ol></nav>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-3"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-500 text-sm font-medium"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Closed</span></div>
+                        <h1 class="text-3xl sm:text-4xl font-bold text-textMain tracking-tight">Lead System Architect Search</h1>
+                        <div class="flex flex-wrap items-center gap-2 mt-2"><span class="inline-flex items-center px-3 py-1 rounded-md bg-surface border border-border/50 text-textMain text-sm font-medium"><i class="fa-regular fa-user text-textMuted mr-2"></i> Human resource</span></div>
+                    </div>
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 sm:p-8 flex flex-col gap-6">
+                        <h2 class="text-xl font-bold text-textMain">Description</h2>
+                        <div class="prose max-w-none text-textMuted leading-relaxed"><p>We are seeking an experienced Lead System Architect to design and oversee the implementation of our new national digital health infrastructure, working with the Ministry of Health and international tech partners.</p></div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                    <div class="bg-surface rounded-xl border border-border/50 p-6 shadow-lg">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-inputBg border border-border/50 rounded-full flex items-center justify-center mx-auto mb-4 text-textMuted"><i class="fa-solid fa-lock text-lg"></i></div>
+                            <h3 class="text-lg font-bold text-textMain mb-2">This role is closed</h3>
+                            <p class="text-sm text-textMuted">The team is no longer accepting expressions of interest for this role. Browse other open opportunities in the directory.</p>
+                        </div>
+                        <a href="#" class="mt-6 w-full flex items-center justify-center gap-2 bg-transparent hover:bg-surfaceHover text-textMain font-medium py-2.5 px-4 rounded-lg border border-border/50 transition-colors">Back to CFEOI Directory</a>
+                        <div class="border-t border-border/50 mt-6 pt-6">
+                            <h4 class="text-xs font-bold text-textMain uppercase tracking-wider mb-3">Related Context</h4>
+                            <a href="#" class="block p-4 rounded-lg border border-border/50 hover:border-primary hover:bg-primary-light transition-colors group">
+                                <span class="text-xs text-textMuted block mb-1">Parent Proposal</span>
+                                <span class="text-sm font-medium text-primary group-hover:underline flex items-center justify-between">Digital Health Infrastructure Upgrade <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="w-full text-center text-xs text-textMuted/50 py-6 border-t border-border/50 bg-background">
+        &copy; 2026 Herit Civic Platform. All rights reserved.
+    </footer>
+
+</body>
+</html>
