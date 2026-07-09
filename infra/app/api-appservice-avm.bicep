@@ -42,7 +42,14 @@ module api 'br/public:avm/res/web/site:0.6.0' = {
     })
     appSettingsKeyValuePairs: union(
       appSettings,
-      { ENABLE_ORYX_BUILD: true, ApplicationInsightsAgent_EXTENSION_VERSION: contains(kind, 'linux') ? '~3' : '~2' }
+      {
+        // azd already runs `dotnet publish` and zip-deploys the output, so a second
+        // remote build in Kudu/Oryx is redundant — and on the B1 plan it's slow enough
+        // to blow past azd's deploy timeout.
+        ENABLE_ORYX_BUILD: false
+        SCM_DO_BUILD_DURING_DEPLOYMENT: false
+        ApplicationInsightsAgent_EXTENSION_VERSION: contains(kind, 'linux') ? '~3' : '~2'
+      }
     )
     logsConfiguration: {
       applicationLogs: { fileSystem: { level: 'Verbose' } }
