@@ -20,7 +20,7 @@ export const withdrawEoi = (id: string): Promise<void> =>
   apiClient.patch(`/Eoi/${id}/withdraw`).then((r) => r.data);
 
 export const updateEoiStatus = (id: string, status: EoiStatus): Promise<void> =>
-  apiClient.patch(`/Eoi/${id}/status`, { status }).then((r) => r.data);
+  apiClient.patch(`/Eoi/${id}/status`, { newStatus: status }).then((r) => r.data);
 
 export const setEoiVisibility = (id: string, visibility: EoiVisibility): Promise<void> =>
   apiClient.patch(`/Eoi/${id}/visibility`, visibility).then((r) => r.data);
