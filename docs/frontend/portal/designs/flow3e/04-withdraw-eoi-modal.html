@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw EOI Confirmation Modal | Herit Civic Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans: ['Inter', 'sans-serif'] },
+                colors: {
+                    background: '#F9FAFB', surface: '#FFFFFF', surfaceHover: '#F9FAFB',
+                    primary: '#1D4ED8', primaryHover: '#1E40AF', brand: '#1D4ED8',
+                    textMain: '#111827', textMuted: '#6B7280', border: '#E5E7EB', inputBg: '#F9FAFB',
+                    success: '#10B981', danger: '#EF4444', infoBanner: '#DBEAFE', infoBannerText: '#1E40AF',
+                    'primary-blue': '#1D4ED8', 'primary-light': '#EFF6FF', 'surface-main': '#FFFFFF',
+                    'surface-subtle': '#F9FAFB', 'surface-border': '#E5E7EB', 'text-main': '#111827',
+                    'text-muted': '#6B7280', 'status-error': '#DC2626', 'status-errorLight': '#FEF2F2',
+                },
+                boxShadow: {
+                    'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                    'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+                    'nav': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                }
+            } }
+        }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F9FAFB; color: #111827; font-family: 'Inter', sans-serif; }
+        .anno { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    </style>
+</head>
+<body class="relative overflow-x-hidden h-screen flex flex-col">
+
+    <!-- ANNOTATION DOC HEADER -->
+    <div class="bg-textMain text-white px-6 py-3 flex-shrink-0">
+        <div class="max-w-[1440px] mx-auto flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <p class="anno text-[11px] uppercase tracking-widest text-white/50">Flow 3e · Deliverable 04</p>
+            <h1 class="text-base font-bold">Withdraw EOI — destructive confirmation modal</h1>
+            <p class="anno text-[11px] text-white/50">pattern: flow3b/07 (layout · radii · shadows reused exactly)</p>
+        </div>
+    </div>
+
+    <div class="relative flex-1 overflow-hidden">
+
+        <!-- Top Navigation -->
+        <header class="bg-surface-main border-b border-surface-border shadow-nav h-16 flex items-center justify-between px-6">
+          <div class="flex items-center gap-8"><a href="#" class="flex items-center gap-2 group">
+              <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">H</div><span class="text-lg font-bold tracking-tight text-text-main group-hover:text-primary-blue transition-colors">Herit</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6"><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Browse RFPs</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Public Proposals</a><a href="#" class="text-sm font-medium text-text-muted hover:text-text-main transition-colors">CFEOI Directory</a></nav>
+          </div>
+          <div class="flex items-center gap-4"><button class="hidden sm:flex bg-primary-blue hover:bg-primary-blue/90 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-soft items-center gap-2"><i class="fa-solid fa-plus text-xs"></i> Create Proposal</button>
+            <div class="relative group cursor-pointer"><div class="flex items-center gap-2"><img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border-2 border-surface-main shadow-sm"><i class="fa-solid fa-chevron-down text-xs text-text-muted"></i></div></div>
+          </div>
+        </header>
+
+        <!-- Blurred My EOIs background -->
+        <main class="blur-[2px] pointer-events-none select-none w-full max-w-[1000px] mx-auto px-6 py-8">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-textMain">My EOIs</h1>
+                <p class="text-sm text-textMuted mt-1">Expressions of interest you've submitted to Calls for Expression of Interest.</p>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="bg-surface border border-border rounded-xl p-6 shadow-card">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-gray-100 text-gray-700 border-gray-200 mb-1.5">Pending</span>
+                            <p class="text-lg font-semibold text-textMain">Lead System Architect Search</p>
+                            <p class="text-sm text-textMuted mt-0.5"><i class="fa-solid fa-folder-open text-textMuted/70 mr-1.5"></i> Digital Health Infrastructure Upgrade · Ministry of Health</p>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 bg-surface border border-danger/40 text-danger rounded-lg font-medium text-sm"><i class="fa-solid fa-trash-can text-xs"></i> Withdraw</button>
+                    </div>
+                </div>
+                <div class="bg-surface border border-border rounded-xl p-6 shadow-card">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border bg-green-100 text-green-700 border-green-200 mb-1.5">Approved</span>
+                            <p class="text-lg font-semibold text-textMain">Community Health Data Analyst</p>
+                            <p class="text-sm text-textMuted mt-0.5"><i class="fa-solid fa-folder-open text-textMuted/70 mr-1.5"></i> Rural Telemedicine Expansion · Ministry of Health</p>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 bg-surface border border-danger/40 text-danger rounded-lg font-medium text-sm"><i class="fa-solid fa-trash-can text-xs"></i> Withdraw</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal backdrop -->
+        <div class="absolute inset-0 bg-textMain/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+
+            <!-- Withdraw confirmation modal -->
+            <div class="bg-surface w-full max-w-lg rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] border border-border overflow-hidden flex flex-col">
+
+                <!-- Header -->
+                <div class="px-6 pt-6 pb-4 flex flex-col items-center text-center">
+                    <div class="w-14 h-14 rounded-full bg-status-errorLight flex items-center justify-center mb-4 shadow-sm border border-red-100">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl text-status-error"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-textMain mb-2">Withdraw expression of interest?</h2>
+                    <p class="text-sm text-textMuted leading-relaxed">
+                        This will <span class="font-semibold text-textMain">permanently delete</span> your EOI for <span class="font-semibold text-textMain">Lead System Architect Search</span>. It is not archived and cannot be undone — the record is removed entirely and disappears from your list and the owner's inbox. You'd need to submit a brand-new EOI to express interest again.
+                    </p>
+                </div>
+
+                <!-- Body -->
+                <div class="px-6 py-4 bg-background border-y border-border">
+                    <form class="space-y-5">
+                        <div class="flex items-start gap-3 pt-2">
+                            <div class="flex items-center h-5">
+                                <input id="confirm-withdraw" type="checkbox" class="w-4 h-4 border border-border rounded bg-surface focus:ring-2 focus:ring-primary text-primary accent-[#DC2626] cursor-pointer">
+                            </div>
+                            <label for="confirm-withdraw" class="text-sm text-textMuted cursor-pointer">
+                                I understand that withdrawing this EOI permanently deletes it and cannot be undone.
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-surface flex items-center justify-end gap-3">
+                    <button type="button" class="px-4 py-2 bg-surface border border-border text-textMain rounded-lg font-medium text-sm hover:bg-surfaceHover transition-colors shadow-sm">Cancel</button>
+                    <button type="button" id="withdraw-btn" disabled class="px-4 py-2 bg-[#DC2626] text-white rounded-lg font-medium text-sm hover:bg-[#B91C1C] transition-colors shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-trash-can text-xs"></i> Withdraw EOI
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cb = document.getElementById('confirm-withdraw');
+        const btn = document.getElementById('withdraw-btn');
+        cb.addEventListener('change', () => { btn.disabled = !cb.checked; });
+    </script>
+</body>
+</html>

@@ -105,6 +105,7 @@
 ### 3e) Browse CFEOIs & Submit/Withdraw EOI (contributor perspective)
 - Start: Browse CFEOI list or CFEOI detail page
 - Node: CFEOI Detail → "Express Interest" button (only shown when CFEOI status is `Open`)
+  - Note (duplicate EOIs — decided): the backend does not prevent multiple EOIs from the same user on one CFEOI, but the UI discourages duplicates. If the current user already has an EOI on this CFEOI, the "Express Interest" button is replaced by a "You've expressed interest" state showing the EOI's status and linking to it on the My EOIs page.
 - Decision: Authenticated?
   - If No → redirect to Authentication flow (Sign in with Google)
   - If Yes → Node: EOI submission form (fields: message / cover note)
@@ -112,6 +113,7 @@
 - Actions:
   - **Submit EOI** → `POST /api/v1/Eoi` → EOI created with `Pending` status; in-app confirmation and placeholder: Future email to contributor and proposal owner
   - **Withdraw EOI** → confirmation modal → `PATCH /api/v1/Eoi/{id}/withdraw` → the EOI record is **deleted** from the system (withdrawal is not a status change; the EOI is permanently removed); in-app confirmation and placeholder: Future email to proposal owner (if implemented in future)
+    - Note (withdraw availability — decided): the backend permits withdrawal in any status, and the UI offers the action on all statuses. On `Pending` and `Approved` EOIs it is labelled **"Withdraw"**; on `Rejected` EOIs the same action is labelled **"Delete"** (the decision is final, so "withdraw" would be misleading — but the user must retain the ability to remove their EOI record and cover note). Both labels invoke the same endpoint and the same permanent-deletion confirmation modal.
   - **Manage EOI visibility** on contributor's My EOIs page: toggle between **Private** (visible to submitter only) and **Shared** (visible to submitter and the proposal owner/relevant staff) via `PATCH /api/v1/Eoi/{id}/visibility`
     - Note: `EoiVisibility` values are `Private` and `Shared`. Do not use "Public" or "Hidden" as labels.
 - End: EOI submitted (status `Pending`) or deleted (if withdrawn)
@@ -138,6 +140,8 @@
 - CFEOI flows do not include draft saving; publishing creates an `Open` CFEOI immediately. CFEOI has no visibility field; it inherits visibility from its parent proposal. CFEOI `Closed` status is terminal.
 - CFEOI forms include all required fields (title, description, resource type) and the optional tags field. No "visibility" control appears on the CFEOI form.
 - EOI withdrawal is shown as a deletion action, not a status transition. Withdrawn EOIs do not appear in any list.
+- The withdraw/delete action is available on EOIs in every status: labelled "Withdraw" on `Pending` and `Approved`, and "Delete" on `Rejected`. Both labels use the same withdraw endpoint and the same permanent-deletion confirmation modal.
+- The "Express Interest" button does not appear on a CFEOI where the current user already has an EOI; it is replaced by an already-submitted state linking to the My EOIs page.
 - EOI status filter options in the owner's inbox are: `Pending`, `Approved`, `Rejected` — no other values.
 - Notification actions are shown only as clearly labelled placeholders (future infrastructure), not as required dependencies.
 - All features listed as out-of-scope by the PRD are removed from the flows. The "availability" field does not appear in the EOI submission form.
