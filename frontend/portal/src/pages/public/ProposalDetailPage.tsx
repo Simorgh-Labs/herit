@@ -85,9 +85,8 @@ export default function ProposalDetailPage() {
   });
 
   const { data: cfeois } = useQuery({
-    queryKey: ['cfeois'],
-    queryFn: () => listCfeois(),
-    select: (data) => data.filter((c) => c.status === 'Open' && c.proposalId === proposalId),
+    queryKey: ['cfeois', { status: 'Open', proposalId }],
+    queryFn: () => listCfeois({ status: 'Open', proposalId: proposalId! }),
     enabled: !!proposalId,
   });
 

@@ -13,11 +13,11 @@ export default function ProposalListPage() {
   const [search, setSearch] = useState('');
   const [selectedStatuses, setSelectedStatuses] = useState<ProposalStatus[]>([]);
 
-  // TODO: replace with server-side filtering once backend supports query parameters
+  // Visibility is enforced server-side: anonymous callers receive only Public proposals,
+  // authenticated expats additionally receive Shared proposals.
   const { data: proposals, isLoading, isError } = useQuery({
     queryKey: ['proposals'],
-    queryFn: listProposals,
-    select: (data) => data.filter((p) => p.visibility === 'Public'),
+    queryFn: () => listProposals(),
   });
 
   const { data: orgs } = useQuery({

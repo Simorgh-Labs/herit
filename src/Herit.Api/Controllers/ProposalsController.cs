@@ -29,8 +29,8 @@ public class ProposalsController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> List(CancellationToken ct)
-        => Ok(await _mediator.Send(new ListProposalsQuery(), ct));
+    public async Task<IActionResult> List([FromQuery] Guid? rfpId, CancellationToken ct)
+        => Ok(await _mediator.Send(new ListProposalsQuery(rfpId), ct));
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]

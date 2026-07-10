@@ -1,8 +1,8 @@
 import { apiClient } from './client';
 import type { Proposal, CreateProposalRequest, UpdateProposalRequest, ProposalStatus, ProposalVisibility } from '../types';
 
-export const listProposals = (): Promise<Proposal[]> =>
-  apiClient.get('/Proposals').then((r) => r.data);
+export const listProposals = (params?: { rfpId?: string }): Promise<Proposal[]> =>
+  apiClient.get('/Proposals', { params }).then((r) => r.data);
 
 export const getProposalById = (id: string): Promise<Proposal> =>
   apiClient.get(`/Proposals/${id}`).then((r) => r.data);

@@ -1,31 +1,97 @@
 using Herit.Application.Features.Cfeoi.Queries.ListCfeois;
 using Herit.Application.Interfaces;
+using Herit.Domain.Entities;
+using UserEntity = Herit.Domain.Entities.User;
 using Herit.Domain.Enums;
 using NSubstitute;
 using CfeoiEntity = Herit.Domain.Entities.Cfeoi;
+using ProposalEntity = Herit.Domain.Entities.Proposal;
 
 namespace Herit.Application.Tests.Features.Cfeoi.Queries.ListCfeois;
 
 public class ListCfeoisQueryHandlerTests
 {
     private readonly ICfeoiRepository _cfeoiRepository = Substitute.For<ICfeoiRepository>();
+    private readonly IProposalRepository _proposalRepository = Substitute.For<IProposalRepository>();
+    private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly ListCfeoisQueryHandler _handler;
+
+    private readonly Guid _ownerId = Guid.NewGuid();
+    private readonly ProposalEntity _publicProposal;
+    private readonly ProposalEntity _sharedProposal;
+    private readonly ProposalEntity _privateProposal;
+    private readonly CfeoiEntity _underPublic;
+    private readonly CfeoiEntity _underShared;
+    private readonly CfeoiEntity _underPrivate;
 
     public ListCfeoisQueryHandlerTests()
     {
-        _handler = new ListCfeoisQueryHandler(_cfeoiRepository);
+        _handler = new ListCfeoisQueryHandler(_cfeoiRepository, _proposalRepository, _currentUserService);
+
+        _publicProposal = MakeProposal(ProposalVisibility.Public, _ownerId);
+        _sharedProposal = MakeProposal(ProposalVisibility.Shared, _ownerId);
+        _privateProposal = MakeProposal(ProposalVisibility.Private, _ownerId);
+
+        _underPublic = MakeCfeoi(_publicProposal.Id);
+        _underShared = MakeCfeoi(_sharedProposal.Id);
+        _underPrivate = MakeCfeoi(_privateProposal.Id);
+
+        _proposalRepository.ListAsync(Arg.Any<CancellationToken>())
+            .Returns(new[] { _publicProposal, _sharedProposal, _privateProposal });
+        _cfeoiRepository.ListAsync(null, null, Arg.Any<CancellationToken>())
+            .Returns(new[] { _underPublic, _underShared, _underPrivate });
+    }
+
+    private static ProposalEntity MakeProposal(ProposalVisibility visibility, Guid authorId)
+    {
+        var proposal = ProposalEntity.Create(Guid.NewGuid(), "Title", "Short", authorId, Guid.NewGuid(), "Long");
+        proposal.SetVisibility(visibility);
+        return proposal;
+    }
+
+    private static CfeoiEntity MakeCfeoi(Guid proposalId)
+        => CfeoiEntity.Create(Guid.NewGuid(), "CFEOI", "Description", CfeoiResourceType.Human, proposalId);
+
+    private static UserEntity MakeUser(Guid id, UserRole role)
+        => UserEntity.Create(id, $"ext-{id}", "user@example.com", "User", role);
+
+    private void CurrentUser(UserEntity? user)
+        => _currentUserService.GetCurrentUserOrNullAsync(Arg.Any<CancellationToken>()).Returns(user);
+
+    [Fact]
+    public async Task Handle_Anonymous_ReturnsOnlyCfeoisUnderPublicProposals()
+    {
+        CurrentUser(null);
+
+        var result = await _handler.Handle(new ListCfeoisQuery(), CancellationToken.None);
+
+        Assert.Equal(new[] { _underPublic.Id }, result.Select(c => c.Id));
     }
 
     [Fact]
-    public async Task Handle_NoFilters_ReturnsAllCfeois()
+    public async Task Handle_NonOwnerExpat_ReturnsCfeoisUnderPublicAndShared()
     {
-        var cfeois = new[]
-        {
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 1", "Description 1", CfeoiResourceType.Human, Guid.NewGuid()),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 2", "Description 2", CfeoiResourceType.NonHuman, Guid.NewGuid()),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title 3", "Description 3", CfeoiResourceType.Human, Guid.NewGuid())
-        };
-        _cfeoiRepository.ListAsync(null, null, Arg.Any<CancellationToken>()).Returns(cfeois);
+        CurrentUser(MakeUser(Guid.NewGuid(), UserRole.Expat));
+
+        var result = await _handler.Handle(new ListCfeoisQuery(), CancellationToken.None);
+
+        Assert.Equal(new[] { _underPublic.Id, _underShared.Id }, result.Select(c => c.Id));
+    }
+
+    [Fact]
+    public async Task Handle_ProposalOwner_ReturnsCfeoiUnderOwnPrivateProposal()
+    {
+        CurrentUser(MakeUser(_ownerId, UserRole.Expat));
+
+        var result = await _handler.Handle(new ListCfeoisQuery(), CancellationToken.None);
+
+        Assert.Contains(result, c => c.Id == _underPrivate.Id);
+    }
+
+    [Fact]
+    public async Task Handle_Staff_ReturnsAllCfeois()
+    {
+        CurrentUser(MakeUser(Guid.NewGuid(), UserRole.Staff));
 
         var result = await _handler.Handle(new ListCfeoisQuery(), CancellationToken.None);
 
@@ -35,12 +101,9 @@ public class ListCfeoisQueryHandlerTests
     [Fact]
     public async Task Handle_FilterByStatus_PassesStatusToRepository()
     {
-        var proposalId = Guid.NewGuid();
-        var cfeois = new[]
-        {
-            CfeoiEntity.Create(Guid.NewGuid(), "Open CFEOI", "Description", CfeoiResourceType.Human, proposalId)
-        };
-        _cfeoiRepository.ListAsync(CfeoiStatus.Open, null, Arg.Any<CancellationToken>()).Returns(cfeois);
+        _cfeoiRepository.ListAsync(CfeoiStatus.Open, null, Arg.Any<CancellationToken>())
+            .Returns(new[] { _underPublic });
+        CurrentUser(MakeUser(Guid.NewGuid(), UserRole.Staff));
 
         var result = await _handler.Handle(new ListCfeoisQuery(Status: CfeoiStatus.Open), CancellationToken.None);
 
@@ -51,24 +114,21 @@ public class ListCfeoisQueryHandlerTests
     [Fact]
     public async Task Handle_FilterByProposalId_PassesProposalIdToRepository()
     {
-        var proposalId = Guid.NewGuid();
-        var cfeois = new[]
-        {
-            CfeoiEntity.Create(Guid.NewGuid(), "Title A", "Description", CfeoiResourceType.Human, proposalId),
-            CfeoiEntity.Create(Guid.NewGuid(), "Title B", "Description", CfeoiResourceType.NonHuman, proposalId)
-        };
-        _cfeoiRepository.ListAsync(null, proposalId, Arg.Any<CancellationToken>()).Returns(cfeois);
+        _cfeoiRepository.ListAsync(null, _publicProposal.Id, Arg.Any<CancellationToken>())
+            .Returns(new[] { _underPublic });
+        CurrentUser(MakeUser(Guid.NewGuid(), UserRole.Staff));
 
-        var result = await _handler.Handle(new ListCfeoisQuery(ProposalId: proposalId), CancellationToken.None);
+        var result = await _handler.Handle(new ListCfeoisQuery(ProposalId: _publicProposal.Id), CancellationToken.None);
 
-        Assert.Equal(2, result.Count());
-        await _cfeoiRepository.Received(1).ListAsync(null, proposalId, Arg.Any<CancellationToken>());
+        Assert.Single(result);
+        await _cfeoiRepository.Received(1).ListAsync(null, _publicProposal.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_EmptyList_ReturnsEmptyEnumerable()
     {
         _cfeoiRepository.ListAsync(null, null, Arg.Any<CancellationToken>()).Returns(Enumerable.Empty<CfeoiEntity>());
+        CurrentUser(MakeUser(Guid.NewGuid(), UserRole.Staff));
 
         var result = await _handler.Handle(new ListCfeoisQuery(), CancellationToken.None);
 

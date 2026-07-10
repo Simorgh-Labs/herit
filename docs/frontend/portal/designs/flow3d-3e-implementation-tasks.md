@@ -17,7 +17,7 @@ Shared context for all tasks:
 
 Implement the EOI inbox per mockup `flow3d/01-eoi-inbox-owner.html` and spec section 3d, replacing the stub `CfeoiEoiInboxPage.tsx` at `/cfeois/:cfeoiId/eois`.
 
-The inbox lists EOIs for the CFEOI via `listEoisByCfeoi`, filtered client-side by status (`Pending`/`Approved`/`Rejected` — the only three values; withdrawn EOIs are deleted and simply don't appear). Each entry shows submitter and message/cover note, with Approve and Reject actions calling `updateEoiStatus`; both are terminal, so approved/rejected entries show no further actions. Reachable from the owner CFEOI detail page's "View All EOIs" link (already implemented in flow3c). Guard the route to the proposal owner. Respect EOI visibility: only `Shared` EOIs are visible to the owner per the spec's visibility rules — confirm the backend's behaviour for this endpoint and match it. The inbox must remain accessible when the CFEOI is `Closed` (with the closed-state banner from the mockup).
+The inbox lists EOIs for the CFEOI via `listEoisByCfeoi`, filtered client-side by status (`Pending`/`Approved`/`Rejected` — the only three values; withdrawn EOIs are deleted and simply don't appear). Each entry shows submitter and message/cover note, with Approve and Reject actions calling `updateEoiStatus`; both are terminal, so approved/rejected entries show no further actions. Reachable from the owner CFEOI detail page's "View All EOIs" link (already implemented in flow3c). Guard the route to the proposal owner. Respect EOI visibility: only `Shared` EOIs are visible to the owner per the spec's visibility rules — the backend now enforces this on `listEoisByCfeoi`; the inbox additionally filters to `Shared` client-side as defense-in-depth. The inbox must remain accessible when the CFEOI is `Closed` (with the closed-state banner from the mockup).
 
 ## 2. Implement contributor states on the CFEOI detail page (flow 3e)
 
@@ -35,7 +35,7 @@ A dedicated page reached from the CFEOI detail CTA, showing the target CFEOI con
 
 Implement the My EOIs page per mockup `flow3e/03-my-eois.html` and spec section 3e, replacing the stub `MyEoisPage.tsx`.
 
-List the user's EOIs via `listMyEois`, each showing the parent CFEOI (linked) and proposal, a status badge (reuse `StatusBadge`), the Private/Shared visibility segmented toggle calling `setEoiVisibility`, and the withdraw action — labelled "Withdraw" on `Pending`/`Approved` rows and "Delete" on `Rejected` rows per the decided behaviour (both open the same confirmation modal from task 5). Include client-side status filter tabs with the interim-filtering note, and the empty state with a link to the CFEOI directory.
+List the user's EOIs via `listMyEois`, each showing the parent CFEOI (linked) and proposal, a status badge (reuse `StatusBadge`), the Private/Shared visibility segmented toggle calling `setEoiVisibility`, and the withdraw action — labelled "Withdraw" on `Pending`/`Approved` rows and "Delete" on `Rejected` rows per the decided behaviour (both open the same confirmation modal from task 5). Include client-side status filter tabs (a UI concern) and the empty state with a link to the CFEOI directory.
 
 ## 5. Implement the withdraw/delete EOI confirmation modal (flow 3e)
 

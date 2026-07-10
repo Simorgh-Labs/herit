@@ -10,16 +10,15 @@ import EmptyState from '../../components/EmptyState';
 export default function CfeoiDirectoryPage() {
   const [search, setSearch] = useState('');
 
-  // TODO: replace with server-side filtering once backend supports query parameters
+  // Parent-proposal visibility is enforced server-side; the directory shows only Open calls.
   const { data: cfeois, isLoading, isError } = useQuery({
-    queryKey: ['cfeois'],
-    queryFn: () => listCfeois(),
-    select: (data) => data.filter((c) => c.status === 'Open'),
+    queryKey: ['cfeois', { status: 'Open' }],
+    queryFn: () => listCfeois({ status: 'Open' }),
   });
 
   const { data: proposals } = useQuery({
     queryKey: ['proposals'],
-    queryFn: listProposals,
+    queryFn: () => listProposals(),
   });
 
   const proposalMap = Object.fromEntries((proposals ?? []).map((p) => [p.id, p.title]));

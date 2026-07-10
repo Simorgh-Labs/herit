@@ -16,11 +16,10 @@ export default function RfpListPage() {
     );
   };
 
-  // TODO: replace with server-side filtering once backend supports query parameters
+  // Status visibility is enforced server-side: non-staff callers receive only Published RFPs.
   const { data: rfps, isLoading, isError } = useQuery({
     queryKey: ['rfps'],
     queryFn: listRfps,
-    select: (data) => data.filter((rfp) => rfp.status === 'Published'),
   });
 
   const { data: orgs } = useQuery({

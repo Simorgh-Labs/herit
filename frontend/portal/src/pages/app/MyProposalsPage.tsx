@@ -40,7 +40,7 @@ export default function MyProposalsPage() {
 
   const { data: allProposals = [], isLoading } = useQuery({
     queryKey: ['proposals'],
-    queryFn: listProposals,
+    queryFn: () => listProposals(),
   });
 
   const myProposals = allProposals.filter((p) => p.authorId === user?.id);

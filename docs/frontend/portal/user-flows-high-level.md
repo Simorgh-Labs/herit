@@ -18,10 +18,10 @@
 ### 1) Unauthenticated Browsing (flow nodes & branches)
 - Start: Public Landing / Home
 - Node 1: RFP List (published) — filters & search
-  - Note: The current `GET /api/v1/Rfps` endpoint returns all RFPs with no server-side filtering. Until query parameters are added to the backend, the frontend must filter client-side to show only `Published` RFPs.
+  - Note: `GET /api/v1/Rfps` filters server-side — non-staff callers receive only `Published` RFPs. The frontend applies UI filters (search, department) on top of this.
 - Node 2: RFP Detail (read-only) — RFP metadata, department, publish date, public attachments are out-of-scope (do not reference attachments)
 - Branch: From landing or RFP list → Public Proposals List
-  - Note: The current `GET /api/v1/Proposals` endpoint returns all proposals with no server-side visibility or status filtering. Until query parameters are added to the backend, the frontend must filter client-side to show only proposals with `Visibility = Public`.
+  - Note: `GET /api/v1/Proposals` filters server-side by visibility — anonymous callers receive only `Public` proposals; authenticated expats additionally receive `Shared` proposals. The frontend applies UI filters (search, status) on top of this.
 - Node 3: Proposal Detail (public) — summary, status, visible CFEOIs
 - Node 4: CFEOI Detail (public) — title, description, resource type, tags
 - Decision: Attempt to interact (Express Interest / Apply / Bookmark)?
@@ -125,7 +125,7 @@
 - EOI entity model respected: EOI statuses are `Pending`, `Approved`, `Rejected`. Withdrawal is not a status — it permanently deletes the EOI record.
 - EOI visibility values are `Private` and `Shared`. `Private` means visible to the submitter only; `Shared` means visible to the submitter and the proposal owner/relevant staff.
 - Proposal statuses are `Ideation`, `Resourcing`, `Submitted`, `UnderReview`, `Approved`, `Withdrawn`. `Withdrawn` is a terminal state reachable only from `Submitted` and cannot be reversed.
-- List endpoints (`GET /api/v1/Proposals`, `GET /api/v1/Rfps`, `GET /api/v1/Cfeoi`) do not yet accept filter query parameters for status or visibility. Until server-side filtering is implemented, the frontend must apply client-side filtering to respect visibility and status rules. This is a known backend gap that must be resolved before building the browse surfaces in production.
+- List endpoints (`GET /api/v1/Proposals`, `GET /api/v1/Rfps`, `GET /api/v1/Cfeoi`) enforce visibility and status rules server-side, so callers only receive records they are authorized to see. They also accept optional convenience filter query parameters (e.g. `status`, `proposalId`, `rfpId`) that the browse surfaces pass through. Client-side filtering is limited to UI concerns (search, tabs).
 
 ### Diagram organization & recommended next steps
 - Produce separate flowcharts for: Unauthenticated Browsing; Authentication; Proposal Creation; Proposal Lifecycle; CFEOI Publishing and Management; EOI Management (owner); CFEOI Browser/EOI Submission (contributor). Provide a master index diagram that links to each flowchart and highlights the Resourcing precondition for CFEOI publishing.
@@ -145,4 +145,4 @@
 - EOI status filter options in the owner's inbox are: `Pending`, `Approved`, `Rejected` — no other values.
 - Notification actions are shown only as clearly labelled placeholders (future infrastructure), not as required dependencies.
 - All features listed as out-of-scope by the PRD are removed from the flows. The "availability" field does not appear in the EOI submission form.
-- A note is included on list/browse surfaces flagging that server-side filtering is not yet implemented and client-side filtering is the interim approach.
+- List/browse surfaces rely on server-side visibility and status filtering; client-side filtering is limited to UI concerns (search, tabs).

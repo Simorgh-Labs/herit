@@ -36,14 +36,11 @@ export default function RfpDetailPage() {
     enabled: !!rfp?.organisationId,
   });
 
-  // TODO: replace with server-side filtering once backend supports query parameters
+  // Proposals for this RFP, scoped by visibility server-side; show at most three.
   const { data: relatedProposals } = useQuery({
-    queryKey: ['proposals'],
-    queryFn: listProposals,
-    select: (data) =>
-      data
-        .filter((p) => p.visibility === 'Public' && p.rfpId === rfpId)
-        .slice(0, 3),
+    queryKey: ['proposals', { rfpId }],
+    queryFn: () => listProposals({ rfpId: rfpId! }),
+    select: (data) => data.slice(0, 3),
     enabled: !!rfpId,
   });
 
