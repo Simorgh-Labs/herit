@@ -22,6 +22,26 @@ public class CurrentUserService : ICurrentUserService
         _mediator = mediator;
     }
 
+    public async Task<User?> GetCurrentUserOrNullAsync(CancellationToken ct = default)
+    {
+        if (_cachedUser is not null)
+            return _cachedUser;
+
+        var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
+        if (claimsPrincipal?.Identity is not { IsAuthenticated: true })
+            return null;
+
+        var externalId = ResolveExternalId(claimsPrincipal);
+        if (externalId is null)
+            return null;
+
+        var user = await _userRepository.GetByExternalIdAsync(externalId, ct);
+        if (user is not null)
+            _cachedUser = user;
+
+        return user;
+    }
+
     public async Task<User> GetCurrentUserAsync(CancellationToken ct = default)
     {
         if (_cachedUser is not null)
@@ -30,12 +50,7 @@ public class CurrentUserService : ICurrentUserService
         var claimsPrincipal = _httpContextAccessor.HttpContext?.User
             ?? throw new UnauthorizedAccessException("No HTTP context available.");
 
-        static string? NonEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
-
-        var externalId =
-            NonEmpty(claimsPrincipal.FindFirst("oid")?.Value)
-            ?? NonEmpty(claimsPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value)
-            ?? NonEmpty(claimsPrincipal.FindFirst("sub")?.Value)
+        var externalId = ResolveExternalId(claimsPrincipal)
             ?? throw new UnauthorizedAccessException("Subject claim could not be determined.");
 
         var user = await _userRepository.GetByExternalIdAsync(externalId, ct);
@@ -61,5 +76,14 @@ public class CurrentUserService : ICurrentUserService
 
         _cachedUser = user;
         return _cachedUser;
+    }
+
+    private static string? ResolveExternalId(System.Security.Claims.ClaimsPrincipal claimsPrincipal)
+    {
+        static string? NonEmpty(string? s) => string.IsNullOrWhiteSpace(s) ? null : s;
+
+        return NonEmpty(claimsPrincipal.FindFirst("oid")?.Value)
+            ?? NonEmpty(claimsPrincipal.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value)
+            ?? NonEmpty(claimsPrincipal.FindFirst("sub")?.Value);
     }
 }

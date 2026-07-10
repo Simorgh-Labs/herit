@@ -47,7 +47,7 @@ export default function DashboardPage() {
   // TODO: filter by authorId client-side — backend list endpoint has no filter params yet
   const { data: allProposals = [], isLoading: proposalsLoading } = useQuery({
     queryKey: ['proposals'],
-    queryFn: listProposals,
+    queryFn: () => listProposals(),
   });
 
   const { data: myEois = [], isLoading: eoisLoading } = useQuery({

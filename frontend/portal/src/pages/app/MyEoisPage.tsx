@@ -33,7 +33,7 @@ export default function MyEoisPage() {
 
   const { data: proposals = [] } = useQuery({
     queryKey: ['proposals'],
-    queryFn: listProposals,
+    queryFn: () => listProposals(),
   });
 
   const cfeoiById = new Map(cfeois.map((c) => [c.id, c]));
