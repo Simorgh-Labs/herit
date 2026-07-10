@@ -7,6 +7,7 @@ import { listProposals } from '../../api/proposals';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import EmptyState from '../../components/EmptyState';
 import StatusBadge from '../../components/StatusBadge';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import type { Eoi, EoiVisibility } from '../../types';
 
 type FilterTab = 'All' | 'Pending' | 'Approved' | 'Rejected';
@@ -18,6 +19,7 @@ export default function MyEoisPage() {
   const [activeTab, setActiveTab] = useState<FilterTab>('All');
   const [withdrawTarget, setWithdrawTarget] = useState<Eoi | null>(null);
   const [withdrawConfirmed, setWithdrawConfirmed] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { data: eois = [], isLoading } = useQuery({
     queryKey: ['eois', 'my'],
@@ -53,6 +55,11 @@ export default function MyEoisPage() {
     mutationFn: (id: string) => withdrawEoi(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['eois', 'my'] });
+      setSuccessMessage(
+        withdrawTarget?.status === 'Rejected'
+          ? 'Your expression of interest was deleted.'
+          : 'Your expression of interest was withdrawn.'
+      );
       setWithdrawTarget(null);
       setWithdrawConfirmed(false);
     },
@@ -67,6 +74,28 @@ export default function MyEoisPage() {
     <main className="max-w-4xl mx-auto px-6 py-10">
       <h1 className="text-2xl font-bold text-gray-900 mb-1">My EOIs</h1>
       <p className="text-sm text-gray-500 mb-6">Expressions of interest you've submitted to Calls for Expression of Interest.</p>
+
+      {successMessage && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 flex items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white flex-shrink-0">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-emerald-900">{successMessage}</p>
+          </div>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            className="text-emerald-600 hover:text-emerald-800 p-1 rounded transition-colors flex-shrink-0"
+            aria-label="Dismiss"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2.5 flex items-center gap-2 mb-6">
         <svg className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -181,59 +210,26 @@ export default function MyEoisPage() {
 
       {/* Withdraw / Delete confirmation modal */}
       {withdrawTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden">
-            <div className="px-6 pt-6 pb-4 flex flex-col items-center text-center">
-              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4 border border-red-100">
-                <svg className="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                {withdrawTarget.status === 'Rejected' ? 'Delete expression of interest?' : 'Withdraw expression of interest?'}
-              </h2>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                This will permanently delete your EOI for{' '}
-                <span className="font-medium text-gray-700">{cfeoiById.get(withdrawTarget.cfeoiId)?.title ?? 'this CFEOI'}</span>.
-                It is not archived and cannot be undone — the record is removed entirely and disappears from your list and the owner's inbox.
-                You'd need to submit a brand-new EOI to express interest again.
-              </p>
-            </div>
-            <div className="px-6 py-4 bg-gray-50 border-y border-gray-200">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={withdrawConfirmed}
-                  onChange={(e) => setWithdrawConfirmed(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 accent-brand border-gray-300 rounded"
-                />
-                <span className="text-sm text-gray-700">
-                  I understand that {withdrawTarget.status === 'Rejected' ? 'deleting' : 'withdrawing'} this EOI permanently deletes it and cannot be undone.
-                </span>
-              </label>
-            </div>
-            {withdrawMutation.isError && (
-              <p className="text-sm text-red-600 px-6 pt-4">Something went wrong. Please try again.</p>
-            )}
-            <div className="px-6 py-4 flex gap-3 justify-end">
-              <button
-                onClick={closeWithdrawModal}
-                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => withdrawMutation.mutate(withdrawTarget.id)}
-                disabled={!withdrawConfirmed || withdrawMutation.isPending}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
-              >
-                {withdrawMutation.isPending
-                  ? (withdrawTarget.status === 'Rejected' ? 'Deleting...' : 'Withdrawing...')
-                  : (withdrawTarget.status === 'Rejected' ? 'Delete EOI' : 'Withdraw EOI')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmationModal
+          title={withdrawTarget.status === 'Rejected' ? 'Delete expression of interest?' : 'Withdraw expression of interest?'}
+          body={
+            <>
+              This will permanently delete your EOI for{' '}
+              <span className="font-medium text-gray-700">{cfeoiById.get(withdrawTarget.cfeoiId)?.title ?? 'this CFEOI'}</span>.
+              It is not archived and cannot be undone — the record is removed entirely and disappears from your list and the owner's inbox.
+              You'd need to submit a brand-new EOI to express interest again.
+            </>
+          }
+          checkboxLabel={`I understand that ${withdrawTarget.status === 'Rejected' ? 'deleting' : 'withdrawing'} this EOI permanently deletes it and cannot be undone.`}
+          confirmLabel={withdrawTarget.status === 'Rejected' ? 'Delete EOI' : 'Withdraw EOI'}
+          pendingLabel={withdrawTarget.status === 'Rejected' ? 'Deleting...' : 'Withdrawing...'}
+          confirmed={withdrawConfirmed}
+          onConfirmedChange={setWithdrawConfirmed}
+          onConfirm={() => withdrawMutation.mutate(withdrawTarget.id)}
+          onCancel={closeWithdrawModal}
+          isPending={withdrawMutation.isPending}
+          isError={withdrawMutation.isError}
+        />
       )}
     </main>
   );
