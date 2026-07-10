@@ -84,11 +84,13 @@ export default function CfeoiDetailPage() {
   const [showCloseModal, setShowCloseModal] = useState(false);
   const [closeConfirmed, setCloseConfirmed] = useState(false);
   const [showSuccessBanner, setShowSuccessBanner] = useState(
-    searchParams.get('published') === 'true' || searchParams.get('updated') === 'true'
+    searchParams.get('published') === 'true' || searchParams.get('updated') === 'true' || searchParams.get('submitted') === 'true'
   );
   const successMessage = searchParams.get('updated') === 'true'
     ? 'CFEOI updated successfully.'
-    : 'CFEOI published successfully. It is now live and accepting expressions of interest from the diaspora network.';
+    : searchParams.get('submitted') === 'true'
+      ? "Your expression of interest was submitted. The proposal owner will review it. Track or withdraw it any time from My EOIs."
+      : 'CFEOI published successfully. It is now live and accepting expressions of interest from the diaspora network.';
 
   const { data: cfeoi, isLoading, isError } = useQuery({
     queryKey: ['cfeois', cfeoiId],

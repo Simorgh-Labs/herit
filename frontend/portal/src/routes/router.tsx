@@ -23,6 +23,7 @@ import MyEoisPage from '../pages/app/MyEoisPage';
 import CfeoiEoiInboxPage from '../pages/app/CfeoiEoiInboxPage';
 import PublishCfeoiPage from '../pages/app/PublishCfeoiPage';
 import EditCfeoiPage from '../pages/app/EditCfeoiPage';
+import SubmitEoiPage from '../pages/app/SubmitEoiPage';
 
 // Layouts
 import PublicLayout from '../components/layout/PublicLayout';
@@ -65,6 +66,7 @@ export const router = createBrowserRouter([
       { path: '/proposals/:proposalId/cfeois/new', element: <PublishCfeoiPage /> },
       { path: '/cfeois/:cfeoiId/edit', element: <EditCfeoiPage /> },
       { path: '/cfeois/:cfeoiId/eois', element: <CfeoiEoiInboxPage /> },
+      { path: '/cfeois/:cfeoiId/eois/new', element: <SubmitEoiPage /> },
     ],
   },
 ]);
