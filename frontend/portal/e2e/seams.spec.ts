@@ -156,3 +156,9 @@ test("expat B mutating expat A's proposal is rejected with 403 at the API", asyn
   const response = await apiB.raw('PATCH', `/Proposals/${hostProposalId}/status`, JSON.stringify('Submitted'));
   expect(response.status()).toBe(403);
 });
+
+test("the by-id profile route is gone; only /me/profile can update a user's own profile", async () => {
+  const other = await apiA.getMe();
+  const response = await apiB.raw('PATCH', `/Users/${other.id}/profile`, { nationality: 'Nowhere' });
+  expect(response.status()).toBe(404);
+});

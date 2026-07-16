@@ -88,11 +88,4 @@ public class UsersController : ControllerBase
         await _mediator.Send(new DeleteOrganisationAdminCommand(id), ct);
         return NoContent();
     }
-
-    [HttpPatch("{id:guid}/profile")]
-    public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] UpdateUserProfileCommand command, CancellationToken ct)
-    {
-        await _mediator.Send(command with { Id = id }, ct);
-        return NoContent();
-    }
 }
