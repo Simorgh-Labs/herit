@@ -30,6 +30,7 @@
 - Note: Email subscription for unauthenticated users is out-of-scope and is not shown.
 
 ### 2) Authentication (Sign in with Google → JIT registration)
+- Note (implementation clarification): "Sign in with Google" means Google acts as a **federated identity provider through Microsoft Entra ID** — it is not a direct Google OAuth integration. The frontend authenticates via MSAL (`frontend/portal/src/auth/msalConfig.ts`), the API validates Entra-issued tokens via Microsoft.Identity.Web (`AddMicrosoftIdentityWebApiAuthentication` in `Program.cs`), and user roles are resolved from the application database (`ICurrentUserService`), not from token claims. The "Sign in with Google" label remains correct from the user's perspective.
 - Start: Sign in with Google
 - Node 1: Google OAuth flow (success/failure)
   - Failure → Error / retry or Contact Support (end)

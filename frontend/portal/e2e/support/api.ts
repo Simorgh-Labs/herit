@@ -86,7 +86,11 @@ export class Api {
 
   /** Raw fetch that does not throw — for asserting on status codes. */
   async raw(method: string, url: string, data?: unknown): Promise<APIResponse> {
-    return this.ctx.fetch(`/api/v1${url}`, { method, data });
+    return this.ctx.fetch(`/api/v1${url}`, {
+      method,
+      data,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   // --- Users ---

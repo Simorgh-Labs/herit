@@ -1,3 +1,4 @@
+using Herit.Application.Authorization;
 using Herit.Application.Exceptions;
 using Herit.Application.Interfaces;
 using MediatR;
@@ -13,10 +14,12 @@ public record UpdateProposalCommand(
 public class UpdateProposalCommandHandler : IRequestHandler<UpdateProposalCommand, Unit>
 {
     private readonly IProposalRepository _proposalRepository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public UpdateProposalCommandHandler(IProposalRepository proposalRepository)
+    public UpdateProposalCommandHandler(IProposalRepository proposalRepository, ICurrentUserService currentUserService)
     {
         _proposalRepository = proposalRepository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Unit> Handle(UpdateProposalCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,10 @@ public class UpdateProposalCommandHandler : IRequestHandler<UpdateProposalComman
         var proposal = await _proposalRepository.GetByIdAsync(request.Id, cancellationToken);
         if (proposal is null)
             throw new NotFoundException($"Proposal '{request.Id}' does not exist.");
+
+        var user = await _currentUserService.GetCurrentUserAsync(cancellationToken);
+        if (!MutationPolicy.CanUpdateProposal(proposal, user))
+            throw new ForbiddenException("Only the owner of this proposal may update it.");
 
         proposal.Update(request.Title, request.ShortDescription, request.LongDescription);
         await _proposalRepository.UpdateAsync(proposal, cancellationToken);

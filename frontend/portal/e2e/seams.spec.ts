@@ -20,6 +20,7 @@ let pendingCfeoiTitle = '';
 let approvedCfeoiTitle = '';
 let rejectedCfeoiTitle = '';
 let pendingCfeoiId = '';
+let hostProposalId = '';
 
 let scope = '';
 
@@ -37,6 +38,7 @@ test.beforeAll(async ({}, testInfo) => {
     longDescription: 'Fixture proposal owning the CFEOIs used by scenario 3.',
     organisationId: state.childOrgId,
   });
+  hostProposalId = proposalId;
   await apiA.setProposalVisibility(proposalId, 'Shared');
   await apiA.setProposalStatus(proposalId, 'Resourcing');
 
@@ -148,4 +150,9 @@ test("a non-owner cannot reach another user's EOI inbox", async ({ browser }) =>
   await expect(page.getByRole('heading', { name: 'Cannot view this inbox' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Approve' })).toBeHidden();
   await context.close();
+});
+
+test("expat B mutating expat A's proposal is rejected with 403 at the API", async () => {
+  const response = await apiB.raw('PATCH', `/Proposals/${hostProposalId}/status`, JSON.stringify('Submitted'));
+  expect(response.status()).toBe(403);
 });
