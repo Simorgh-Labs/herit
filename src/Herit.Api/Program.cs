@@ -1,5 +1,6 @@
 using Azure.Identity;
 using FluentValidation;
+using Herit.Api.Authentication;
 using Herit.Api.Authorization;
 using Herit.Api.Middleware;
 using Herit.Api.Services;
@@ -10,6 +11,7 @@ using Herit.Application.Seeding;
 using Herit.Domain.Enums;
 using Herit.Infrastructure;
 using Herit.Infrastructure.Persistence;
+using Herit.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +54,12 @@ var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
     ?? builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddInfrastructure(connectionString);
+
+if (TestAuthentication.IsEnabled(builder.Configuration, builder.Environment))
+{
+    builder.AddTestAuthentication();
+    builder.Services.AddScoped<IIdentityProviderService, LocalTestIdentityProviderService>();
+}
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("SuperAdmin", policy =>
@@ -132,6 +140,9 @@ static async Task<int> RunSeedSuperAdminAsync(string[] args)
 
     seedBuilder.Services.AddInfrastructure(seedConnectionString);
     seedBuilder.Services.AddScoped<SuperAdminSeeder>();
+
+    if (TestAuthentication.IsEnabled(seedBuilder.Configuration, seedBuilder.Environment))
+        seedBuilder.Services.AddScoped<IIdentityProviderService, LocalTestIdentityProviderService>();
 
     var seedApp = seedBuilder.Build();
 

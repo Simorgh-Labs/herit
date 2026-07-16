@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useIsAuthenticated } from '@azure/msal-react';
+import { InteractionStatus } from '@azure/msal-browser';
+import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 
 interface ProtectedRouteProps {
@@ -8,7 +9,14 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const isAuthenticated = useIsAuthenticated();
+  const { inProgress } = useMsal();
   const { user, isLoading, isNotFound, error } = useCurrentUser();
+
+  // useIsAuthenticated reports false until MSAL finishes starting up, so deciding
+  // before then would bounce signed-in users to /sign-in on a cold deep-link.
+  if (inProgress !== InteractionStatus.None) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;

@@ -1,9 +1,15 @@
 import axios from 'axios';
-import { PublicClientApplication } from '@azure/msal-browser';
+import { PublicClientApplication, type IPublicClientApplication } from '@azure/msal-browser';
 import { msalConfig } from '../auth/msalConfig';
 import { apiScopes } from '../auth/authScopes';
+import { createTestMsalInstance } from '../auth/testAuth';
 
-const msalInstance = new PublicClientApplication(msalConfig);
+// The E2E branch is statically false outside the `e2e` Vite mode, so production
+// builds tree-shake the test-auth stub away entirely.
+const msalInstance: IPublicClientApplication =
+  import.meta.env.VITE_E2E_AUTH === 'true'
+    ? createTestMsalInstance()
+    : new PublicClientApplication(msalConfig);
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,

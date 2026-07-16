@@ -14,4 +14,4 @@ export const updateCfeoi = (id: string, data: PublishCfeoiRequest): Promise<void
   apiClient.put(`/Cfeoi/${id}`, data).then((r) => r.data);
 
 export const updateCfeoiStatus = (id: string, status: CfeoiStatus): Promise<void> =>
-  apiClient.patch(`/Cfeoi/${id}/status`, { status }).then((r) => r.data);
+  apiClient.patch(`/Cfeoi/${id}/status`, { newStatus: status }).then((r) => r.data);

@@ -11,6 +11,11 @@ frontend/**/node_modules/
 frontend/**/.env*.local
 frontend/**/dist/
 
+# Playwright E2E artifacts (per-run state, traces, reports)
+frontend/portal/e2e/.state/
+frontend/portal/e2e/.results/
+frontend/portal/e2e/.report/
+
 # Claude Code task/design working files (kept local, not tracked)
 docs/frontend/portal/designs/flow3c-implementation-tasks.md
 docs/frontend/portal/designs/flow3c-review-tasks.md

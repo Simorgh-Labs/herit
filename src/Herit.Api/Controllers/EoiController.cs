@@ -71,7 +71,7 @@ public class EoiController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/status")]
-    [Authorize(Policy = "Staff")]
+    [Authorize(Policy = "StaffOrExpat")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateEoiStatusCommand command, CancellationToken ct)
     {
         await _mediator.Send(command with { Id = id }, ct);
