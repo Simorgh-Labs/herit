@@ -20,6 +20,12 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 Title = "Not Found",
                 Detail = exception.Message
             },
+            ForbiddenException => new ProblemDetails
+            {
+                Status = StatusCodes.Status403Forbidden,
+                Title = "Forbidden",
+                Detail = exception.Message
+            },
             InvalidOperationException => new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
