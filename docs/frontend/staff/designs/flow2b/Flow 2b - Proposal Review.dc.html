@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/styles.css">
+  <script src="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/_ds_bundle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--text-link); }
+    a:hover { color: var(--text-link-hover); }
+  </style>
+</helmet>
+
+<div style="font-family: var(--font-sans); min-height: 100vh; background: var(--surface-page);">
+
+  <!-- Reviewer chrome -->
+  <div style="position: sticky; top: 0; z-index: 50; background: var(--neutral-900); color: white; display: flex; align-items: center; gap: 24px; padding: 10px 24px; font-size: var(--text-sm); flex-wrap: wrap;">
+    <span style="font-weight: var(--font-weight-bold); letter-spacing: var(--tracking-wide);">Brief 2b — Proposal Review</span>
+    <div style="display: flex; gap: 8px;">
+      <button onClick="{{ goQueue }}" style="{{ tabStyle_queue }}">01 · Review queue</button>
+      <button onClick="{{ goDetail }}" style="{{ tabStyle_detail }}">02 · Review detail</button>
+      <button onClick="{{ goTakedown }}" style="{{ tabStyle_takedown }}">03 · Takedown modal</button>
+    </div>
+    <sc-if value="{{ isQueue }}">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Demo</span>
+        <button onClick="{{ toggleEmptyQueue }}" style="{{ emptyToggleStyle }}">{{ emptyToggleLabel }}</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isDetail }}">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Status state</span>
+        <button onClick="{{ setStatusSubmitted }}" style="{{ statusTabStyle_submitted }}">Submitted</button>
+        <button onClick="{{ setStatusUnderReview }}" style="{{ statusTabStyle_underreview }}">Under Review</button>
+        <button onClick="{{ setStatusApproved }}" style="{{ statusTabStyle_approved }}">Approved</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isTakedown }}">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Demo</span>
+        <button onClick="{{ toggleDeleteError }}" style="{{ errorToggleStyle }}">{{ errorToggleLabel }}</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- Staff shell header — reused verbatim from flow1 -->
+  <header style="background: var(--neutral-900); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: var(--shadow-nav);">
+    <div style="display: flex; align-items: center; gap: 32px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); font-size: var(--text-lg);">H</span>
+        <span style="font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: white;">Herit</span>
+        <span style="font-size: 10px; font-weight: var(--font-weight-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--brand-300); background: rgba(29,78,216,0.25); border: 1px solid var(--brand-500); border-radius: var(--radius-sm); padding: 2px 6px;">Staff</span>
+      </div>
+      <nav style="display: flex; gap: 24px;">
+        <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Dashboard</a>
+        <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">RFPs</a>
+        <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white; text-decoration: none;">Proposals</a>
+      </nav>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="width: 34px; height: 34px; border-radius: var(--radius-full); background: var(--brand-100); color: var(--brand-600); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-semibold); font-size: var(--text-sm);">JW</span>
+      <div style="display: flex; flex-direction: column; line-height: 1.2;">
+        <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white;">Jonas Weber</span>
+        <span style="font-size: 11px; color: var(--neutral-400);">Staff</span>
+      </div>
+      <i class="fa-solid fa-right-from-bracket" style="color: var(--neutral-400); font-size: 14px; margin-left: 6px; cursor: pointer;" title="Sign out"></i>
+    </div>
+  </header>
+
+  <!-- ============ SCREEN 1: REVIEW QUEUE ============ -->
+  <sc-if value="{{ isQueue }}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px;">
+      <div style="margin-bottom: 24px;">
+        <h1 style="margin: 0 0 4px; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Proposal review queue</h1>
+        <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary);">Staff drive proposals from Submitted through Approved. There is no reject transition — deletion is the only negative outcome.</p>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--border-default); margin-bottom: 20px;">
+        <button onClick="{{ setTabSubmitted }}" style="{{ queueTabStyle_submitted }}">Submitted</button>
+        <button onClick="{{ setTabUnderReview }}" style="{{ queueTabStyle_underreview }}">Under Review</button>
+        <div style="width: 1px; height: 20px; background: var(--border-default); margin: 0 8px;"></div>
+        <button onClick="{{ setTabAll }}" style="{{ queueTabStyle_all }}">All proposals</button>
+      </div>
+
+      <sc-if value="{{ isAllTab }}">
+        <p style="margin: 0 0 16px; font-size: var(--text-xs); color: var(--text-secondary); background: var(--surface-subtle); border: 1px dashed var(--border-default); border-radius: var(--radius-md); padding: 10px 14px; line-height: var(--leading-relaxed);">
+          Staff read-access spans every proposal regardless of visibility — Private proposals submitted by an expat are included in this tab by design, not a leak.
+        </p>
+      </sc-if>
+
+      <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="HeritDesignSystem_14a381.EmptyState" hint-size="100%,220px" title="{{ emptyTitle }}" description="{{ emptyDescription }}">
+          <i class="fa-solid fa-inbox"></i>
+        </x-import>
+      </sc-if>
+
+      <sc-if value="{{ queueNotEmpty }}" hint-placeholder-val="{{ true }}" hint-placeholder-count="3">
+        <div style="background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-lg); overflow: hidden;">
+          <div style="display: grid; grid-template-columns: 2.2fr 1.3fr 1.3fr 0.9fr 0.9fr 32px; gap: 12px; padding: 10px 20px; background: var(--surface-subtle); border-bottom: 1px solid var(--border-default); font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wide);">
+            <span>Title</span><span>Author</span><span>Organisation</span><span>Status</span><span>Visibility</span><span></span>
+          </div>
+          <sc-for list="{{ queueRows }}" as="row" hint-placeholder-count="3">
+            <div onClick="{{ goDetail }}" style="display: grid; grid-template-columns: 2.2fr 1.3fr 1.3fr 0.9fr 0.9fr 32px; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border-default); align-items: center; cursor: pointer;" class="{{ rowHover }}">
+              <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">{{ row.title }}</span>
+              <span style="font-size: var(--text-sm); color: var(--text-secondary);">{{ row.author }}</span>
+              <span style="font-size: var(--text-sm); color: var(--text-secondary);">{{ row.org }}</span>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,24px" tone="{{ row.tone }}">{{ row.status }}</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,24px" tone="{{ row.visTone }}">{{ row.vis }}</x-import>
+              <i class="fa-solid fa-chevron-right" style="color: var(--text-disabled); font-size: 12px;"></i>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 2 (+3 backdrop): PROPOSAL REVIEW DETAIL ============ -->
+  <sc-if value="{{ isDetailOrTakedown }}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px;">
+      <a onClick="{{ goQueue }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--text-secondary); text-decoration: none; margin-bottom: 16px; cursor: pointer;">
+        <i class="fa-solid fa-arrow-left" style="font-size: 12px;"></i> Back to review queue
+      </a>
+
+      <sc-if value="{{ isDetail }}">
+        <div style="margin-bottom: 20px; padding: 12px 18px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed);">
+          <strong>DECISION — open question (post-approve follow-on):</strong> recommending a silent terminal state with an inline "Future:" notification placeholder, rather than an interrupting confirmation step. Approve has no destructive or reversible consequence to narrate, so a modal would just add a click; the placeholder note in the terminal banner below keeps the notification gap visible without inventing UI for infrastructure that doesn't exist yet.
+        </div>
+      </sc-if>
+
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,24px" tone="{{ detailTone }}">{{ detailStatusLabel }}</x-import>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,24px" tone="neutral">Public</x-import>
+          </div>
+          <h1 style="margin: 0; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary); letter-spacing: var(--tracking-tight);">Community Health Outreach Expansion</h1>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,180px">
+            <h2 style="margin: 0 0 12px; font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--text-primary);">Proposal content</h2>
+            <p style="margin: 0 0 10px; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Expands the mobile health outreach program to three additional rural districts, adding a coordinator role and a data analyst to track clinic attendance against the linked RFP's targets.</p>
+            <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">This content is read-only here — staff review and move proposals through the lifecycle but never edit what an expat submitted.</p>
+          </x-import>
+
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,140px">
+            <h2 style="margin: 0 0 12px; font-size: var(--text-base); font-weight: var(--font-weight-semibold); color: var(--text-primary);">CFEOIs under this proposal</h2>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ cfeois }}" as="c" hint-placeholder-count="2">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--surface-subtle); border-radius: var(--radius-md);">
+                  <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">{{ c.title }}</span>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: var(--text-xs); color: var(--text-secondary);"><i class="fa-solid fa-handshake" style="margin-right: 4px;"></i>{{ c.eois }} EOIs</span>
+                    <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,22px" tone="{{ c.tone }}">{{ c.status }}</x-import>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </x-import>
+
+          <sc-if value="{{ isApproved }}">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Banner" hint-size="100%,70px" tone="success" title="Approved — terminal in-app">
+              This proposal has completed the review lifecycle; there is no further staff transition. Project conversion is out of scope for this app. Future: the owner will be notified by email once notifications are available.
+            </x-import>
+          </sc-if>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,100px">
+            <h3 style="margin: 0 0 10px; font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wide);">Submitted by</h3>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Avatar" hint-size="36px,36px" name="Amara Chen"></x-import>
+              <div>
+                <div style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">Amara Chen</div>
+                <div style="font-size: var(--text-xs); color: var(--text-secondary);">Ministry of Health</div>
+              </div>
+            </div>
+          </x-import>
+
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,80px">
+            <h3 style="margin: 0 0 10px; font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wide);">Linked RFP</h3>
+            <a href="#" style="font-size: var(--text-sm); color: var(--text-link); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+              Rural Clinics Modernisation RFP <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
+            </a>
+          </x-import>
+
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,90px">
+            <h3 style="margin: 0 0 10px; font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wide);">Review action</h3>
+            <sc-if value="{{ showStartReview }}">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="primary" style="width: 100%;" onClick="{{ setStatusUnderReview }}">
+                <i class="fa-solid fa-magnifying-glass"></i> Start review
+              </x-import>
+            </sc-if>
+            <sc-if value="{{ showApprove }}">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="primary" style="width: 100%;" onClick="{{ setStatusApproved }}">
+                <i class="fa-solid fa-circle-check"></i> Approve
+              </x-import>
+            </sc-if>
+            <sc-if value="{{ isApproved }}">
+              <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">No further review action — approval is terminal.</p>
+            </sc-if>
+          </x-import>
+
+          <div style="border: 1px solid var(--status-danger-bg); background: var(--surface-card); border-radius: var(--radius-lg); padding: 16px;">
+            <h3 style="margin: 0 0 6px; font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--status-danger-text); text-transform: uppercase; letter-spacing: var(--tracking-wide);">Takedown</h3>
+            <p style="margin: 0 0 12px; font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">Deletion is the only moderation action available — it is separate from the review lifecycle and available in every status.</p>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,38px" variant="danger" style="width: 100%;" onClick="{{ goTakedown }}">
+              <i class="fa-solid fa-trash"></i> Delete proposal
+            </x-import>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 3: TAKEDOWN MODAL ============ -->
+  <sc-if value="{{ isTakedown }}">
+    <div onClick="{{ goDetail }}" style="position: fixed; inset: 0; background: rgba(17,24,39,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100;">
+      <div onClick="{{ stopProp }}" style="background: var(--surface-card); width: 100%; max-width: 440px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden; display: flex; flex-direction: column;">
+        <div style="padding: 28px 24px 16px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+          <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+            <i class="fa-solid fa-triangle-exclamation" style="color: var(--status-danger-text); font-size: 22px;"></i>
+          </div>
+          <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Delete this proposal?</h2>
+        </div>
+        <div style="padding: 0 24px 16px;">
+          <sc-if value="{{ showDeleteError }}">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Banner" hint-size="100%,80px" tone="danger" title="Delete failed" style="margin-bottom: 14px;">
+              The server refused this request: this proposal has CFEOIs with existing EOI submissions and did not cascade-delete them. This is flagged for backend verification — the copy below assumes cascade until that's confirmed.
+            </x-import>
+          </sc-if>
+          <p style="margin: 0 0 12px; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); text-align: center;">This permanently removes <strong>Community Health Outreach Expansion</strong>, its 2 CFEOIs, and every EOI submitted to them. It is kept nowhere as a historical record and cannot be undone.</p>
+          <p style="margin: 0 0 16px; padding: 10px 12px; background: var(--surface-subtle); border-radius: var(--radius-md); font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+            <strong>DECISION — cascade verification:</strong> the authoritative flows spec wasn't available to confirm this against the backend. Copy assumes cascading delete per ADR-018 (deletion as the sole moderation safety valve); flag for verification before shipping. Toggle "Show delete error" above to preview the fallback if the backend errors instead.
+          </p>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Checkbox" hint-size="100%,20px" label="I understand this action is permanent and cannot be undone" checked="{{ takedownChecked }}" onChange="{{ toggleTakedownChecked }}"></x-import>
+        </div>
+        <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; background: var(--surface-page); border-top: 1px solid var(--border-default);">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="auto,38px" variant="secondary" onClick="{{ goDetail }}">Cancel</x-import>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="auto,38px" variant="danger" disabled="{{ deleteDisabled }}">Delete proposal</x-import>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'queue',
+    queueTab: 'submitted',
+    emptyQueue: false,
+    detailStatus: 'submitted',
+    takedownChecked: false,
+    showDeleteError: false,
+  };
+
+  allProposals = [
+    { title: 'Community Health Outreach Expansion', author: 'Amara Chen', org: 'Ministry of Health', status: 'Submitted', tone: 'amber', vis: 'Public', visTone: 'neutral' },
+    { title: 'Youth Coding Bootcamp', author: 'Sara Osei', org: 'Ministry of Education', status: 'Submitted', tone: 'amber', vis: 'Private', visTone: 'neutral' },
+    { title: 'Diaspora Mentorship Network', author: 'Jonas Weber', org: 'Ministry of Education', status: 'Under Review', tone: 'orange', vis: 'Shared', visTone: 'info' },
+    { title: 'Digital Literacy for Elders', author: 'Priya Nair', org: 'Ministry of Digital Affairs', status: 'Approved', tone: 'success', vis: 'Public', visTone: 'neutral' },
+    { title: 'Solar Micro-Grid Pilot', author: 'Kwame Boateng', org: 'Ministry of Energy', status: 'Ideation', tone: 'neutral', vis: 'Private', visTone: 'neutral' },
+    { title: 'Returning Talent Fellowship', author: 'Elena Petrova', org: 'Ministry of Labour', status: 'Resourcing', tone: 'info', vis: 'Shared', visTone: 'info' },
+    { title: 'Coastal Cleanup Initiative', author: 'Diego Alvarez', org: 'Ministry of Environment', status: 'Withdrawn', tone: 'danger', vis: 'Public', visTone: 'neutral' },
+  ];
+
+  cfeois = [
+    { title: 'Program Coordinator', status: 'Open', tone: 'info', eois: 5 },
+    { title: 'Field Data Analyst', status: 'Closed', tone: 'neutral', eois: 9 },
+  ];
+
+  tab(active) {
+    return {
+      padding: '6px 14px',
+      borderRadius: 'var(--radius-md)',
+      border: '1px solid ' + (active ? 'var(--brand-500)' : 'rgba(255,255,255,0.15)'),
+      background: active ? 'var(--brand-500)' : 'transparent',
+      color: 'white',
+      fontSize: 'var(--text-sm)',
+      fontWeight: 'var(--font-weight-medium)',
+      cursor: 'pointer',
+    };
+  }
+
+  queueTab(active) {
+    return {
+      padding: '10px 4px',
+      marginBottom: '-1px',
+      border: 'none',
+      borderBottom: '2px solid ' + (active ? 'var(--color-primary)' : 'transparent'),
+      background: 'transparent',
+      color: active ? 'var(--color-primary)' : 'var(--text-secondary)',
+      fontSize: 'var(--text-sm)',
+      fontWeight: 'var(--font-weight-medium)',
+      cursor: 'pointer',
+    };
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const qt = this.state.queueTab;
+    const ds = this.state.detailStatus;
+
+    let rows = this.allProposals;
+    if (qt === 'submitted') rows = this.allProposals.filter(p => p.status === 'Submitted');
+    else if (qt === 'underreview') rows = this.allProposals.filter(p => p.status === 'Under Review');
+    const empty = this.state.emptyQueue || rows.length === 0;
+
+    const detailTone = ds === 'submitted' ? 'amber' : ds === 'underreview' ? 'orange' : 'success';
+    const detailStatusLabel = ds === 'submitted' ? 'Submitted' : ds === 'underreview' ? 'Under Review' : 'Approved';
+
+    return {
+      isQueue: s === 'queue',
+      isDetail: s === 'detail',
+      isTakedown: s === 'takedown',
+      isDetailOrTakedown: s === 'detail' || s === 'takedown',
+      goQueue: () => this.setState({ screen: 'queue' }),
+      goDetail: () => this.setState({ screen: 'detail' }),
+      goTakedown: () => this.setState({ screen: 'takedown' }),
+      stopProp: (e) => e.stopPropagation(),
+      tabStyle_queue: this.tab(s === 'queue'),
+      tabStyle_detail: this.tab(s === 'detail'),
+      tabStyle_takedown: this.tab(s === 'takedown'),
+
+      isAllTab: qt === 'all',
+      setTabSubmitted: () => this.setState({ queueTab: 'submitted' }),
+      setTabUnderReview: () => this.setState({ queueTab: 'underreview' }),
+      setTabAll: () => this.setState({ queueTab: 'all' }),
+      queueTabStyle_submitted: this.queueTab(qt === 'submitted'),
+      queueTabStyle_underreview: this.queueTab(qt === 'underreview'),
+      queueTabStyle_all: this.queueTab(qt === 'all'),
+
+      queueRows: empty ? [] : rows,
+      queueEmpty: empty,
+      queueNotEmpty: !empty,
+      emptyTitle: qt === 'underreview' ? 'Nothing under review' : qt === 'all' ? 'No proposals yet' : 'Nothing submitted for review',
+      emptyDescription: qt === 'underreview'
+        ? 'No proposals are currently under review. Proposals move here once staff start reviewing a submission.'
+        : qt === 'all'
+        ? 'No proposals have been created on the platform yet.'
+        : 'No proposals are waiting for review right now. New submissions will appear here.',
+      toggleEmptyQueue: () => this.setState({ emptyQueue: !this.state.emptyQueue }),
+      emptyToggleStyle: this.tab(this.state.emptyQueue),
+      emptyToggleLabel: this.state.emptyQueue ? 'Showing empty state' : 'Show empty state',
+
+      cfeois: this.cfeois,
+      detailTone,
+      detailStatusLabel,
+      isApproved: ds === 'approved',
+      showStartReview: ds === 'submitted',
+      showApprove: ds === 'underreview',
+      setStatusSubmitted: () => this.setState({ detailStatus: 'submitted' }),
+      setStatusUnderReview: () => this.setState({ detailStatus: 'underreview' }),
+      setStatusApproved: () => this.setState({ detailStatus: 'approved' }),
+      statusTabStyle_submitted: this.tab(ds === 'submitted'),
+      statusTabStyle_underreview: this.tab(ds === 'underreview'),
+      statusTabStyle_approved: this.tab(ds === 'approved'),
+
+      takedownChecked: this.state.takedownChecked,
+      toggleTakedownChecked: () => this.setState({ takedownChecked: !this.state.takedownChecked }),
+      deleteDisabled: !this.state.takedownChecked,
+      showDeleteError: this.state.showDeleteError,
+      toggleDeleteError: () => this.setState({ showDeleteError: !this.state.showDeleteError }),
+      errorToggleStyle: this.tab(this.state.showDeleteError),
+      errorToggleLabel: this.state.showDeleteError ? 'Showing delete error' : 'Show delete error',
+    };
+  }
+}
+
+</script>
+</body>
+</html>

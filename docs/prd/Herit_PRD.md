@@ -255,15 +255,17 @@ The following are explicitly out of scope for the Herit platform:
 
 ---
 
-## 10. Open Questions
+## 10. Open Questions (all resolved — July 2026)
 
-1. **Authentication:** What identity provider will be used for expat and staff user authentication? Will social login (e.g. Google, LinkedIn) be supported?
-2. **Notification system:** Should users receive email or in-app notifications on status changes (e.g., proposal approved, EOI received)?
-3. **Proposal co-authorship:** Can multiple expat users be listed as co-authors on a single proposal from the outset, or only via the EOI/CFEOI process?
-4. **Visibility defaults:** What is the default visibility for a newly created proposal?
-5. **RFP approval workflow:** Is a separate RFP approval step required before a staff user can publish, or can any staff user publish directly?
-6. **Localisation:** Does the platform need to support multiple languages?
-7. **Moderation:** Is there a content moderation step for proposals and EOIs before they are visible to other users?
+All questions in this section have been resolved. Each answer is recorded where noted; this section is retained for traceability.
+
+1. **Authentication:** *Resolved.* Microsoft Entra External ID with Google federated as the identity provider; MSAL on the frontend; roles resolved from the application database. See ADR-013, ADR-014, ADR-015 and the note in `docs/frontend/portal/user-flows-high-level.md` §2.
+2. **Notification system:** *Resolved — deferred.* No email or in-app notification infrastructure for MVP. All user flows mark notification touchpoints as labelled "Future:" placeholders so the trigger points are documented for later.
+3. **Proposal co-authorship:** *Resolved.* Single author per proposal; collaborators join through the CFEOI/EOI process. See ADR-008.
+4. **Visibility defaults:** *Resolved.* New proposals are created with `Visibility = Private`; the owner deliberately opts into `Shared` or `Public`. (Enforced in the domain entity; EOIs likewise default to `Private`.)
+5. **RFP approval workflow:** *Resolved.* Any staff user may perform every RFP lifecycle transition for MVP; the `Draft → Approved → Published` sequence is retained as the extension point for future separation of duties. See ADR-017.
+6. **Localisation:** *Resolved.* English-only across both applications with no i18n investment; a future second-language requirement would be met by a dedicated retrofit pass across both apps. See ADR-019 (revised).
+7. **Moderation:** *Resolved.* No pre-moderation; private-by-default visibility plus staff deletion serve as the safety valve, with flagging/review gates as documented future escalations. See ADR-018.
 
 ---
 

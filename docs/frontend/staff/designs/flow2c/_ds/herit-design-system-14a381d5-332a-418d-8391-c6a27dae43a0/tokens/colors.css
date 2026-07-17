@@ -1,0 +1,71 @@
+/* Herit — Color tokens
+   Source: frontend/portal/designs (flow3a/flow3c "corrected" Tailwind config blocks).
+   Brand blue is #1D4ED8 across the authenticated app; marketing/public pages lean on
+   the darker #1E40AF for text/CTAs on white. Both are the same ramp (500 vs 600). */
+
+:root {
+  /* Brand ramp */
+  --brand-50: #EFF6FF;
+  --brand-100: #DBEAFE;
+  --brand-200: #BFDBFE;
+  --brand-300: #93C5FD;
+  --brand-400: #60A5FA;
+  --brand-500: #1D4ED8; /* primary */
+  --brand-600: #1E40AF; /* primary hover / marketing primary */
+  --brand-700: #1E3A8A;
+  --brand-800: #172554;
+  --brand-900: #0F172A;
+
+  /* Neutral / surface ramp (cool gray, Tailwind slate-like) */
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F9FAFB;
+  --neutral-100: #F3F4F6;
+  --neutral-200: #E5E7EB;
+  --neutral-300: #D1D5DB;
+  --neutral-400: #9CA3AF;
+  --neutral-500: #6B7280;
+  --neutral-600: #4B5563;
+  --neutral-700: #374151;
+  --neutral-800: #1F2937;
+  --neutral-900: #111827;
+
+  /* Status colors — bg/text pairs, used as pill badges */
+  --status-info-bg: #DBEAFE;
+  --status-info-text: #1D4ED8;
+  --status-amber-bg: #FEF3C7;
+  --status-amber-text: #B45309;
+  --status-orange-bg: #FFEDD5;
+  --status-orange-text: #C2410C;
+  --status-success-bg: #D1FAE5;
+  --status-success-text: #047857;
+  --status-danger-bg: #FEE2E2;
+  --status-danger-text: #B91C1C;
+  --status-neutral-bg: #F3F4F6;
+  --status-neutral-text: #4B5563;
+
+  /* Destructive (distinct from status-danger — used for delete/sign-out actions) */
+  --error-500: #DC2626;
+  --error-600: #B91C1C;
+  --error-bg: #FEF2F2;
+
+  /* Semantic aliases */
+  --color-primary: var(--brand-500);
+  --color-primary-hover: var(--brand-600);
+  --color-primary-light: var(--brand-50);
+  --color-on-primary: #FFFFFF;
+
+  --surface-page: var(--neutral-50);       /* app background */
+  --surface-card: var(--neutral-0);        /* card / panel background */
+  --surface-subtle: var(--neutral-100);    /* hover fills, chips */
+  --surface-sunken: #F9FAFB;               /* inputs, code, editor toolbars */
+
+  --text-primary: var(--neutral-900);
+  --text-secondary: var(--neutral-500);
+  --text-disabled: var(--neutral-400);
+  --text-on-primary: #FFFFFF;
+  --text-link: var(--color-primary);
+  --text-link-hover: var(--color-primary-hover);
+
+  --border-default: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+}

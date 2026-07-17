@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/styles.css">
+  <script src="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/_ds_bundle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--text-link); }
+    a:hover { color: var(--text-link-hover); }
+  </style>
+</helmet>
+
+<div style="font-family: var(--font-sans); min-height: 100vh; background: var(--surface-page);">
+
+  <!-- Reviewer chrome -->
+  <div style="position: sticky; top: 0; z-index: 200; background: var(--neutral-900); color: white; display: flex; align-items: center; gap: 24px; padding: 10px 24px; font-size: var(--text-sm); flex-wrap: wrap;">
+    <span style="font-weight: var(--font-weight-bold); letter-spacing: var(--tracking-wide);">Brief 3 — Administration: Organisations &amp; Users</span>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button onClick="{{ goScreen_tree }}" style="{{ tabStyle_tree }}">01 · Organisation tree</button>
+      <button onClick="{{ goScreen_modals }}" style="{{ tabStyle_modals }}">02 · Org modals</button>
+      <button onClick="{{ goScreen_users }}" style="{{ tabStyle_users }}">03 · User management</button>
+      <button onClick="{{ goScreen_forms }}" style="{{ tabStyle_forms }}">04 · User forms &amp; modals</button>
+    </div>
+    <div style="margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">State</span>
+      <sc-if value="{{ isTree }}">
+        <button onClick="{{ setTree_populated }}" style="{{ subTabStyle_treePopulated }}">Populated</button>
+        <button onClick="{{ setTree_empty }}" style="{{ subTabStyle_treeEmpty }}">Bootstrap empty (SuperAdmin)</button>
+      </sc-if>
+      <sc-if value="{{ isModals }}">
+        <button onClick="{{ setModal_create }}" style="{{ subTabStyle_modalCreate }}">Create sub-org</button>
+        <button onClick="{{ setModal_rename }}" style="{{ subTabStyle_modalRename }}">Rename</button>
+        <button onClick="{{ setModal_deleteConfirm }}" style="{{ subTabStyle_modalDeleteConfirm }}">Delete confirm</button>
+        <button onClick="{{ setModal_deleteRefused }}" style="{{ subTabStyle_modalDeleteRefused }}">Delete refused (409)</button>
+      </sc-if>
+      <sc-if value="{{ isForms }}">
+        <button onClick="{{ setForm_createStaff }}" style="{{ subTabStyle_formCreateStaff }}">Create staff</button>
+        <button onClick="{{ setForm_createOrgAdmin }}" style="{{ subTabStyle_formCreateOrgAdmin }}">Create org admin</button>
+        <button onClick="{{ setForm_editStaff }}" style="{{ subTabStyle_formEditStaff }}">Edit staff</button>
+        <button onClick="{{ setForm_deleteUser }}" style="{{ subTabStyle_formDeleteUser }}">Delete user</button>
+        <button onClick="{{ setForm_deleteGuard }}" style="{{ subTabStyle_formDeleteGuard }}">Delete guard</button>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- Shared shell header (verbatim from flow1) -->
+  <sc-if value="{{ showShellHeader }}">
+    <header style="background: var(--neutral-900); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: var(--shadow-nav);">
+      <div style="display: flex; align-items: center; gap: 32px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); font-size: var(--text-lg);">H</span>
+          <span style="font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: white;">Herit</span>
+          <span style="font-size: 10px; font-weight: var(--font-weight-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--brand-300); background: rgba(29,78,216,0.25); border: 1px solid var(--brand-500); border-radius: var(--radius-sm); padding: 2px 6px;">Staff</span>
+        </div>
+        <nav style="display: flex; gap: 24px;">
+          <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Dashboard</a>
+          <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">RFPs</a>
+          <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Proposals</a>
+          <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: {{ navColor_orgs }}; text-decoration: none;">Organisations</a>
+          <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: {{ navColor_users }}; text-decoration: none;">Users</a>
+        </nav>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="width: 34px; height: 34px; border-radius: var(--radius-full); background: var(--brand-100); color: var(--brand-600); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-semibold); font-size: var(--text-sm);">AC</span>
+        <div style="display: flex; flex-direction: column; line-height: 1.2;">
+          <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white;">Amara Chen</span>
+          <span style="font-size: 11px; color: var(--neutral-400);">SuperAdmin</span>
+        </div>
+        <i class="fa-solid fa-right-from-bracket" style="color: var(--neutral-400); font-size: 14px; margin-left: 6px; cursor: pointer;" title="Sign out"></i>
+      </div>
+    </header>
+  </sc-if>
+
+  <!-- ============ SCREEN 01: ORGANISATION TREE ============ -->
+  <sc-if value="{{ isTree }}">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 28px 24px 64px;">
+      <div style="margin-bottom: 20px; padding: 12px 18px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed);">
+        <strong>DECISION — open question 1 (tree depth handling):</strong> recommending flat indentation (28px per level) over collapsible levels. Herit's org hierarchy is a government structure — realistically a handful of levels, not hundreds of nodes — so collapse/expand state management is unneeded complexity for the common case. Cost of the alternative: collapsible levels scale better to a pathological deep tree, at the price of persisting expand state and an extra click to reach any deep node on every visit.
+      </div>
+      <x-import component-from-global-scope="HeritDesignSystem_14a381.Breadcrumb" hint-size="auto,24px" items="{{ breadcrumbItems_orgs }}" style="margin-bottom: 16px;"></x-import>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <div>
+          <h1 style="margin: 0 0 4px; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Organisations</h1>
+          <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary);">Single root hierarchy. This spans every organisation on the platform — there is no per-admin scoping yet.</p>
+        </div>
+        <sc-if value="{{ isTreePopulated }}">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="200px,40px" variant="secondary">
+            <i class="fa-solid fa-plus" style="font-size: 12px;"></i> Create sub-organisation
+          </x-import>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ isTreePopulated }}" hint-placeholder-val="{{ true }}">
+        <div style="background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-nav); overflow: hidden;">
+          <sc-for list="{{ treeNodes }}" as="node" hint-placeholder-count="6">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border-default); padding-left: {{ node.indentPx }}px;">
+              <i class="fa-solid fa-building-columns" style="color: var(--text-secondary); width: 14px; font-size: 13px;"></i>
+              <span style="font-weight: var(--font-weight-medium); color: var(--text-primary); font-size: var(--text-sm);">{{ node.name }}</span>
+              <sc-if value="{{ node.isRoot }}">
+                <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="50px,20px" tone="info">Root</x-import>
+              </sc-if>
+              <div style="margin-left: auto; display: flex; gap: 4px;">
+                <button title="Create sub-organisation" style="width: 28px; height: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-plus" style="font-size: 11px;"></i></button>
+                <button title="Rename" style="width: 28px; height: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-pen" style="font-size: 11px;"></i></button>
+                <button title="Delete" style="width: 28px; height: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--error-500); cursor: pointer;"><i class="fa-solid fa-trash" style="font-size: 11px;"></i></button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTreeEmpty }}">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <div style="width: 100%;">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.EmptyState" hint-size="100%,220px" title="No organisations yet" description="Create the root organisation to get started — Herit has a single root, and every other organisation nests underneath it."></x-import>
+          </div>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="220px,40px" style="margin-top: -60px;">
+            <i class="fa-solid fa-plus" style="font-size: 12px;"></i> Create root organisation
+          </x-import>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 02: ORGANISATION MODALS ============ -->
+  <sc-if value="{{ isModals }}">
+    <div style="position: relative;">
+      <div style="max-width: 1080px; margin: 0 auto; padding: 28px 24px 64px; opacity: 0.35; pointer-events: none; filter: saturate(0.6);">
+        <div style="background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-nav); overflow: hidden;">
+          <sc-for list="{{ treeNodes }}" as="node" hint-placeholder-count="6">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border-default); padding-left: {{ node.indentPx }}px;">
+              <i class="fa-solid fa-building-columns" style="color: var(--text-secondary); width: 14px; font-size: 13px;"></i>
+              <span style="font-weight: var(--font-weight-medium); color: var(--text-primary); font-size: var(--text-sm);">{{ node.name }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 60px 16px;">
+
+        <sc-if value="{{ isModalCreate }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 420px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--brand-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-plus" style="color: var(--color-primary); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Create sub-organisation</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Creating a sub-organisation under Ministry of Health. It will appear nested one level below its parent in the tree.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" placeholder="Organisation name"></x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px">Create</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isModalRename }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 420px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--brand-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-pen" style="color: var(--color-primary); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Rename organisation</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Renaming Patient Identity Verification Unit. This only changes the display name — its position in the hierarchy is unaffected.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" defaultValue="Patient Identity Verification Unit"></x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px">Save</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isModalDeleteConfirm }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 420px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-trash" style="color: var(--status-danger-text); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Delete Energy Authority?</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">This permanently deletes the organisation. The application performs no check for attached users, RFPs, or proposals before deleting — if any exist, the database will refuse the delete rather than removing them, and you'll see an error instead. This action cannot be undone once it succeeds.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Checkbox" hint-size="auto,20px" label="I understand this cannot be undone" checked="{{ deleteConfirmChecked }}" onChange="{{ toggleDeleteConfirmChecked }}"></x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="170px,40px" variant="danger" disabled="{{ deleteConfirmDisabled }}">Delete organisation</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isModalDeleteRefused }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 420px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--status-danger-text); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Couldn't delete Ministry of Health</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">This organisation still has users, RFPs, or proposals attached to it. Move or delete those first, then try again.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <div style="padding: 12px 14px; background: var(--surface-subtle); border: 1px dashed var(--border-default); border-radius: var(--radius-md); font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+                <strong style="color: var(--text-primary);">Annotation — flagged backend-hardening candidate:</strong> organisation foreign keys are configured <code>Restrict</code>, so this delete surfaces as a raw database constraint error (effectively a 500), not a friendly 409. This screen's copy anticipates that response; a real "409 Conflict — organisation has N attached records" would let this message be specific instead of generic.
+              </div>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Close</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 03: USER MANAGEMENT ============ -->
+  <sc-if value="{{ isUsers }}">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 28px 24px 64px;">
+      <x-import component-from-global-scope="HeritDesignSystem_14a381.Breadcrumb" hint-size="auto,24px" items="{{ breadcrumbItems_users }}" style="margin-bottom: 16px;"></x-import>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 16px; flex-wrap: wrap;">
+        <div>
+          <h1 style="margin: 0 0 4px; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Users</h1>
+          <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary);">Every user on the platform. Expats are listed read-only — they are managed by no one; they're visible because this endpoint returns all users.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="140px,40px" variant="secondary"><i class="fa-solid fa-plus" style="font-size: 12px;"></i> Create staff</x-import>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="170px,40px" variant="primary"><i class="fa-solid fa-plus" style="font-size: 12px;"></i> Create org admin</x-import>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+        <button onClick="{{ setRoleFilter_all }}" style="{{ roleFilterStyle_all }}">All</button>
+        <button onClick="{{ setRoleFilter_staff }}" style="{{ roleFilterStyle_staff }}">Staff</button>
+        <button onClick="{{ setRoleFilter_orgadmin }}" style="{{ roleFilterStyle_orgadmin }}">Organisation Admin</button>
+        <button onClick="{{ setRoleFilter_superadmin }}" style="{{ roleFilterStyle_superadmin }}">SuperAdmin</button>
+        <button onClick="{{ setRoleFilter_expat }}" style="{{ roleFilterStyle_expat }}">Expat</button>
+      </div>
+
+      <div style="background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-nav); overflow: hidden;">
+        <div style="display: grid; grid-template-columns: 2fr 2fr 1.2fr 1.6fr 1.4fr; padding: 10px 20px; background: var(--surface-subtle); font-size: var(--text-xs); font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">
+          <span>Name</span><span>Email</span><span>Role</span><span>Organisation</span><span style="text-align: right;">Actions</span>
+        </div>
+        <sc-for list="{{ filteredUsers }}" as="u" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 2fr 2fr 1.2fr 1.6fr 1.4fr; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border-default); font-size: var(--text-sm);">
+            <span style="color: var(--text-primary); font-weight: var(--font-weight-medium);">{{ u.name }} <sc-if value="{{ u.isYou }}"><span style="color: var(--text-disabled); font-weight: var(--font-weight-regular);">(you)</span></sc-if></span>
+            <span style="color: var(--text-secondary);">{{ u.email }}</span>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="90px,22px" tone="{{ u.roleTone }}">{{ u.role }}</x-import>
+            <span style="color: var(--text-secondary);">{{ u.orgLabel }}</span>
+            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+              <sc-if value="{{ u.canEdit }}">
+                <button title="Edit" style="width: 28px; height: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-pen" style="font-size: 11px;"></i></button>
+              </sc-if>
+              <sc-if value="{{ u.canDelete }}">
+                <button title="Delete" style="width: 28px; height: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--error-500); cursor: pointer;"><i class="fa-solid fa-trash" style="font-size: 11px;"></i></button>
+              </sc-if>
+              <sc-if value="{{ u.readOnlyNote }}">
+                <span style="font-size: var(--text-xs); color: var(--text-disabled);">Read-only</span>
+              </sc-if>
+              <sc-if value="{{ u.noUpdateNote }}">
+                <span title="Org admins have no update endpoint — create/delete only" style="font-size: var(--text-xs); color: var(--text-disabled); cursor: help;"><i class="fa-solid fa-circle-info"></i></span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 04: USER FORMS & MODALS ============ -->
+  <sc-if value="{{ isForms }}">
+    <div style="position: relative;">
+      <div style="max-width: 1160px; margin: 0 auto; padding: 28px 24px 64px; opacity: 0.35; pointer-events: none; filter: saturate(0.6);">
+        <div style="background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-nav); overflow: hidden;">
+          <sc-for list="{{ filteredUsers }}" as="u" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 2fr 2fr 1.2fr 1.6fr; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border-default); font-size: var(--text-sm);">
+              <span style="color: var(--text-primary); font-weight: var(--font-weight-medium);">{{ u.name }}</span>
+              <span style="color: var(--text-secondary);">{{ u.email }}</span>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="90px,22px" tone="{{ u.roleTone }}">{{ u.role }}</x-import>
+              <span style="color: var(--text-secondary);">{{ u.orgLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 60px 16px;">
+
+        <sc-if value="{{ isFormCreateStaff }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 440px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--brand-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-user-plus" style="color: var(--color-primary); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Create staff user</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Provisions a Staff account. Staff can act on any RFP or proposal, platform-wide.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default); display: flex; flex-direction: column; gap: 14px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" placeholder="Work email" helpText="Must match the identity this person signs in with through Entra."></x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" placeholder="Full name"></x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Select" hint-size="100%,44px">
+                <option value="" disabled="">Organisation</option>
+                <sc-for list="{{ orgOptions }}" as="opt" hint-placeholder-count="6">
+                  <option value="{{ opt.id }}">{{ opt.label }}</option>
+                </sc-for>
+              </x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="140px,40px">Create staff user</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormCreateOrgAdmin }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 440px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--brand-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-user-plus" style="color: var(--color-primary); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Create organisation admin</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Provisions an OrganisationAdmin account, scoped to the organisation below in name only — enforcement isn't org-scoped yet. Org admins can create and delete users, but have no edit action.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default); display: flex; flex-direction: column; gap: 14px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" placeholder="Work email" helpText="Must match the identity this person signs in with through Entra."></x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" placeholder="Full name"></x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Select" hint-size="100%,44px">
+                <option value="" disabled="">Organisation</option>
+                <sc-for list="{{ orgOptions }}" as="opt" hint-placeholder-count="6">
+                  <option value="{{ opt.id }}">{{ opt.label }}</option>
+                </sc-for>
+              </x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="160px,40px">Create org admin</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormEditStaff }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 440px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--brand-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-pen" style="color: var(--color-primary); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Edit staff user</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Editing Jonas Weber. Organisation isn't editable here — there's no update endpoint for reassigning a user's organisation; delete and recreate the account if it needs to move.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default); display: flex; flex-direction: column; gap: 14px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" defaultValue="jonas.weber@herit.gov" helpText="Must match the identity this person signs in with through Entra."></x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,44px" defaultValue="Jonas Weber"></x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="130px,40px">Save changes</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormDeleteUser }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 420px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-trash" style="color: var(--status-danger-text); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Delete Marcus Ade?</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">This permanently removes Marcus Ade's platform access. Content they authored — RFPs, proposals — stays in place and keeps referencing their user id; it is not deleted or reassigned. This cannot be undone.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Checkbox" hint-size="auto,20px" label="I understand this cannot be undone" checked="{{ deleteUserChecked }}" onChange="{{ toggleDeleteUserChecked }}"></x-import>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="120px,40px" variant="danger" disabled="{{ deleteUserDisabled }}">Delete user</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormDeleteGuard }}">
+          <div style="background: var(--surface-card); width: 100%; max-width: 440px; border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); border: 1px solid var(--border-default); overflow: hidden;">
+            <div style="padding: 28px 24px 16px; text-align: center;">
+              <div style="width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;"><i class="fa-solid fa-trash" style="color: var(--status-danger-text); font-size: 22px;"></i></div>
+              <h2 style="margin: 0 0 8px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Delete Amara Chen (you)?</h2>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Amara Chen is the last SuperAdmin account and the account you're currently signed in as.</p>
+            </div>
+            <div style="padding: 16px 24px; background: var(--surface-page); border-top: 1px solid var(--border-default); border-bottom: 1px solid var(--border-default);">
+              <div style="padding: 12px 14px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed); margin-bottom: 12px;">
+                <strong>DECISION — open question 2 (deleting yourself / the last admin):</strong> the backend does not prevent either case — verified, no guard exists server-side. Recommending a client-side guard: block the delete action here with an explanation, rather than letting the request go through and lock everyone out of user administration. This is a UI safeguard only; it doesn't close the backend gap, which should still be fixed server-side.
+              </div>
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Deleting this account would remove the only SuperAdmin able to manage organisations and users. Have another SuperAdmin remove this account instead, or promote someone else first.</p>
+            </div>
+            <div style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="90px,40px" variant="secondary">Cancel</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="140px,40px" variant="danger" disabled="{{ true }}">Delete account</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+const ORG_TREE = [
+  { id: 'org-root', name: 'Republic of Herit Government', depth: 0, isRoot: true },
+  { id: 'org-health', name: 'Ministry of Health', depth: 1 },
+  { id: 'org-health-piv', name: 'Patient Identity Verification Unit', depth: 2 },
+  { id: 'org-edu', name: 'Department of Education', depth: 1 },
+  { id: 'org-energy', name: 'Energy Authority', depth: 1 },
+  { id: 'org-energy-renew', name: 'Renewable Programs Office', depth: 2 },
+];
+
+const USERS = [
+  { id: 'u1', name: 'Amara Chen', email: 'amara.chen@herit.gov', role: 'SuperAdmin', org: 'Republic of Herit Government', isYou: true },
+  { id: 'u2', name: 'Priya Nair', email: 'priya.nair@herit.gov', role: 'OrganisationAdmin', org: 'Ministry of Health' },
+  { id: 'u3', name: 'Jonas Weber', email: 'jonas.weber@herit.gov', role: 'Staff', org: 'Ministry of Health' },
+  { id: 'u4', name: 'Marcus Ade', email: 'marcus.ade@herit.gov', role: 'Staff', org: 'Department of Education' },
+  { id: 'u5', name: 'Sofia Petrov', email: 'sofia.petrov@herit.gov', role: 'OrganisationAdmin', org: 'Energy Authority' },
+  { id: 'u6', name: 'Fatima Al-Sayed', email: 'fatima.alsayed@example.com', role: 'Expat', org: null },
+];
+
+const ROLE_TONE = { SuperAdmin: 'info', OrganisationAdmin: 'amber', Staff: 'neutral', Expat: 'neutral' };
+
+class Component extends DCLogic {
+  state = {
+    screen: 'tree',
+    treeState: 'populated',
+    modalState: 'create',
+    roleFilter: 'all',
+    formState: 'create-staff',
+    deleteConfirmChecked: false,
+    deleteUserChecked: false,
+  };
+
+  tabStyle(active) {
+    return {
+      padding: '6px 14px', borderRadius: 'var(--radius-md)',
+      border: '1px solid ' + (active ? 'var(--brand-500)' : 'rgba(255,255,255,0.15)'),
+      background: active ? 'var(--brand-500)' : 'transparent', color: 'white',
+      fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', cursor: 'pointer',
+    };
+  }
+
+  pillStyle(active) {
+    return {
+      padding: '7px 14px', borderRadius: 'var(--radius-full)',
+      border: '1px solid ' + (active ? 'var(--color-primary)' : 'var(--border-default)'),
+      background: active ? 'var(--brand-50)' : 'var(--surface-card)',
+      color: active ? 'var(--brand-700)' : 'var(--text-secondary)',
+      fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', cursor: 'pointer',
+    };
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const isTree = s === 'tree', isModals = s === 'modals', isUsers = s === 'users', isForms = s === 'forms';
+    const isTreePopulated = this.state.treeState === 'populated';
+    const isTreeEmpty = this.state.treeState === 'empty';
+    const m = this.state.modalState;
+    const f = this.state.formState;
+    const rf = this.state.roleFilter;
+
+    const treeNodes = ORG_TREE.map(n => ({ ...n, indentPx: 16 + n.depth * 28 }));
+    const orgOptions = ORG_TREE.map(n => ({ id: n.id, label: (n.depth > 0 ? '\u2014 '.repeat(n.depth) : '') + n.name }));
+
+    const roleMatch = (role) => {
+      if (rf === 'all') return true;
+      if (rf === 'staff') return role === 'Staff';
+      if (rf === 'orgadmin') return role === 'OrganisationAdmin';
+      if (rf === 'superadmin') return role === 'SuperAdmin';
+      if (rf === 'expat') return role === 'Expat';
+      return true;
+    };
+    const filteredUsers = USERS.filter(u => roleMatch(u.role)).map(u => ({
+      ...u,
+      orgLabel: u.org || '\u2014',
+      roleTone: ROLE_TONE[u.role],
+      canEdit: u.role === 'Staff',
+      canDelete: u.role === 'Staff' || u.role === 'OrganisationAdmin',
+      readOnlyNote: u.role === 'Expat',
+      noUpdateNote: u.role === 'OrganisationAdmin',
+    }));
+
+    return {
+      isTree, isModals, isUsers, isForms,
+      showShellHeader: isTree || isUsers,
+      navColor_orgs: isTree ? 'white' : 'var(--neutral-400)',
+      navColor_users: isUsers ? 'white' : 'var(--neutral-400)',
+      goScreen_tree: () => this.setState({ screen: 'tree' }),
+      goScreen_modals: () => this.setState({ screen: 'modals' }),
+      goScreen_users: () => this.setState({ screen: 'users' }),
+      goScreen_forms: () => this.setState({ screen: 'forms' }),
+      tabStyle_tree: this.tabStyle(isTree),
+      tabStyle_modals: this.tabStyle(isModals),
+      tabStyle_users: this.tabStyle(isUsers),
+      tabStyle_forms: this.tabStyle(isForms),
+
+      setTree_populated: () => this.setState({ treeState: 'populated' }),
+      setTree_empty: () => this.setState({ treeState: 'empty' }),
+      subTabStyle_treePopulated: this.tabStyle(isTreePopulated),
+      subTabStyle_treeEmpty: this.tabStyle(isTreeEmpty),
+      isTreePopulated, isTreeEmpty,
+      breadcrumbItems_orgs: [{ label: 'Dashboard', href: '#' }, { label: 'Organisations' }],
+      treeNodes,
+
+      setModal_create: () => this.setState({ modalState: 'create' }),
+      setModal_rename: () => this.setState({ modalState: 'rename' }),
+      setModal_deleteConfirm: () => this.setState({ modalState: 'delete-confirm' }),
+      setModal_deleteRefused: () => this.setState({ modalState: 'delete-refused' }),
+      subTabStyle_modalCreate: this.tabStyle(m === 'create'),
+      subTabStyle_modalRename: this.tabStyle(m === 'rename'),
+      subTabStyle_modalDeleteConfirm: this.tabStyle(m === 'delete-confirm'),
+      subTabStyle_modalDeleteRefused: this.tabStyle(m === 'delete-refused'),
+      isModalCreate: m === 'create',
+      isModalRename: m === 'rename',
+      isModalDeleteConfirm: m === 'delete-confirm',
+      isModalDeleteRefused: m === 'delete-refused',
+      deleteConfirmChecked: this.state.deleteConfirmChecked,
+      deleteConfirmDisabled: !this.state.deleteConfirmChecked,
+      toggleDeleteConfirmChecked: () => this.setState(st => ({ deleteConfirmChecked: !st.deleteConfirmChecked })),
+
+      breadcrumbItems_users: [{ label: 'Dashboard', href: '#' }, { label: 'Users' }],
+      setRoleFilter_all: () => this.setState({ roleFilter: 'all' }),
+      setRoleFilter_staff: () => this.setState({ roleFilter: 'staff' }),
+      setRoleFilter_orgadmin: () => this.setState({ roleFilter: 'orgadmin' }),
+      setRoleFilter_superadmin: () => this.setState({ roleFilter: 'superadmin' }),
+      setRoleFilter_expat: () => this.setState({ roleFilter: 'expat' }),
+      roleFilterStyle_all: this.pillStyle(rf === 'all'),
+      roleFilterStyle_staff: this.pillStyle(rf === 'staff'),
+      roleFilterStyle_orgadmin: this.pillStyle(rf === 'orgadmin'),
+      roleFilterStyle_superadmin: this.pillStyle(rf === 'superadmin'),
+      roleFilterStyle_expat: this.pillStyle(rf === 'expat'),
+      filteredUsers,
+
+      setForm_createStaff: () => this.setState({ formState: 'create-staff' }),
+      setForm_createOrgAdmin: () => this.setState({ formState: 'create-orgadmin' }),
+      setForm_editStaff: () => this.setState({ formState: 'edit-staff' }),
+      setForm_deleteUser: () => this.setState({ formState: 'delete-user' }),
+      setForm_deleteGuard: () => this.setState({ formState: 'delete-guard' }),
+      subTabStyle_formCreateStaff: this.tabStyle(f === 'create-staff'),
+      subTabStyle_formCreateOrgAdmin: this.tabStyle(f === 'create-orgadmin'),
+      subTabStyle_formEditStaff: this.tabStyle(f === 'edit-staff'),
+      subTabStyle_formDeleteUser: this.tabStyle(f === 'delete-user'),
+      subTabStyle_formDeleteGuard: this.tabStyle(f === 'delete-guard'),
+      isFormCreateStaff: f === 'create-staff',
+      isFormCreateOrgAdmin: f === 'create-orgadmin',
+      isFormEditStaff: f === 'edit-staff',
+      isFormDeleteUser: f === 'delete-user',
+      isFormDeleteGuard: f === 'delete-guard',
+      orgOptions,
+      deleteUserChecked: this.state.deleteUserChecked,
+      deleteUserDisabled: !this.state.deleteUserChecked,
+      toggleDeleteUserChecked: () => this.setState(st => ({ deleteUserChecked: !st.deleteUserChecked })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
