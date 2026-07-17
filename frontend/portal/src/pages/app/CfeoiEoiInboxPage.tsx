@@ -22,7 +22,7 @@ function EoiCard({ eoi, onApprove, onReject, isMutating }: {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3 mb-2">
           <span className="text-sm font-medium text-gray-900">
-            Submitter #{eoi.submittedById.slice(0, 8)}
+            {eoi.submitterName}
           </span>
           <StatusBadge type="eoi" status={eoi.status} />
         </div>

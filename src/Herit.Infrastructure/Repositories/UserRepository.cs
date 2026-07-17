@@ -24,6 +24,9 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> ListAsync(CancellationToken cancellationToken = default)
         => await _context.Users.ToListAsync(cancellationToken);
 
+    public async Task<IEnumerable<User>> ListByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        => await _context.Users.Where(u => ids.Contains(u.Id)).ToListAsync(cancellationToken);
+
     public async Task AddAsync(User user, CancellationToken cancellationToken = default)
     {
         await _context.Users.AddAsync(user, cancellationToken);

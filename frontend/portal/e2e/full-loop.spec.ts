@@ -142,11 +142,17 @@ test('full loop: JIT sign-in through proposal withdrawal', async ({ browser }) =
     await apiB.dispose();
   });
 
-  await test.step("A1 sees B's EOI in the inbox and approves it", async () => {
+  await test.step("A1 sees B's real name (not a GUID fragment) in the inbox and approves it", async () => {
+    const apiB = await Api.forToken(state.identities.userB.token);
+    const submitterName = (await apiB.listMyEois()).find((e) => e.cfeoiId === cfeoiId)!.submitterName;
+    await apiB.dispose();
+
     await a1.page.goto(`/cfeois/${cfeoiId}/eois`);
     await expect(a1.page.getByRole('heading', { name: 'Expressions of Interest' })).toBeVisible();
     const eoiCard = a1.page.locator('div.divide-y > div').filter({ hasText: eoiMessage });
     await expect(eoiCard).toBeVisible();
+    await expect(eoiCard.getByText(submitterName, { exact: true })).toBeVisible();
+    await expect(eoiCard.getByText(/^Submitter #/)).toHaveCount(0);
     await eoiCard.getByRole('button', { name: 'Approve' }).click();
     await expect(eoiCard.getByText('Approved')).toBeVisible();
   });

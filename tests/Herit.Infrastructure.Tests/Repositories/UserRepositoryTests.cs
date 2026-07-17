@@ -136,4 +136,27 @@ public class UserRepositoryTests : IDisposable
 
         Assert.Null(result);
     }
+
+    [Fact]
+    public async Task ListByIdsAsync_ReturnsOnlyMatchingUsers()
+    {
+        var idA = Guid.NewGuid();
+        var idB = Guid.NewGuid();
+        await _repository.AddAsync(User.Create(idA, "ext-a", "a@example.com", "User A", UserRole.Staff));
+        await _repository.AddAsync(User.Create(idB, "ext-b", "b@example.com", "User B", UserRole.Expat));
+        await _repository.AddAsync(User.Create(Guid.NewGuid(), "ext-c", "c@example.com", "User C", UserRole.Expat));
+
+        var result = await _repository.ListByIdsAsync(new[] { idA, idB });
+
+        Assert.Equal(2, result.Count());
+        Assert.Equal(new[] { idA, idB }.OrderBy(x => x), result.Select(u => u.Id).OrderBy(x => x));
+    }
+
+    [Fact]
+    public async Task ListByIdsAsync_WhenNoIds_ReturnsEmptyCollection()
+    {
+        var result = await _repository.ListByIdsAsync(Array.Empty<Guid>());
+
+        Assert.Empty(result);
+    }
 }

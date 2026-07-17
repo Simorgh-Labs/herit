@@ -15,6 +15,7 @@ public class ListEoisByCfeoiQueryHandlerTests
     private readonly IEoiRepository _eoiRepository = Substitute.For<IEoiRepository>();
     private readonly ICfeoiRepository _cfeoiRepository = Substitute.For<ICfeoiRepository>();
     private readonly IProposalRepository _proposalRepository = Substitute.For<IProposalRepository>();
+    private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
     private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly ListEoisByCfeoiQueryHandler _handler;
 
@@ -30,7 +31,7 @@ public class ListEoisByCfeoiQueryHandlerTests
     public ListEoisByCfeoiQueryHandlerTests()
     {
         _handler = new ListEoisByCfeoiQueryHandler(
-            _eoiRepository, _cfeoiRepository, _proposalRepository, _currentUserService);
+            _eoiRepository, _cfeoiRepository, _proposalRepository, _userRepository, _currentUserService);
 
         var proposal = ProposalEntity.Create(Guid.NewGuid(), "Title", "Short", _proposalOwnerId, Guid.NewGuid(), "Long");
         var cfeoi = CfeoiEntity.Create(_cfeoiId, "CFEOI", "Description", CfeoiResourceType.Human, proposal.Id);
@@ -43,6 +44,18 @@ public class ListEoisByCfeoiQueryHandlerTests
         _proposalRepository.GetByIdAsync(proposal.Id, Arg.Any<CancellationToken>()).Returns(proposal);
         _eoiRepository.ListByCfeoiAsync(_cfeoiId, Arg.Any<CancellationToken>())
             .Returns(new[] { _privateByA, _sharedByB, _privateByB });
+
+        _userRepository.ListByIdsAsync(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                var ids = ((IEnumerable<Guid>)callInfo[0]).ToHashSet();
+                var users = new[]
+                {
+                    MakeUser(_submitterAId, UserRole.Expat, "Submitter A", "a@example.com"),
+                    MakeUser(_submitterBId, UserRole.Expat, "Submitter B", "b@example.com")
+                };
+                return users.Where(u => ids.Contains(u.Id));
+            });
     }
 
     private EoiEntity MakeEoi(Guid submittedById, EoiVisibility visibility)
@@ -53,8 +66,8 @@ public class ListEoisByCfeoiQueryHandlerTests
         return eoi;
     }
 
-    private static UserEntity MakeUser(Guid id, UserRole role)
-        => UserEntity.Create(id, $"ext-{id}", "user@example.com", "User", role);
+    private static UserEntity MakeUser(Guid id, UserRole role, string fullName = "User", string email = "user@example.com")
+        => UserEntity.Create(id, $"ext-{id}", email, fullName, role);
 
     private void CurrentUser(UserEntity? user)
         => _currentUserService.GetCurrentUserOrNullAsync(Arg.Any<CancellationToken>()).Returns(user);
@@ -110,5 +123,34 @@ public class ListEoisByCfeoiQueryHandlerTests
         var result = await _handler.Handle(new ListEoisByCfeoiQuery(_cfeoiId), CancellationToken.None);
 
         Assert.Equal(3, result.Count());
+    }
+
+    [Fact]
+    public async Task Handle_ProposalOwner_IncludesSubmitterNameButNotEmail()
+    {
+        CurrentUser(MakeUser(_proposalOwnerId, UserRole.Expat));
+
+        var result = await _handler.Handle(new ListEoisByCfeoiQuery(_cfeoiId), CancellationToken.None);
+        var dto = Assert.Single(result);
+
+        Assert.Equal("Submitter B", dto.SubmitterName);
+        Assert.Null(dto.SubmitterEmail);
+    }
+
+    [Theory]
+    [InlineData(UserRole.Staff)]
+    [InlineData(UserRole.OrganisationAdmin)]
+    [InlineData(UserRole.SuperAdmin)]
+    public async Task Handle_Staff_IncludesSubmitterNameAndEmail(UserRole role)
+    {
+        CurrentUser(MakeUser(Guid.NewGuid(), role));
+
+        var result = await _handler.Handle(new ListEoisByCfeoiQuery(_cfeoiId), CancellationToken.None);
+
+        Assert.All(result, dto =>
+        {
+            Assert.False(string.IsNullOrEmpty(dto.SubmitterName));
+            Assert.False(string.IsNullOrEmpty(dto.SubmitterEmail));
+        });
     }
 }
