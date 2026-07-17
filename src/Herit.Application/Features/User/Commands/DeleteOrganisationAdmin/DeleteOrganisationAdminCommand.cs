@@ -11,11 +11,16 @@ public class DeleteOrganisationAdminCommandHandler : IRequestHandler<DeleteOrgan
 {
     private readonly IUserRepository _userRepository;
     private readonly IIdentityProviderService _identityProviderService;
+    private readonly ICurrentUserService _currentUserService;
 
-    public DeleteOrganisationAdminCommandHandler(IUserRepository userRepository, IIdentityProviderService identityProviderService)
+    public DeleteOrganisationAdminCommandHandler(
+        IUserRepository userRepository,
+        IIdentityProviderService identityProviderService,
+        ICurrentUserService currentUserService)
     {
         _userRepository = userRepository;
         _identityProviderService = identityProviderService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Unit> Handle(DeleteOrganisationAdminCommand request, CancellationToken cancellationToken)
@@ -26,6 +31,15 @@ public class DeleteOrganisationAdminCommandHandler : IRequestHandler<DeleteOrgan
 
         if (user.Role != UserRole.OrganisationAdmin)
             throw new InvalidOperationException($"User with ID '{request.Id}' is not an OrganisationAdmin.");
+
+        var currentUser = await _currentUserService.GetCurrentUserAsync(cancellationToken);
+        if (currentUser.Id == request.Id)
+            throw new ForbiddenException("You cannot delete your own account.");
+
+        var allUsers = await _userRepository.ListAsync(cancellationToken);
+        var remainingAdminCount = allUsers.Count(u => u.Role == UserRole.OrganisationAdmin);
+        if (remainingAdminCount <= 1)
+            throw new ConflictException("The last remaining OrganisationAdmin cannot be deleted.");
 
         await _identityProviderService.DeleteUserAsync(user.ExternalId, cancellationToken);
         await _userRepository.DeleteAsync(request.Id, cancellationToken);

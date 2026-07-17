@@ -11,11 +11,16 @@ public class DeleteStaffUserCommandHandler : IRequestHandler<DeleteStaffUserComm
 {
     private readonly IUserRepository _userRepository;
     private readonly IIdentityProviderService _identityProviderService;
+    private readonly ICurrentUserService _currentUserService;
 
-    public DeleteStaffUserCommandHandler(IUserRepository userRepository, IIdentityProviderService identityProviderService)
+    public DeleteStaffUserCommandHandler(
+        IUserRepository userRepository,
+        IIdentityProviderService identityProviderService,
+        ICurrentUserService currentUserService)
     {
         _userRepository = userRepository;
         _identityProviderService = identityProviderService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Unit> Handle(DeleteStaffUserCommand request, CancellationToken cancellationToken)
@@ -26,6 +31,10 @@ public class DeleteStaffUserCommandHandler : IRequestHandler<DeleteStaffUserComm
 
         if (user.Role != UserRole.Staff)
             throw new InvalidOperationException($"User with ID '{request.Id}' is not a Staff user.");
+
+        var currentUser = await _currentUserService.GetCurrentUserAsync(cancellationToken);
+        if (currentUser.Id == request.Id)
+            throw new ForbiddenException("You cannot delete your own account.");
 
         await _identityProviderService.DeleteUserAsync(user.ExternalId, cancellationToken);
         await _userRepository.DeleteAsync(request.Id, cancellationToken);

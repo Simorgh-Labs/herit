@@ -34,6 +34,18 @@ public class GlobalExceptionHandlerTests
     }
 
     [Fact]
+    public async Task TryHandleAsync_ConflictException_Returns409()
+    {
+        var context = CreateHttpContext();
+        var exception = new ConflictException("Organisation still has attached records");
+
+        var handled = await _handler.TryHandleAsync(context, exception, CancellationToken.None);
+
+        Assert.True(handled);
+        Assert.Equal((int)HttpStatusCode.Conflict, context.Response.StatusCode);
+    }
+
+    [Fact]
     public async Task TryHandleAsync_InvalidOperationException_Returns400()
     {
         var context = CreateHttpContext();
