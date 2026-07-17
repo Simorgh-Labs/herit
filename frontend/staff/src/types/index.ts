@@ -83,10 +83,13 @@ export interface Cfeoi {
 
 export type EoiStatus = 'Pending' | 'Approved' | 'Rejected';
 
+export type EoiVisibility = 'Private' | 'Shared';
+
 export interface Eoi {
   id: string;
   message: string;
   status: EoiStatus;
+  visibility: EoiVisibility;
   cfeoiId: string;
   submittedById: string;
   submitterName: string;

@@ -9,6 +9,7 @@ import RfpEditorPage from '../pages/app/RfpEditorPage';
 import RfpDetailPage from '../pages/app/RfpDetailPage';
 import ProposalsPage from '../pages/app/ProposalsPage';
 import ProposalDetailPage from '../pages/app/ProposalDetailPage';
+import EoiListPage from '../pages/app/EoiListPage';
 import OrganisationsPage from '../pages/app/OrganisationsPage';
 import UsersPage from '../pages/app/UsersPage';
 import AppLayout from '../components/layout/AppLayout';
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { path: '/rfps/:id/edit', element: <RfpEditorPage /> },
       { path: '/proposals', element: <ProposalsPage /> },
       { path: '/proposals/:id', element: <ProposalDetailPage /> },
+      { path: '/proposals/:proposalId/cfeois/:cfeoiId/eois', element: <EoiListPage /> },
       { path: '/organisations', element: <OrganisationsPage /> },
       { path: '/users', element: <UsersPage /> },
     ],
