@@ -5,11 +5,8 @@ import { deleteProposal, getProposalById, updateProposalStatus } from '../../api
 import { listCfeois } from '../../api/cfeois';
 import { listEoisByCfeoi } from '../../api/eois';
 import { getErrorMessage } from '../../api/errors';
-import { listOrganisations } from '../../api/organisations';
-import { listUsers } from '../../api/users';
 import { getRfpById } from '../../api/rfps';
-import { useCurrentUser } from '../../hooks/useCurrentUser';
-import { isAdminRole, type ProposalStatus } from '../../types';
+import type { ProposalStatus } from '../../types';
 import StatusBadge from '../../components/StatusBadge';
 import Modal from '../../components/Modal';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -48,8 +45,6 @@ export default function ProposalDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { user } = useCurrentUser();
-  const isAdmin = !!user && isAdminRole(user.role);
 
   const [modal, setModal] = useState<ModalKind>(null);
   const [deleteChecked, setDeleteChecked] = useState(false);
@@ -59,9 +54,6 @@ export default function ProposalDetailPage() {
     isLoading,
     isError,
   } = useQuery({ queryKey: ['proposals', id], queryFn: () => getProposalById(id!) });
-
-  const { data: organisations } = useQuery({ queryKey: ['organisations'], queryFn: listOrganisations });
-  const { data: users } = useQuery({ queryKey: ['users'], queryFn: listUsers, enabled: isAdmin });
 
   const { data: rfp } = useQuery({
     queryKey: ['rfps', proposal?.rfpId],
@@ -119,9 +111,6 @@ export default function ProposalDetailPage() {
       </div>
     );
   }
-
-  const org = organisations?.find((o) => o.id === proposal.organisationId);
-  const author = users?.find((u) => u.id === proposal.authorId);
 
   return (
     <div className="max-w-[1120px] mx-auto px-6 py-8 pb-16">
@@ -198,11 +187,11 @@ export default function ProposalDetailPage() {
             <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-3">Submitted by</h3>
             <div className="flex items-center gap-2.5">
               <span className="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-semibold">
-                {(author?.fullName ?? '?').slice(0, 1).toUpperCase()}
+                {proposal.authorName.slice(0, 1).toUpperCase()}
               </span>
               <div>
-                <div className="text-sm font-medium text-neutral-900">{author?.fullName ?? '—'}</div>
-                <div className="text-xs text-neutral-500">{org?.name ?? '—'}</div>
+                <div className="text-sm font-medium text-neutral-900">{proposal.authorName}</div>
+                <div className="text-xs text-neutral-500">{proposal.organisationName}</div>
               </div>
             </div>
           </div>

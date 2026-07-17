@@ -31,7 +31,9 @@ const draftRfp: Rfp = {
   longDescription: 'A long description.',
   status: 'Draft',
   organisationId: 'o1',
+  organisationName: 'Ministry of Digital Economy',
   authorId: 'u1',
+  authorName: 'Amara Chen',
   tags: 'identity',
 };
 

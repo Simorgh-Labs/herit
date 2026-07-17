@@ -39,7 +39,9 @@ export interface Rfp {
   longDescription: string;
   status: RfpStatus;
   organisationId: string;
+  organisationName: string;
   authorId: string;
+  authorName: string;
   tags?: string;
 }
 
@@ -61,7 +63,9 @@ export interface Proposal {
   status: ProposalStatus;
   visibility: ProposalVisibility;
   authorId: string;
+  authorName: string;
   organisationId: string;
+  organisationName: string;
   rfpId?: string;
 }
 

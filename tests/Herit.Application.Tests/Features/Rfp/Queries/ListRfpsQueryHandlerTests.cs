@@ -11,6 +11,8 @@ namespace Herit.Application.Tests.Features.Rfp.Queries;
 public class ListRfpsQueryHandlerTests
 {
     private readonly IRfpRepository _repository = Substitute.For<IRfpRepository>();
+    private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
+    private readonly IOrganisationRepository _organisationRepository = Substitute.For<IOrganisationRepository>();
     private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly ListRfpsQueryHandler _handler;
 
@@ -20,7 +22,7 @@ public class ListRfpsQueryHandlerTests
 
     public ListRfpsQueryHandlerTests()
     {
-        _handler = new ListRfpsQueryHandler(_repository, _currentUserService);
+        _handler = new ListRfpsQueryHandler(_repository, _userRepository, _organisationRepository, _currentUserService);
 
         _draft = MakeRfp(RfpStatus.Draft);
         _approved = MakeRfp(RfpStatus.Approved);
@@ -28,6 +30,10 @@ public class ListRfpsQueryHandlerTests
 
         _repository.ListAsync(Arg.Any<CancellationToken>())
             .Returns(new[] { _draft, _approved, _published });
+        _userRepository.ListByIdsAsync(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(Enumerable.Empty<UserEntity>());
+        _organisationRepository.ListAsync(Arg.Any<CancellationToken>())
+            .Returns(Enumerable.Empty<Herit.Domain.Entities.Organisation>());
     }
 
     private static RfpEntity MakeRfp(RfpStatus status)

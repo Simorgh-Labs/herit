@@ -11,6 +11,8 @@ namespace Herit.Application.Tests.Features.Proposal.Queries;
 public class ListProposalsQueryHandlerTests
 {
     private readonly IProposalRepository _proposalRepository = Substitute.For<IProposalRepository>();
+    private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
+    private readonly IOrganisationRepository _organisationRepository = Substitute.For<IOrganisationRepository>();
     private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly ListProposalsQueryHandler _handler;
 
@@ -21,7 +23,7 @@ public class ListProposalsQueryHandlerTests
 
     public ListProposalsQueryHandlerTests()
     {
-        _handler = new ListProposalsQueryHandler(_proposalRepository, _currentUserService);
+        _handler = new ListProposalsQueryHandler(_proposalRepository, _userRepository, _organisationRepository, _currentUserService);
 
         _public = MakeProposal(ProposalVisibility.Public, _ownerId);
         _shared = MakeProposal(ProposalVisibility.Shared, _ownerId);
@@ -29,6 +31,10 @@ public class ListProposalsQueryHandlerTests
 
         _proposalRepository.ListAsync(Arg.Any<CancellationToken>())
             .Returns(new[] { _public, _shared, _privateOwned });
+        _userRepository.ListByIdsAsync(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(Enumerable.Empty<UserEntity>());
+        _organisationRepository.ListAsync(Arg.Any<CancellationToken>())
+            .Returns(Enumerable.Empty<Herit.Domain.Entities.Organisation>());
     }
 
     private static ProposalEntity MakeProposal(ProposalVisibility visibility, Guid authorId)

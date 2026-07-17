@@ -22,17 +22,17 @@ const mockListOrganisations = vi.mocked(listOrganisations);
 const mockListUsers = vi.mocked(listUsers);
 
 const rfps: Rfp[] = [
-  { id: '1', title: 'a', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', authorId: 'u1' },
-  { id: '2', title: 'b', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', authorId: 'u1' },
-  { id: '3', title: 'c', shortDescription: '', longDescription: '', status: 'Approved', organisationId: 'o1', authorId: 'u1' },
-  { id: '4', title: 'd', shortDescription: '', longDescription: '', status: 'Published', organisationId: 'o1', authorId: 'u1' },
+  { id: '1', title: 'a', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', organisationName: 'Org One', authorId: 'u1', authorName: 'Staff One' },
+  { id: '2', title: 'b', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', organisationName: 'Org One', authorId: 'u1', authorName: 'Staff One' },
+  { id: '3', title: 'c', shortDescription: '', longDescription: '', status: 'Approved', organisationId: 'o1', organisationName: 'Org One', authorId: 'u1', authorName: 'Staff One' },
+  { id: '4', title: 'd', shortDescription: '', longDescription: '', status: 'Published', organisationId: 'o1', organisationName: 'Org One', authorId: 'u1', authorName: 'Staff One' },
 ];
 
 const proposals: Proposal[] = [
-  { id: '1', title: 'a', shortDescription: '', longDescription: '', status: 'Submitted', authorId: 'u1', organisationId: 'o1' },
-  { id: '2', title: 'b', shortDescription: '', longDescription: '', status: 'UnderReview', authorId: 'u1', organisationId: 'o1' },
-  { id: '3', title: 'c', shortDescription: '', longDescription: '', status: 'UnderReview', authorId: 'u1', organisationId: 'o1' },
-  { id: '4', title: 'd', shortDescription: '', longDescription: '', status: 'Approved', authorId: 'u1', organisationId: 'o1' },
+  { id: '1', title: 'a', shortDescription: '', longDescription: '', status: 'Submitted', authorId: 'u1', authorName: 'Staff One', organisationId: 'o1', organisationName: 'Org One' },
+  { id: '2', title: 'b', shortDescription: '', longDescription: '', status: 'UnderReview', authorId: 'u1', authorName: 'Staff One', organisationId: 'o1', organisationName: 'Org One' },
+  { id: '3', title: 'c', shortDescription: '', longDescription: '', status: 'UnderReview', authorId: 'u1', authorName: 'Staff One', organisationId: 'o1', organisationName: 'Org One' },
+  { id: '4', title: 'd', shortDescription: '', longDescription: '', status: 'Approved', authorId: 'u1', authorName: 'Staff One', organisationId: 'o1', organisationName: 'Org One' },
 ];
 
 const organisations: Organisation[] = [{ id: 'o1', name: 'Org One' }, { id: 'o2', name: 'Org Two' }];

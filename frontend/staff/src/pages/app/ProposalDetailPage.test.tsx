@@ -6,11 +6,8 @@ import ProposalDetailPage from './ProposalDetailPage';
 import { deleteProposal, getProposalById, updateProposalStatus } from '../../api/proposals';
 import { listCfeois } from '../../api/cfeois';
 import { listEoisByCfeoi } from '../../api/eois';
-import { listOrganisations } from '../../api/organisations';
-import { listUsers } from '../../api/users';
 import { getRfpById } from '../../api/rfps';
-import { useCurrentUser } from '../../hooks/useCurrentUser';
-import type { Cfeoi, Eoi, Organisation, Proposal, Rfp, User } from '../../types';
+import type { Cfeoi, Eoi, Proposal, Rfp } from '../../types';
 
 vi.mock('../../api/proposals', () => ({
   getProposalById: vi.fn(),
@@ -19,23 +16,14 @@ vi.mock('../../api/proposals', () => ({
 }));
 vi.mock('../../api/cfeois', () => ({ listCfeois: vi.fn() }));
 vi.mock('../../api/eois', () => ({ listEoisByCfeoi: vi.fn() }));
-vi.mock('../../api/organisations', () => ({ listOrganisations: vi.fn() }));
-vi.mock('../../api/users', () => ({ listUsers: vi.fn() }));
 vi.mock('../../api/rfps', () => ({ getRfpById: vi.fn() }));
-vi.mock('../../hooks/useCurrentUser', () => ({ useCurrentUser: vi.fn() }));
 
 const mockGetProposalById = vi.mocked(getProposalById);
 const mockUpdateProposalStatus = vi.mocked(updateProposalStatus);
 const mockDeleteProposal = vi.mocked(deleteProposal);
 const mockListCfeois = vi.mocked(listCfeois);
 const mockListEoisByCfeoi = vi.mocked(listEoisByCfeoi);
-const mockListOrganisations = vi.mocked(listOrganisations);
-const mockListUsers = vi.mocked(listUsers);
 const mockGetRfpById = vi.mocked(getRfpById);
-const mockUseCurrentUser = vi.mocked(useCurrentUser);
-
-const organisations: Organisation[] = [{ id: 'o1', name: 'Ministry of Health' }];
-const users: User[] = [{ id: 'u1', email: 'amara@example.com', fullName: 'Amara Chen', role: 'Expat' }];
 
 const baseProposal: Proposal = {
   id: 'p1',
@@ -45,7 +33,9 @@ const baseProposal: Proposal = {
   status: 'Submitted',
   visibility: 'Public',
   authorId: 'u1',
+  authorName: 'Amara Chen',
   organisationId: 'o1',
+  organisationName: 'Ministry of Health',
 };
 
 const cfeois: Cfeoi[] = [
@@ -67,17 +57,9 @@ const eois: Eoi[] = [
 function renderPage(proposal: Proposal, initialEntries = ['/proposals/p1']) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   mockGetProposalById.mockResolvedValue(proposal);
-  mockListOrganisations.mockResolvedValue(organisations);
-  mockListUsers.mockResolvedValue(users);
   mockListCfeois.mockResolvedValue(cfeois);
   mockListEoisByCfeoi.mockResolvedValue(eois);
   mockGetRfpById.mockResolvedValue({ id: 'rfp1', title: 'Rural Clinics Modernisation' } as Rfp);
-  mockUseCurrentUser.mockReturnValue({
-    user: { id: 'staff-1', email: 'jonas@example.com', fullName: 'Jonas Weber', role: 'SuperAdmin' },
-    isLoading: false,
-    error: null,
-    isNotFound: false,
-  });
   return render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={initialEntries}>

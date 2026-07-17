@@ -3,7 +3,6 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteRfp, getRfpById, updateRfpStatus } from '../../api/rfps';
 import { getErrorMessage } from '../../api/errors';
-import { listOrganisations } from '../../api/organisations';
 import type { RfpStatus } from '../../types';
 import StatusBadge from '../../components/StatusBadge';
 import Modal from '../../components/Modal';
@@ -58,8 +57,6 @@ export default function RfpDetailPage() {
     isError,
   } = useQuery({ queryKey: ['rfps', id], queryFn: () => getRfpById(id!) });
 
-  const { data: organisations } = useQuery({ queryKey: ['organisations'], queryFn: listOrganisations });
-
   const statusMutation = useMutation({
     mutationFn: (status: RfpStatus) => updateRfpStatus(id!, status),
     onSuccess: () => {
@@ -98,8 +95,7 @@ export default function RfpDetailPage() {
     );
   }
 
-  const org = organisations?.find((o) => o.id === rfp.organisationId);
-  const subtitle = [org?.name, rfp.tags].filter(Boolean).join(' · ');
+  const subtitle = [rfp.organisationName, rfp.tags].filter(Boolean).join(' · ');
   const publicUrl = `${PORTAL_URL}/rfps/${rfp.id}`;
 
   const deleteDescription =
