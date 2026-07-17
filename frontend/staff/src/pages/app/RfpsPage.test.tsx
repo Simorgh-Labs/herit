@@ -82,6 +82,11 @@ describe('RfpsPage', () => {
     expect(screen.getByText('New RFPs start in Draft. Create one to get started.')).toBeInTheDocument();
   });
 
+  it('shows a deletion confirmation banner when redirected with ?deleted=true', async () => {
+    renderPage(['/rfps?deleted=true']);
+    expect(await screen.findByText('RFP deleted.')).toBeInTheDocument();
+  });
+
   it('links rows to the detail page and the New RFP action to the editor', async () => {
     renderPage();
 

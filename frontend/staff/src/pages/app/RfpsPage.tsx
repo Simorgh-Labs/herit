@@ -30,6 +30,8 @@ export default function RfpsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
 
+  const deleted = searchParams.get('deleted') === 'true';
+
   const statusParam = searchParams.get('status');
   const activeTab: RfpStatus = isRfpStatus(statusParam) ? statusParam : 'Draft';
 
@@ -71,6 +73,11 @@ export default function RfpsPage() {
 
   return (
     <div className="max-w-[1080px] mx-auto px-6 py-8 pb-16">
+      {deleted && (
+        <div className="mb-5 px-4 py-3 rounded-lg border border-status-success-text/20 bg-status-success-bg text-status-success-text text-sm font-medium">
+          RFP deleted.
+        </div>
+      )}
       <div className="flex items-start justify-between gap-4 mb-5">
         <div>
           <h1 className="text-2xl font-bold text-neutral-900 mb-1">RFPs</h1>
