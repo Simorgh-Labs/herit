@@ -1,0 +1,7 @@
+/* Herit — Webfont loading.
+   No font binaries were provided with the source mockups (they load Inter from
+   Google Fonts CDN via <link>). Substituting the same family via @import here so
+   the token closure still declares it. If real font files are added later, replace
+   this @import with local @font-face src: url(...) rules — see readme.md. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');

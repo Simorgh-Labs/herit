@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/styles.css">
+  <script src="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/_ds_bundle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--text-link); }
+    a:hover { color: var(--text-link-hover); }
+  </style>
+</helmet>
+
+<div style="font-family: var(--font-sans); min-height: 100vh; background: var(--surface-page);">
+
+  <!-- Reviewer chrome: screen switcher, not part of the product UI -->
+  <div style="position: sticky; top: 0; z-index: 200; background: var(--neutral-900); color: white; display: flex; align-items: center; gap: 24px; padding: 10px 24px; font-size: var(--text-sm); flex-wrap: wrap;">
+    <span style="font-weight: var(--font-weight-bold); letter-spacing: var(--tracking-wide);">Brief 2c — EOI Management (Staff)</span>
+    <div style="display: flex; gap: 8px;">
+      <button onClick="{{ goList }}" style="{{ tabStyle_list }}">01 · EOI list (staff)</button>
+      <button onClick="{{ goModal }}" style="{{ tabStyle_modal }}">02 · Delete EOI modal</button>
+    </div>
+    <sc-if value="{{ isList }}">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">CFEOI state</span>
+        <button onClick="{{ setOpenState }}" style="{{ cfeoiTabStyle_open }}">Open</button>
+        <button onClick="{{ setClosedState }}" style="{{ cfeoiTabStyle_closed }}">Closed</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ SCREEN 1: EOI LIST (STAFF) ============ -->
+  <sc-if value="{{ isList }}">
+    <div>
+      <!-- Staff shell header — reused verbatim from the flow1 export per Brief 2c shared context -->
+      <header style="background: var(--neutral-900); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: var(--shadow-nav);">
+        <div style="display: flex; align-items: center; gap: 32px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); font-size: var(--text-lg);">H</span>
+            <span style="font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: white;">Herit</span>
+            <span style="font-size: 10px; font-weight: var(--font-weight-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--brand-300); background: rgba(29,78,216,0.25); border: 1px solid var(--brand-500); border-radius: var(--radius-sm); padding: 2px 6px;">Staff</span>
+          </div>
+          <nav style="display: flex; gap: 24px;">
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Dashboard</a>
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">RFPs</a>
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white; text-decoration: none;">Proposals</a>
+          </nav>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span style="width: 34px; height: 34px; border-radius: var(--radius-full); background: var(--brand-100); color: var(--brand-600); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-semibold); font-size: var(--text-sm);">JW</span>
+          <div style="display: flex; flex-direction: column; line-height: 1.2;">
+            <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white;">Jonas Weber</span>
+            <span style="font-size: 11px; color: var(--neutral-400);">Staff</span>
+          </div>
+          <i class="fa-solid fa-right-from-bracket" style="color: var(--neutral-400); font-size: 14px; margin-left: 6px; cursor: pointer;" title="Sign out"></i>
+        </div>
+      </header>
+
+      <div style="max-width: 1160px; margin: 0 auto; padding: 24px 24px 64px; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="padding: 12px 18px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed);">
+          <strong>DECISION — reuse per Brief 2c:</strong> this reuses the portal's EOI inbox layout (owner view) with staff additions only: a Visibility column, staff-only Delete on every row, and Approve/Reject inline on Pending rows. Staff CFEOI publish/edit/close under any proposal reuses the portal's flow3c designs as-is — no new mockups, per the brief's explicit scope note.
+        </div>
+
+        <sc-if value="{{ cfeoiClosed }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Banner" hint-size="100%,60px" tone="info" title="This CFEOI is now closed.">
+            It is no longer accepting new expressions of interest. Staff can still review, approve, reject, and delete existing submissions below.
+          </x-import>
+        </sc-if>
+
+        <x-import component-from-global-scope="HeritDesignSystem_14a381.Breadcrumb" hint-size="100%,20px" items="{{ breadcrumbItems }}"></x-import>
+
+        <div style="display: flex; flex-direction: column; sm:flex-row; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <h1 style="margin: 0; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary); letter-spacing: var(--tracking-tight);">Expressions of Interest</h1>
+            <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); max-width: 560px;">Reviewing applicants for Lead System Architect. Staff see every submission, including ones the applicant marked Private — visibility rules restrict other expats, not staff review.</p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,64px" value="{{ counts.total }}" label="Total"></x-import>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,64px" value="{{ counts.pending }}" label="Pending" tone="info"></x-import>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,64px" value="{{ counts.approved }}" label="Approved" tone="success"></x-import>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,64px" value="{{ counts.rejected }}" label="Rejected" tone="danger"></x-import>
+          </div>
+        </div>
+
+        <x-import component-from-global-scope="HeritDesignSystem_14a381.Card" hint-size="100%,480px" padding="{{ zeroPadding }}" style="{{ tableCardStyle }}">
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-default); display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="width: 320px; max-width: 100%;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Input" hint-size="100%,40px" placeholder="Search applicant name..." icon="{{ searchIcon }}"></x-import>
+            </div>
+            <div style="width: 180px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Select" hint-size="100%,40px">
+                <option value="">Status: All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </x-import>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-default); background: var(--surface-subtle);">
+                  <th style="text-align: left; padding: 12px 20px; font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Applicant</th>
+                  <th style="text-align: left; padding: 12px 20px; font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Visibility</th>
+                  <th style="text-align: left; padding: 12px 20px; font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Status</th>
+                  <th style="text-align: left; padding: 12px 20px; font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Submitted</th>
+                  <th style="text-align: right; padding: 12px 20px; font-size: 11px; font-weight: var(--font-weight-semibold); color: var(--text-secondary); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ eois }}" as="eoi" hint-placeholder-count="5">
+                  <tr style="border-bottom: 1px solid var(--border-default);">
+                    <td style="padding: 14px 20px;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <x-import component-from-global-scope="HeritDesignSystem_14a381.Avatar" hint-size="32px,32px" name="{{ eoi.name }}" size="32"></x-import>
+                        <div style="display: flex; flex-direction: column;">
+                          <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">{{ eoi.name }}</span>
+                          <span style="font-size: var(--text-xs); color: var(--text-secondary);">{{ eoi.email }}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="padding: 14px 20px;">
+                      <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,22px" tone="{{ eoi.visibilityTone }}" icon="{{ eoi.visibilityIcon }}">{{ eoi.visibility }}</x-import>
+                    </td>
+                    <td style="padding: 14px 20px;">
+                      <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,22px" tone="{{ eoi.statusTone }}">{{ eoi.status }}</x-import>
+                    </td>
+                    <td style="padding: 14px 20px;">
+                      <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: var(--text-sm); color: var(--text-primary);">{{ eoi.submittedDate }}</span>
+                        <span style="font-size: var(--text-xs); color: var(--text-secondary);">{{ eoi.submittedTime }}</span>
+                      </div>
+                    </td>
+                    <td style="padding: 14px 20px;">
+                      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                        <sc-if value="{{ eoi.isPending }}">
+                          <button onClick="{{ eoi.onApprove }}" title="Approve" style="width: 30px; height: 30px; border-radius: var(--radius-md); border: 1px solid var(--status-success-bg); background: var(--status-success-bg); color: var(--status-success-text); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-check" style="font-size: 12px;"></i></button>
+                          <button onClick="{{ eoi.onReject }}" title="Reject" style="width: 30px; height: 30px; border-radius: var(--radius-md); border: 1px solid var(--status-danger-bg); background: var(--status-danger-bg); color: var(--status-danger-text); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark" style="font-size: 12px;"></i></button>
+                        </sc-if>
+                        <button onClick="{{ eoi.onView }}" title="View details" style="width: 30px; height: 30px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-regular fa-eye" style="font-size: 12px;"></i></button>
+                        <span style="width: 1px; height: 18px; background: var(--border-default); margin: 0 2px;"></span>
+                        <button onClick="{{ eoi.onDeleteClick }}" title="Delete (staff only)" style="width: 30px; height: 30px; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--status-danger-text); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-regular fa-trash-can" style="font-size: 12px;"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="padding: 14px 20px; border-top: 1px solid var(--border-default); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Showing {{ counts.total }} of {{ counts.total }} entries</span>
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Pagination" hint-size="140px,32px" page="1" page-count="1"></x-import>
+          </div>
+        </x-import>
+
+        <p style="margin: 0; font-size: var(--text-xs); color: var(--text-disabled); line-height: var(--leading-relaxed);">Staff read-access spans every visibility level by design (Public, Shared, Private) — this is not an organisation-scoped view; there is no organisation boundary on staff capabilities today.</p>
+      </div>
+    </div>
+
+    <!-- Detail drawer -->
+    <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeDrawer }}" style="position: fixed; inset: 0; z-index: 300; background: rgba(17,24,39,0.4); backdrop-filter: blur(2px);"></div>
+      <div style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 310; width: 100%; max-width: 420px; background: var(--surface-card); border-left: 1px solid var(--border-default); box-shadow: var(--shadow-floating); display: flex; flex-direction: column;">
+        <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-default); display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="margin: 0; font-size: var(--text-lg); font-weight: var(--font-weight-bold); color: var(--text-primary);">EOI Details</h2>
+          <button onClick="{{ closeDrawer }}" style="width: 32px; height: 32px; border-radius: var(--radius-full); border: none; background: transparent; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px;">
+          <div style="display: flex; align-items: flex-start; gap: 14px;">
+            <x-import component-from-global-scope="HeritDesignSystem_14a381.Avatar" hint-size="56px,56px" name="{{ selected.name }}" size="56"></x-import>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h3 style="margin: 0; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">{{ selected.name }}</h3>
+              <span style="font-size: var(--text-sm); color: var(--text-secondary);"><i class="fa-regular fa-envelope"></i>&nbsp; {{ selected.email }}</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: var(--surface-subtle); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 10px; text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-secondary);">Status</span>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,22px" tone="{{ selected.statusTone }}" style="{{ badgeAlignStart }}">{{ selected.status }}</x-import>
+            </div>
+            <div style="background: var(--surface-subtle); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 10px; text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-secondary);">Visibility</span>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Badge" hint-size="auto,22px" tone="{{ selected.visibilityTone }}" icon="{{ selected.visibilityIcon }}" style="{{ badgeAlignStart }}">{{ selected.visibility }}</x-import>
+            </div>
+          </div>
+
+          <sc-if value="{{ selected.isPrivate }}">
+            <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); padding: 10px 12px; background: var(--surface-subtle); border-radius: var(--radius-md); border: 1px dashed var(--border-default);">This submission was marked <strong>Private</strong> by the applicant. Staff can still see it — visibility rules restrict other expats, not staff review, by design.</p>
+          </sc-if>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <h4 style="margin: 0; font-size: var(--text-sm); font-weight: var(--font-weight-semibold); color: var(--text-primary); text-transform: uppercase; letter-spacing: var(--tracking-wide); border-bottom: 1px solid var(--border-default); padding-bottom: 8px;">Message</h4>
+            <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">{{ selected.message }}</p>
+          </div>
+        </div>
+
+        <div style="padding: 20px 24px; border-top: 1px solid var(--border-default); display: flex; flex-direction: column; gap: 10px;">
+          <sc-if value="{{ selected.isPending }}">
+            <label style="font-size: 10px; text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--text-secondary); font-weight: var(--font-weight-semibold);">Update status</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="secondary" style="{{ approveButtonStyle }}" onClick="{{ selected.onApprove }}">Approve</x-import>
+              <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="secondary" style="{{ rejectButtonStyle }}" onClick="{{ selected.onReject }}">Reject</x-import>
+            </div>
+          </sc-if>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="danger" onClick="{{ selected.onDeleteClick }}">Delete this submission</x-import>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="ghost" onClick="{{ closeDrawer }}">Close</x-import>
+        </div>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ============ SCREEN 2: DELETE EOI MODAL ============ -->
+  <sc-if value="{{ isModal }}">
+    <div style="min-height: calc(100vh - 45px); background: var(--surface-page); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; gap: 24px;">
+      <div style="max-width: 420px; width: 100%; padding: 12px 18px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed); box-sizing: border-box;">
+        <strong>DECISION — checkbox-gated per flow3b/07:</strong> deletion here removes another person's submission, not the staff member's own record, so the copy says so plainly and the confirm button stays disabled until the checkbox is acknowledged.
+      </div>
+      <x-import component-from-global-scope="HeritDesignSystem_14a381.Modal" hint-size="420px,400px" open="{{ true }}" tone="danger" icon="{{ modalIcon }}" title="Delete this expression of interest?" description="{{ modalDescription }}">
+        <x-import component-from-global-scope="HeritDesignSystem_14a381.Checkbox" hint-size="100%,40px" label="I understand this permanently deletes another person's submission and cannot be undone." checked="{{ ackChecked }}" onChange="{{ toggleAck }}"></x-import>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="auto,40px" variant="secondary" onClick="{{ cancelDelete }}">Cancel</x-import>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="auto,40px" variant="danger" disabled="{{ deleteDisabled }}" onClick="{{ confirmDelete }}">Delete permanently</x-import>
+        </div>
+      </x-import>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+class Component extends DCLogic {
+  state = {
+    screen: 'list',
+    cfeoiClosed: false,
+    ackChecked: false,
+    drawerId: null,
+    eois: [
+      { id: 1, name: 'Marcus Johnson', email: 'marcus.j@example.com', status: 'Pending', visibility: 'Private', submittedDate: 'Oct 12, 2026', submittedTime: '10:45 AM', message: 'I am writing to express my strong interest in the Lead System Architect role for the Digital Health Infrastructure Upgrade. With over a decade of experience designing scalable health data systems in the UK National Health Service, I believe I can bring valuable expertise to this initiative.' },
+      { id: 2, name: 'Elena Rodriguez', email: 'elena.r@example.com', status: 'Pending', visibility: 'Shared', submittedDate: 'Oct 11, 2026', submittedTime: '02:30 PM', message: 'My background includes leading the architecture for HL7/FHIR compliant data exchanges and managing cross-functional teams of developers and clinical informaticists across three health authorities.' },
+      { id: 3, name: 'David Chen', email: 'd.chen@example.com', status: 'Approved', visibility: 'Shared', submittedDate: 'Oct 10, 2026', submittedTime: '09:15 AM', message: 'Ten years in enterprise integration architecture, most recently modernising claims processing for a national insurer. Keen to bring that experience to this initiative.' },
+      { id: 4, name: 'Aisha Patel', email: 'apatel@example.com', status: 'Rejected', visibility: 'Private', submittedDate: 'Oct 08, 2026', submittedTime: '11:20 AM', message: 'Frontend-focused engineer looking to move into systems architecture; limited backend experience but strong track record on delivery.' },
+      { id: 5, name: 'Tomás Alves', email: 't.alves@example.com', status: 'Approved', visibility: 'Private', submittedDate: 'Oct 06, 2026', submittedTime: '04:05 PM', message: 'Former lead architect on a national digital identity programme; happy to discuss specifics of the health data interoperability work directly.' },
+    ],
+  };
+
+  tab(active) {
+    return {
+      padding: '6px 14px', borderRadius: 'var(--radius-md)',
+      border: '1px solid ' + (active ? 'var(--brand-500)' : 'rgba(255,255,255,0.15)'),
+      background: active ? 'var(--brand-500)' : 'transparent',
+      color: 'white', fontSize: 'var(--text-sm)', fontWeight: 'var(--font-weight-medium)', cursor: 'pointer',
+    };
+  }
+
+  toneFor(status) {
+    if (status === 'Pending') return 'info';
+    if (status === 'Approved') return 'success';
+    return 'danger';
+  }
+
+  visIcon(visibility) {
+    const icon = visibility === 'Private' ? 'fa-lock' : 'fa-users';
+    return React.createElement('i', { className: 'fa-solid ' + icon, style: { fontSize: '9px' } });
+  }
+
+  setStatus(id, status) {
+    this.setState(s => ({ eois: s.eois.map(e => e.id === id ? { ...e, status } : e) }));
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const raw = this.state.eois;
+    const eois = raw.map(e => ({
+      ...e,
+      isPending: e.status === 'Pending',
+      statusTone: this.toneFor(e.status),
+      visibilityTone: e.visibility === 'Private' ? 'neutral' : 'info',
+      visibilityIcon: this.visIcon(e.visibility),
+      onApprove: () => this.setStatus(e.id, 'Approved'),
+      onReject: () => this.setStatus(e.id, 'Rejected'),
+      onView: () => this.setState({ drawerId: e.id }),
+      onDeleteClick: () => this.setState({ deleteTargetId: e.id, screen: 'modal' }),
+    }));
+    const counts = {
+      total: eois.length,
+      pending: eois.filter(e => e.status === 'Pending').length,
+      approved: eois.filter(e => e.status === 'Approved').length,
+      rejected: eois.filter(e => e.status === 'Rejected').length,
+    };
+    const selectedRaw = eois.find(e => e.id === this.state.drawerId) || eois[0];
+    const selected = { ...selectedRaw, isPrivate: selectedRaw.visibility === 'Private' };
+    const deleteTarget = eois.find(e => e.id === this.state.deleteTargetId) || eois[0];
+
+    return {
+      isList: s === 'list',
+      isModal: s === 'modal',
+      goList: () => this.setState({ screen: 'list' }),
+      goModal: () => this.setState({ screen: 'modal', deleteTargetId: this.state.deleteTargetId || eois[0].id }),
+      tabStyle_list: this.tab(s === 'list'),
+      tabStyle_modal: this.tab(s === 'modal'),
+      cfeoiClosed: this.state.cfeoiClosed,
+      setOpenState: () => this.setState({ cfeoiClosed: false }),
+      setClosedState: () => this.setState({ cfeoiClosed: true }),
+      cfeoiTabStyle_open: this.tab(!this.state.cfeoiClosed),
+      cfeoiTabStyle_closed: this.tab(this.state.cfeoiClosed),
+      breadcrumbItems: [
+        { label: 'Review Queue', href: '#' },
+        { label: 'Digital Health Infrastructure Upgrade', href: '#' },
+        { label: 'Lead System Architect', href: '#' },
+        { label: 'Expressions of Interest' },
+      ],
+      counts,
+      eois,
+      zeroPadding: 0,
+      tableCardStyle: { padding: 0, overflow: 'hidden' },
+      searchIcon: React.createElement('i', { className: 'fa-solid fa-magnifying-glass', style: { fontSize: '12px' } }),
+      drawerOpen: this.state.drawerId != null,
+      closeDrawer: () => this.setState({ drawerId: null }),
+      selected,
+      badgeAlignStart: { alignSelf: 'flex-start' },
+      approveButtonStyle: { background: 'var(--status-success-bg)', color: 'var(--status-success-text)', border: '1px solid var(--status-success-bg)' },
+      rejectButtonStyle: { background: 'var(--status-danger-bg)', color: 'var(--status-danger-text)', border: '1px solid var(--status-danger-bg)' },
+      modalIcon: React.createElement('i', { className: 'fa-solid fa-trash-can' }),
+      modalDescription: `This permanently removes ${deleteTarget.name}'s submission for Lead System Architect. They will lose their own record of it — this cannot be undone.`,
+      ackChecked: this.state.ackChecked,
+      toggleAck: () => this.setState(st => ({ ackChecked: !st.ackChecked })),
+      deleteDisabled: !this.state.ackChecked,
+      cancelDelete: () => this.setState({ screen: 'list' }),
+      confirmDelete: () => this.setState({ screen: 'list', ackChecked: false }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

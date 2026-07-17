@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/styles.css">
+  <script src="_ds/herit-design-system-14a381d5-332a-418d-8391-c6a27dae43a0/_ds_bundle.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { margin: 0; background: var(--surface-page); }
+    a { color: var(--text-link); }
+    a:hover { color: var(--text-link-hover); }
+  </style>
+</helmet>
+
+<div style="font-family: var(--font-sans); min-height: 100vh; background: var(--surface-page);">
+
+  <!-- Reviewer chrome: screen + state switcher, not part of the product UI -->
+  <div style="position: sticky; top: 0; z-index: 50; background: var(--neutral-900); color: white; display: flex; align-items: center; gap: 24px; padding: 10px 24px; font-size: var(--text-sm);">
+    <span style="font-weight: var(--font-weight-bold); letter-spacing: var(--tracking-wide);">Brief 1 — Auth &amp; App Shell</span>
+    <div style="display: flex; gap: 8px;">
+      <button onClick="{{ goSignIn }}" style="{{ tabStyle_signin }}">01 · Sign in</button>
+      <button onClick="{{ goDenied }}" style="{{ tabStyle_denied }}">02 · Access denied</button>
+      <button onClick="{{ goDashboard }}" style="{{ tabStyle_dashboard }}">03 · Dashboard &amp; shell</button>
+    </div>
+    <sc-if value="{{ isDashboard }}">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--neutral-400); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider);">Role state</span>
+        <button onClick="{{ setRoleStaff }}" style="{{ roleTabStyle_staff }}">Staff</button>
+        <button onClick="{{ setRoleAdmin }}" style="{{ roleTabStyle_admin }}">OrganisationAdmin / SuperAdmin</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ============ SCREEN 1: SIGN IN ============ -->
+  <sc-if value="{{ isSignIn }}">
+    <div style="min-height: calc(100vh - 45px); background: var(--neutral-900); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; position: relative; overflow: hidden;">
+      <i class="fa-solid fa-building-columns" style="position: absolute; right: -40px; bottom: -40px; font-size: 320px; color: white; opacity: 0.04;"></i>
+
+      <div style="max-width: 640px; margin-bottom: 28px; padding: 12px 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-md); color: var(--neutral-300); font-size: var(--text-xs); line-height: var(--leading-relaxed);">
+        <strong style="color: white;">DECISION — open question 1 (visual differentiation):</strong> recommending a combined cue — a dark slate shell (this panel, and the in-app header on screen 03) plus an explicit "Staff" wordmark tag, rather than either alone. A color-only shift is too subtle for staff scanning quickly; the wordmark tag alone doesn't carry through the whole shell. This combination stays legible at a glance and is cheap to keep consistent across every subsequent screen.
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 40px;">
+        <span style="width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); font-size: var(--text-xl);">H</span>
+        <span style="font-weight: var(--font-weight-bold); font-size: var(--text-xl); color: white;">Herit</span>
+        <span style="font-size: var(--text-xs); font-weight: var(--font-weight-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--brand-300); background: rgba(29,78,216,0.25); border: 1px solid var(--brand-500); border-radius: var(--radius-sm); padding: 3px 8px; margin-left: 2px;">Staff</span>
+      </div>
+
+      <div style="background: var(--surface-card); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating); padding: 40px; width: 100%; max-width: 400px; box-sizing: border-box; text-align: center;">
+        <h1 style="margin: 0 0 8px; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary); letter-spacing: var(--tracking-tight);">Sign in to Herit Staff</h1>
+        <p style="margin: 0 0 28px; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Staff and admin access only. Sign in with the Entra work account provisioned for you.</p>
+
+        <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,44px" variant="secondary" size="lg" style="{{ googleButtonStyle }}">
+          <i class="fa-brands fa-google" style="color: #EA4335;"></i>
+          Continue with Google
+        </x-import>
+
+        <p style="margin: 24px 0 0; font-size: var(--text-xs); color: var(--text-disabled); line-height: var(--leading-relaxed);">There is no sign-up here — staff and admin accounts are provisioned by an administrator.</p>
+      </div>
+
+      <p style="margin-top: 28px; font-size: var(--text-sm); color: var(--neutral-400);">
+        Looking for the public portal? <a href="#" style="color: var(--brand-300);">Go to the Herit Portal</a>
+      </p>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 2: ACCESS DENIED ============ -->
+  <sc-if value="{{ isDenied }}">
+    <div style="min-height: calc(100vh - 45px); background: var(--surface-page); display: flex; align-items: center; justify-content: center; padding: 24px;">
+      <div style="max-width: 440px; width: 100%; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); padding: 40px; text-align: center;">
+        <div style="width: 64px; height: 64px; border-radius: var(--radius-full); background: var(--status-danger-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+          <i class="fa-solid fa-lock" style="font-size: 24px; color: var(--status-danger-text);"></i>
+        </div>
+        <h1 style="margin: 0 0 10px; font-size: var(--text-xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">This application is for Herit staff</h1>
+        <p style="margin: 0 0 28px; font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">Your signed-in account isn't provisioned for staff access. If you believe this is a mistake, contact an administrator to be added — this page won't retry automatically.</p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="primary" style="width: 100%;">
+            Go to the Herit Portal
+          </x-import>
+          <x-import component-from-global-scope="HeritDesignSystem_14a381.Button" hint-size="100%,40px" variant="ghost" style="width: 100%;">
+            Sign out
+          </x-import>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SCREEN 3: DASHBOARD & SHELL ============ -->
+  <sc-if value="{{ isDashboard }}">
+    <div>
+      <!-- Staff shell header — dark, distinguishes staff app from the light portal header on every screen -->
+      <header style="background: var(--neutral-900); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: var(--shadow-nav);">
+        <div style="display: flex; align-items: center; gap: 32px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-bold); font-size: var(--text-lg);">H</span>
+            <span style="font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: white;">Herit</span>
+            <span style="font-size: 10px; font-weight: var(--font-weight-semibold); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--brand-300); background: rgba(29,78,216,0.25); border: 1px solid var(--brand-500); border-radius: var(--radius-sm); padding: 2px 6px;">Staff</span>
+          </div>
+          <nav style="display: flex; gap: 24px;">
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white; text-decoration: none;">Dashboard</a>
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">RFPs</a>
+            <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Proposals</a>
+            <sc-if value="{{ isAdmin }}">
+              <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Organisations</a>
+              <a href="#" style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: var(--neutral-400); text-decoration: none;">Users</a>
+            </sc-if>
+          </nav>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span style="width: 34px; height: 34px; border-radius: var(--radius-full); background: var(--brand-100); color: var(--brand-600); display: flex; align-items: center; justify-content: center; font-weight: var(--font-weight-semibold); font-size: var(--text-sm);">{{ initials }}</span>
+          <div style="display: flex; flex-direction: column; line-height: 1.2;">
+            <span style="font-size: var(--text-sm); font-weight: var(--font-weight-medium); color: white;">{{ userName }}</span>
+            <span style="font-size: 11px; color: var(--neutral-400);">{{ roleLabel }}</span>
+          </div>
+          <i class="fa-solid fa-right-from-bracket" style="color: var(--neutral-400); font-size: 14px; margin-left: 6px; cursor: pointer;" title="Sign out"></i>
+        </div>
+      </header>
+
+      <div style="max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px;">
+
+        <div style="margin-bottom: 24px; padding: 12px 18px; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-md); color: var(--brand-700); font-size: var(--text-xs); line-height: var(--leading-relaxed);">
+          <strong>DECISION — open question 2 (dashboard depth):</strong> recommending a thin launcher (client-side counts + links into the flow 2a/2b queues) over embedded queue previews. Counts come from the plain list endpoints with no pagination guarantee at scale, so previewing rows here means fetching and rendering the same data twice; a launcher keeps the dashboard fast and pushes triage into the purpose-built queue screens. Cost of the alternative: richer at-a-glance context, at the price of duplicated fetches and a second place row-level actions must stay in sync.
+        </div>
+
+        <div style="margin-bottom: 28px;">
+          <h1 style="margin: 0 0 4px; font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary);">Welcome back, {{ userName }}</h1>
+          <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary);">{{ roleLabel }} · counts below are computed from the current list endpoints, not a stats API — nothing here is a trend or a "this week" figure.</p>
+        </div>
+
+        <section style="margin-bottom: 28px;">
+          <h2 style="margin: 0 0 12px; font-size: var(--text-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary);">RFPs by status</h2>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="14" label="Draft"></x-import></a>
+            <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="6" label="Approved"></x-import></a>
+            <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="128" label="Published"></x-import></a>
+          </div>
+        </section>
+
+        <section style="margin-bottom: 28px;">
+          <h2 style="margin: 0 0 12px; font-size: var(--text-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary);">Proposals awaiting review</h2>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="9" label="Submitted" tone="amber"></x-import></a>
+            <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="4" label="Under Review" tone="orange"></x-import></a>
+          </div>
+        </section>
+
+        <sc-if value="{{ isAdmin }}">
+          <section style="margin-bottom: 28px;">
+            <h2 style="margin: 0 0 12px; font-size: var(--text-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary);">Organisations &amp; users</h2>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px;">
+              <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="23" label="Organisations"></x-import></a>
+              <a href="#" style="text-decoration: none;"><x-import component-from-global-scope="HeritDesignSystem_14a381.StatCard" hint-size="92px,72px" value="61" label="Staff &amp; admins"></x-import></a>
+            </div>
+            <p style="margin: 0; font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">These counts span every organisation on the platform. Organisation-scoped permissions don't exist yet — any admin sees and manages all organisations, not just their own.</p>
+          </section>
+        </sc-if>
+
+        <div style="padding: 12px 18px; background: var(--surface-subtle); border: 1px dashed var(--border-default); border-radius: var(--radius-md); color: var(--text-secondary); font-size: var(--text-xs);">
+          Nav renders only what this role can act on — a Staff sign-in never sees the Organisations/Users links or sections above; toggle the role state switcher above to compare.
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'signin', role: 'staff' };
+
+  activeTab(style, active) {
+    return {
+      padding: '6px 14px',
+      borderRadius: 'var(--radius-md)',
+      border: '1px solid ' + (active ? 'var(--brand-500)' : 'rgba(255,255,255,0.15)'),
+      background: active ? 'var(--brand-500)' : 'transparent',
+      color: 'white',
+      fontSize: 'var(--text-sm)',
+      fontWeight: 'var(--font-weight-medium)',
+      cursor: 'pointer',
+    };
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const isAdmin = this.state.role === 'admin';
+    return {
+      isSignIn: s === 'signin',
+      isDenied: s === 'denied',
+      isDashboard: s === 'dashboard',
+      isAdmin,
+      goSignIn: () => this.setState({ screen: 'signin' }),
+      goDenied: () => this.setState({ screen: 'denied' }),
+      goDashboard: () => this.setState({ screen: 'dashboard' }),
+      setRoleStaff: () => this.setState({ role: 'staff' }),
+      setRoleAdmin: () => this.setState({ role: 'admin' }),
+      tabStyle_signin: this.activeTab(null, s === 'signin'),
+      tabStyle_denied: this.activeTab(null, s === 'denied'),
+      tabStyle_dashboard: this.activeTab(null, s === 'dashboard'),
+      roleTabStyle_staff: this.activeTab(null, !isAdmin),
+      roleTabStyle_admin: this.activeTab(null, isAdmin),
+      googleButtonStyle: { width: '100%' },
+      userName: isAdmin ? 'Amara Chen' : 'Jonas Weber',
+      initials: isAdmin ? 'AC' : 'JW',
+      roleLabel: isAdmin ? 'SuperAdmin' : 'Staff',
+    };
+  }
+}
+
+</script>
+</body>
+</html>
