@@ -5,3 +5,6 @@ import type { User } from '../types';
 // Returns 404 if no User record exists for this identity (ADR-015: staff/admin
 // accounts are provisioned, never JIT-registered — a 404 here means access-denied).
 export const getCurrentUser = (): Promise<User> => apiClient.get('/Users/me').then((r) => r.data);
+
+// AdminOrSuperAdmin only — used for the admin dashboard's "Staff & admins" count.
+export const listUsers = (): Promise<User[]> => apiClient.get('/Users').then((r) => r.data);
