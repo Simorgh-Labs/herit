@@ -26,6 +26,8 @@ export interface CfeoiDto {
 export interface EoiDto {
   id: string;
   submittedById: string;
+  submitterName: string;
+  submitterEmail: string | null;
   message: string;
   cfeoiId: string;
   status: string;

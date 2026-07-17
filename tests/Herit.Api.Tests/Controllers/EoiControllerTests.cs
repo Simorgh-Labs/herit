@@ -1,4 +1,5 @@
 using Herit.Api.Controllers;
+using Herit.Application.Features.Eoi.Dtos;
 using Herit.Application.Features.Eoi.Queries.ListEoisByUser;
 using Herit.Application.Interfaces;
 using Herit.Domain.Entities;
@@ -6,7 +7,6 @@ using Herit.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using EoiEntity = Herit.Domain.Entities.Eoi;
 
 namespace Herit.Api.Tests.Controllers;
 
@@ -21,6 +21,9 @@ public class EoiControllerTests
         _controller = new EoiController(_mediator, _currentUserService);
     }
 
+    private static EoiResponseDto MakeEoiResponse(Guid submittedById, string message)
+        => new(Guid.NewGuid(), message, Guid.NewGuid(), EoiStatus.Pending, EoiVisibility.Private, submittedById, "Test User", null);
+
     [Fact]
     public async Task ListMyEois_ReturnsOkWithEois()
     {
@@ -28,17 +31,17 @@ public class EoiControllerTests
         var user = User.Create(userId, "ext-123", "test@example.com", "Test User", UserRole.Expat);
         var eois = new[]
         {
-            EoiEntity.Create(Guid.NewGuid(), userId, "Message 1", Guid.NewGuid()),
-            EoiEntity.Create(Guid.NewGuid(), userId, "Message 2", Guid.NewGuid())
+            MakeEoiResponse(userId, "Message 1"),
+            MakeEoiResponse(userId, "Message 2")
         };
         _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(user);
         _mediator.Send(Arg.Any<ListEoisByUserQuery>(), Arg.Any<CancellationToken>())
-            .Returns((IEnumerable<EoiEntity>)eois);
+            .Returns((IEnumerable<EoiResponseDto>)eois);
 
         var result = await _controller.ListMyEois(CancellationToken.None);
 
         var ok = Assert.IsType<OkObjectResult>(result);
-        var returned = Assert.IsAssignableFrom<IEnumerable<EoiEntity>>(ok.Value);
+        var returned = Assert.IsAssignableFrom<IEnumerable<EoiResponseDto>>(ok.Value);
         Assert.Equal(2, returned.Count());
     }
 
@@ -49,7 +52,7 @@ public class EoiControllerTests
         var user = User.Create(userId, "ext-123", "test@example.com", "Test User", UserRole.Expat);
         _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(user);
         _mediator.Send(Arg.Any<ListEoisByUserQuery>(), Arg.Any<CancellationToken>())
-            .Returns(Enumerable.Empty<EoiEntity>());
+            .Returns(Enumerable.Empty<EoiResponseDto>());
 
         await _controller.ListMyEois(CancellationToken.None);
 

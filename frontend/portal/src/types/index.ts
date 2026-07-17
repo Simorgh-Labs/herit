@@ -79,6 +79,8 @@ export interface Eoi {
   status: EoiStatus;
   visibility: EoiVisibility;
   submittedById: string;
+  submitterName: string;
+  submitterEmail?: string;
   cfeoiId: string;
 }
 
