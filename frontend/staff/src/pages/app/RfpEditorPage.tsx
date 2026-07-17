@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createRfp, getRfpById, updateRfp } from '../../api/rfps';
 import { listOrganisations } from '../../api/organisations';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -20,6 +20,7 @@ export default function RfpEditorPage() {
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [title, setTitle] = useState('');
   const [shortDescription, setShortDescription] = useState('');
@@ -68,6 +69,7 @@ export default function RfpEditorPage() {
       return createRfp({ ...payload, organisationId });
     },
     onSuccess: (rfpId) => {
+      queryClient.invalidateQueries({ queryKey: ['rfps'] });
       navigate(`/rfps/${rfpId}?${isEdit ? 'updated' : 'created'}=true`);
     },
   });

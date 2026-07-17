@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { Rfp } from '../types';
+import type { Rfp, RfpStatus } from '../types';
 
 export const listRfps = (): Promise<Rfp[]> => apiClient.get('/Rfps').then((r) => r.data);
 
@@ -25,3 +25,9 @@ export interface UpdateRfpPayload {
 
 export const updateRfp = (id: string, payload: UpdateRfpPayload): Promise<void> =>
   apiClient.put(`/Rfps/${id}`, payload).then(() => undefined);
+
+export const updateRfpStatus = (id: string, newStatus: RfpStatus): Promise<void> =>
+  apiClient.patch(`/Rfps/${id}/status`, { newStatus }).then(() => undefined);
+
+export const deleteRfp = (id: string): Promise<void> =>
+  apiClient.delete(`/Rfps/${id}`).then(() => undefined);
