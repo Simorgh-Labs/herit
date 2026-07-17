@@ -22,6 +22,7 @@ param logAnalyticsName string = ''
 param resourceGroupName string = ''
 param sqlServerName string = ''
 param webServiceName string = ''
+param staffServiceName string = ''
 param apimServiceName string = ''
 param connectionStringKey string = 'AZURE-SQL-CONNECTION-STRING'
 
@@ -90,6 +91,20 @@ module web './app/web-appservice-avm.bicep' = {
   }
 }
 
+// The staff-facing frontend (reuses the shared App Service Plan)
+module staff './app/staff-appservice-avm.bicep' = {
+  name: 'staff'
+  scope: rg
+  params: {
+    name: !empty(staffServiceName) ? staffServiceName : '${abbrs.webSitesAppService}staff-${resourceToken}'
+    location: location
+    tags: tags
+    appServicePlanId: appServicePlan.outputs.resourceId
+    appInsightResourceId: monitoring.outputs.applicationInsightsResourceId
+    linuxFxVersion: 'node|22-lts'
+  }
+}
+
 // The application backend
 module api './app/api-appservice-avm.bicep' = {
   name: 'api'
@@ -113,9 +128,10 @@ module api './app/api-appservice-avm.bicep' = {
       AzureAd__TenantId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant-id)'
       AzureAd__ClientId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-client-id)'
       AllowedOrigins__0: web.outputs.SERVICE_WEB_URI
+      AllowedOrigins__1: staff.outputs.SERVICE_STAFF_URI
     }
     appInsightResourceId: monitoring.outputs.applicationInsightsResourceId
-    allowedOrigins: [web.outputs.SERVICE_WEB_URI]
+    allowedOrigins: [web.outputs.SERVICE_WEB_URI, staff.outputs.SERVICE_STAFF_URI]
   }
 }
 
@@ -299,6 +315,7 @@ output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
 output API_BASE_URL string = useAPIM ? apimApi.outputs.serviceApiUri : api.outputs.SERVICE_API_URI
 output REACT_APP_WEB_BASE_URL string = web.outputs.SERVICE_WEB_URI
+output SERVICE_STAFF_URI string = staff.outputs.SERVICE_STAFF_URI
 output USE_APIM bool = useAPIM
 output SERVICE_API_ENDPOINTS array = useAPIM ? [apimApi.outputs.serviceApiUri, api.outputs.SERVICE_API_URI] : []
 
@@ -309,3 +326,10 @@ output VITE_AZURE_CLIENT_ID string = entraClientId
 output VITE_AZURE_TENANT_NAME string = ciamSubdomain
 output VITE_AZURE_AUTHORITY string = '${entraAuthority}/${ciamSubdomain}.onmicrosoft.com/'
 output VITE_API_SCOPE string = 'api://${entraClientId}/access_as_user'
+
+// Staff-app build-time env vars. The staff app reuses the portal's Entra app
+// registration (shared VITE_AZURE_* / VITE_API_* outputs above), but its MSAL
+// redirect URI must be its OWN Azure URL — not the portal's VITE_REDIRECT_URI.
+// VITE_PORTAL_URL points sign-in/access-denied links back at the portal.
+output VITE_STAFF_REDIRECT_URI string = staff.outputs.SERVICE_STAFF_URI
+output VITE_PORTAL_URL string = web.outputs.SERVICE_WEB_URI

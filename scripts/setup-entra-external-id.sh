@@ -29,6 +29,9 @@ set -euo pipefail
 TENANT_ID=""
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
+SPA_REDIRECT_URIS=()
+
+USAGE="Usage: $0 --tenant-id <id> --google-client-id <id> --google-client-secret <secret> [--spa-redirect-uri <url> ...]"
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -41,9 +44,11 @@ while [[ $# -gt 0 ]]; do
       GOOGLE_CLIENT_ID="$2"; shift 2 ;;
     --google-client-secret)
       GOOGLE_CLIENT_SECRET="$2"; shift 2 ;;
+    --spa-redirect-uri)
+      SPA_REDIRECT_URIS+=("$2"); shift 2 ;;
     *)
       echo "Unknown argument: $1" >&2
-      echo "Usage: $0 --tenant-id <id> --google-client-id <id> --google-client-secret <secret>" >&2
+      echo "$USAGE" >&2
       exit 1 ;;
   esac
 done
@@ -58,7 +63,7 @@ MISSING=()
 
 if [[ ${#MISSING[@]} -gt 0 ]]; then
   echo "Error: missing required parameter(s): ${MISSING[*]}" >&2
-  echo "Usage: $0 --tenant-id <id> --google-client-id <id> --google-client-secret <secret>" >&2
+  echo "$USAGE" >&2
   exit 1
 fi
 
@@ -127,6 +132,57 @@ SECRET_RESPONSE=$(az rest \
 
 CLIENT_SECRET=$(echo "$SECRET_RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['secretText'])")
 echo "    Client secret generated."
+
+# ---------------------------------------------------------------------------
+# Step 2b: Register SPA redirect URIs
+#
+# The portal and staff single-page apps reuse this same app registration, so
+# each deployed SPA URL must be listed as a redirect URI under the app's `spa`
+# platform. The URLs are only known after `azd provision` generates the App
+# Service hostnames, so they are passed in with --spa-redirect-uri (repeatable):
+#
+#   ./scripts/setup-entra-external-id.sh ... \
+#     --spa-redirect-uri https://app-web-xxxx.azurewebsites.net \
+#     --spa-redirect-uri https://app-staff-xxxx.azurewebsites.net
+#
+# This step is idempotent — it unions the supplied URIs with any already
+# registered, so re-running never drops existing redirect URIs.
+#
+# NOTE: patching the app registration requires Application.ReadWrite.All on the
+# signed-in principal (a tenant-admin-granted permission). Claude Code cannot
+# execute this against a real tenant; a tenant admin must run the script.
+# ---------------------------------------------------------------------------
+echo ""
+echo "==> Step 2b: Registering SPA redirect URIs..."
+
+if [[ ${#SPA_REDIRECT_URIS[@]} -eq 0 ]]; then
+  echo "    No --spa-redirect-uri values supplied. Skipping."
+else
+  EXISTING_URIS=$(az rest \
+    --method GET \
+    --uri "https://graph.microsoft.com/v1.0/applications/${OBJECT_ID}" \
+    --query "spa.redirectUris" \
+    --output json \
+    --only-show-errors)
+
+  MERGED_URIS=$(python3 -c "
+import json, sys
+# spa.redirectUris is null when the app has no SPA platform yet.
+existing = json.loads(sys.argv[1]) or []
+supplied = sys.argv[2:]
+merged = list(dict.fromkeys(existing + supplied))
+print(json.dumps(merged))
+" "$EXISTING_URIS" "${SPA_REDIRECT_URIS[@]}")
+
+  az rest \
+    --method PATCH \
+    --uri "https://graph.microsoft.com/v1.0/applications/${OBJECT_ID}" \
+    --headers "Content-Type=application/json" \
+    --body "{\"spa\": {\"redirectUris\": ${MERGED_URIS}}}" \
+    --only-show-errors
+
+  echo "    SPA redirect URIs now: ${MERGED_URIS}"
+fi
 
 # ---------------------------------------------------------------------------
 # Step 3: Configure Google as an identity provider
