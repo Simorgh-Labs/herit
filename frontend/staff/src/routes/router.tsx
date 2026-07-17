@@ -5,6 +5,8 @@ import AccessDeniedPage from '../pages/auth/AccessDeniedPage';
 import AuthErrorPage from '../pages/auth/AuthErrorPage';
 import DashboardPage from '../pages/app/DashboardPage';
 import RfpsPage from '../pages/app/RfpsPage';
+import RfpEditorPage from '../pages/app/RfpEditorPage';
+import RfpDetailPage from '../pages/app/RfpDetailPage';
 import ProposalsPage from '../pages/app/ProposalsPage';
 import OrganisationsPage from '../pages/app/OrganisationsPage';
 import UsersPage from '../pages/app/UsersPage';
@@ -25,6 +27,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <DashboardPage /> },
       { path: '/rfps', element: <RfpsPage /> },
+      { path: '/rfps/new', element: <RfpEditorPage /> },
+      { path: '/rfps/:id', element: <RfpDetailPage /> },
       { path: '/proposals', element: <ProposalsPage /> },
       { path: '/organisations', element: <OrganisationsPage /> },
       { path: '/users', element: <UsersPage /> },
