@@ -4,22 +4,17 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import RfpDetailPage from './RfpDetailPage';
 import { deleteRfp, getRfpById, updateRfpStatus } from '../../api/rfps';
-import { listOrganisations } from '../../api/organisations';
-import type { Organisation, Rfp } from '../../types';
+import type { Rfp } from '../../types';
 
 vi.mock('../../api/rfps', () => ({
   getRfpById: vi.fn(),
   updateRfpStatus: vi.fn(),
   deleteRfp: vi.fn(),
 }));
-vi.mock('../../api/organisations', () => ({ listOrganisations: vi.fn() }));
 
 const mockGetRfpById = vi.mocked(getRfpById);
 const mockUpdateRfpStatus = vi.mocked(updateRfpStatus);
 const mockDeleteRfp = vi.mocked(deleteRfp);
-const mockListOrganisations = vi.mocked(listOrganisations);
-
-const organisations: Organisation[] = [{ id: 'o1', name: 'Ministry of Digital Economy' }];
 
 const baseRfp: Rfp = {
   id: 'rfp-1',
@@ -28,14 +23,15 @@ const baseRfp: Rfp = {
   longDescription: 'A long description.',
   status: 'Draft',
   organisationId: 'o1',
+  organisationName: 'Ministry of Digital Economy',
   authorId: 'u1',
+  authorName: 'Amara Chen',
   tags: 'identity',
 };
 
 function renderPage(rfp: Rfp, initialEntries = ['/rfps/rfp-1']) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   mockGetRfpById.mockResolvedValue(rfp);
-  mockListOrganisations.mockResolvedValue(organisations);
   return render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={initialEntries}>

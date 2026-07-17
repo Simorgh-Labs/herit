@@ -4,25 +4,17 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import RfpsPage from './RfpsPage';
 import { listRfps } from '../../api/rfps';
-import { listOrganisations } from '../../api/organisations';
-import type { Organisation, Rfp } from '../../types';
+import type { Rfp } from '../../types';
 
 vi.mock('../../api/rfps', () => ({ listRfps: vi.fn() }));
-vi.mock('../../api/organisations', () => ({ listOrganisations: vi.fn() }));
 
 const mockListRfps = vi.mocked(listRfps);
-const mockListOrganisations = vi.mocked(listOrganisations);
 
 const rfps: Rfp[] = [
-  { id: '1', title: 'Digital ID Verification', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', authorId: 'u1', tags: 'identity' },
-  { id: '2', title: 'Remote Voting Portal', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o2', authorId: 'u1' },
-  { id: '3', title: 'Consular Records', shortDescription: '', longDescription: '', status: 'Approved', organisationId: 'o1', authorId: 'u1' },
-  { id: '4', title: 'Diaspora Outreach', shortDescription: '', longDescription: '', status: 'Published', organisationId: 'o1', authorId: 'u1' },
-];
-
-const organisations: Organisation[] = [
-  { id: 'o1', name: 'Ministry of Digital Economy' },
-  { id: 'o2', name: 'Diaspora Engagement Bureau' },
+  { id: '1', title: 'Digital ID Verification', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o1', organisationName: 'Ministry of Digital Economy', authorId: 'u1', authorName: 'Amara Chen', tags: 'identity' },
+  { id: '2', title: 'Remote Voting Portal', shortDescription: '', longDescription: '', status: 'Draft', organisationId: 'o2', organisationName: 'Diaspora Engagement Bureau', authorId: 'u1', authorName: 'Amara Chen' },
+  { id: '3', title: 'Consular Records', shortDescription: '', longDescription: '', status: 'Approved', organisationId: 'o1', organisationName: 'Ministry of Digital Economy', authorId: 'u1', authorName: 'Amara Chen' },
+  { id: '4', title: 'Diaspora Outreach', shortDescription: '', longDescription: '', status: 'Published', organisationId: 'o1', organisationName: 'Ministry of Digital Economy', authorId: 'u1', authorName: 'Amara Chen' },
 ];
 
 function renderPage(initialEntries = ['/rfps']) {
@@ -38,7 +30,6 @@ function renderPage(initialEntries = ['/rfps']) {
 
 beforeEach(() => {
   mockListRfps.mockResolvedValue(rfps);
-  mockListOrganisations.mockResolvedValue(organisations);
 });
 
 describe('RfpsPage', () => {

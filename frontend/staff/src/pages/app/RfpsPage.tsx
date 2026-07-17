@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { listRfps } from '../../api/rfps';
-import { listOrganisations } from '../../api/organisations';
 import type { RfpStatus } from '../../types';
 import StatusBadge from '../../components/StatusBadge';
 import EmptyState from '../../components/EmptyState';
@@ -45,13 +44,6 @@ export default function RfpsPage() {
     isError,
   } = useQuery({ queryKey: ['rfps'], queryFn: listRfps });
 
-  const { data: orgs } = useQuery({ queryKey: ['organisations'], queryFn: listOrganisations });
-
-  const orgMap = useMemo(
-    () => Object.fromEntries((orgs ?? []).map((o) => [o.id, o.name])),
-    [orgs],
-  );
-
   const counts = useMemo(() => {
     const result: Record<RfpStatus, number> = { Draft: 0, Approved: 0, Published: 0 };
     for (const rfp of rfps ?? []) result[rfp.status]++;
@@ -65,11 +57,11 @@ export default function RfpsPage() {
       if (!query) return true;
       return (
         rfp.title.toLowerCase().includes(query) ||
-        (orgMap[rfp.organisationId] ?? '').toLowerCase().includes(query) ||
+        rfp.organisationName.toLowerCase().includes(query) ||
         (rfp.tags ?? '').toLowerCase().includes(query)
       );
     });
-  }, [rfps, activeTab, search, orgMap]);
+  }, [rfps, activeTab, search]);
 
   return (
     <div className="max-w-[1080px] mx-auto px-6 py-8 pb-16">
@@ -154,7 +146,7 @@ export default function RfpsPage() {
                     <div className="text-sm font-medium text-neutral-900 mb-0.5">{rfp.title}</div>
                     {rfp.tags && <div className="text-xs text-neutral-400">{rfp.tags}</div>}
                   </div>
-                  <span className="text-sm text-neutral-500">{orgMap[rfp.organisationId] ?? '—'}</span>
+                  <span className="text-sm text-neutral-500">{rfp.organisationName}</span>
                   <StatusBadge type="rfp" status={rfp.status} />
                 </Link>
               ))}

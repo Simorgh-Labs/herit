@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { listProposals } from '../../api/proposals';
-import { listOrganisations } from '../../api/organisations';
-import { listUsers } from '../../api/users';
-import { useCurrentUser } from '../../hooks/useCurrentUser';
-import { isAdminRole, type ProposalStatus } from '../../types';
+import type { ProposalStatus } from '../../types';
 import StatusBadge from '../../components/StatusBadge';
 import EmptyState from '../../components/EmptyState';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -38,8 +35,6 @@ function isQueueTab(value: string | null): value is QueueTab {
 
 export default function ProposalsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { user } = useCurrentUser();
-  const isAdmin = !!user && isAdminRole(user.role);
 
   const deleted = searchParams.get('deleted') === 'true';
 
@@ -55,18 +50,6 @@ export default function ProposalsPage() {
     isLoading,
     isError,
   } = useQuery({ queryKey: ['proposals'], queryFn: listProposals });
-
-  const { data: orgs } = useQuery({ queryKey: ['organisations'], queryFn: listOrganisations });
-  const { data: users } = useQuery({ queryKey: ['users'], queryFn: listUsers, enabled: isAdmin });
-
-  const orgMap = useMemo(
-    () => Object.fromEntries((orgs ?? []).map((o) => [o.id, o.name])),
-    [orgs],
-  );
-  const authorMap = useMemo(
-    () => Object.fromEntries((users ?? []).map((u) => [u.id, u.fullName])),
-    [users],
-  );
 
   const filtered = useMemo(() => {
     if (activeTab === 'All') return proposals ?? [];
@@ -153,8 +136,8 @@ export default function ProposalsPage() {
                   className="grid grid-cols-[2.2fr_1.3fr_1.3fr_0.9fr_0.9fr_24px] gap-3 px-5 py-4 border-b border-neutral-200 last:border-b-0 items-center hover:bg-neutral-50 transition-colors"
                 >
                   <span className="text-sm font-medium text-neutral-900">{proposal.title}</span>
-                  <span className="text-sm text-neutral-500">{authorMap[proposal.authorId] ?? '—'}</span>
-                  <span className="text-sm text-neutral-500">{orgMap[proposal.organisationId] ?? '—'}</span>
+                  <span className="text-sm text-neutral-500">{proposal.authorName}</span>
+                  <span className="text-sm text-neutral-500">{proposal.organisationName}</span>
                   <StatusBadge type="proposal" status={proposal.status} />
                   <StatusBadge type="visibility" status={proposal.visibility} />
                   <span className="text-neutral-300">›</span>

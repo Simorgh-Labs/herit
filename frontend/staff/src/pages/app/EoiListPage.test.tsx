@@ -30,7 +30,9 @@ const proposal: Proposal = {
   status: 'UnderReview',
   visibility: 'Public',
   authorId: 'u1',
+  authorName: 'Amara Chen',
   organisationId: 'o1',
+  organisationName: 'Org One',
 };
 
 const cfeoi: Cfeoi = {
