@@ -29,6 +29,7 @@ export const router = createBrowserRouter([
       { path: '/rfps', element: <RfpsPage /> },
       { path: '/rfps/new', element: <RfpEditorPage /> },
       { path: '/rfps/:id', element: <RfpDetailPage /> },
+      { path: '/rfps/:id/edit', element: <RfpEditorPage /> },
       { path: '/proposals', element: <ProposalsPage /> },
       { path: '/organisations', element: <OrganisationsPage /> },
       { path: '/users', element: <UsersPage /> },
