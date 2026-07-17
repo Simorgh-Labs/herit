@@ -69,3 +69,26 @@ export interface Organisation {
   name: string;
   parentId?: string;
 }
+
+export type CfeoiStatus = 'Open' | 'Closed';
+
+export interface Cfeoi {
+  id: string;
+  title: string;
+  description: string;
+  proposalId: string;
+  status: CfeoiStatus;
+  tags?: string;
+}
+
+export type EoiStatus = 'Pending' | 'Approved' | 'Rejected';
+
+export interface Eoi {
+  id: string;
+  message: string;
+  status: EoiStatus;
+  cfeoiId: string;
+  submittedById: string;
+  submitterName: string;
+  submitterEmail?: string;
+}

@@ -41,6 +41,8 @@ export default function ProposalsPage() {
   const { user } = useCurrentUser();
   const isAdmin = !!user && isAdminRole(user.role);
 
+  const deleted = searchParams.get('deleted') === 'true';
+
   const statusParam = searchParams.get('status');
   const activeTab: QueueTab = isQueueTab(statusParam) ? statusParam : 'Submitted';
 
@@ -73,6 +75,11 @@ export default function ProposalsPage() {
 
   return (
     <div className="max-w-[1120px] mx-auto px-6 py-8 pb-16">
+      {deleted && (
+        <div className="mb-5 px-4 py-3 rounded-lg border border-status-success-text/20 bg-status-success-bg text-status-success-text text-sm font-medium">
+          Proposal deleted.
+        </div>
+      )}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-neutral-900 mb-1">Proposal review queue</h1>
         <p className="text-sm text-neutral-500">
