@@ -5,6 +5,7 @@ export interface User {
   email: string;
   fullName: string;
   role: UserRole;
+  organisationId?: string;
 }
 
 export const STAFF_ROLES: readonly UserRole[] = ['Staff', 'OrganisationAdmin', 'SuperAdmin'];

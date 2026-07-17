@@ -1,4 +1,4 @@
-import type { EoiStatus, EoiVisibility, ProposalStatus, ProposalVisibility, RfpStatus } from '../types';
+import type { EoiStatus, EoiVisibility, ProposalStatus, ProposalVisibility, RfpStatus, UserRole } from '../types';
 
 const rfpStatusStyles: Record<RfpStatus, string> = {
   Draft: 'bg-status-neutral-bg text-status-neutral-text',
@@ -32,12 +32,20 @@ const eoiVisibilityStyles: Record<EoiVisibility, string> = {
   Shared: 'bg-status-info-bg text-status-info-text',
 };
 
+const roleStyles: Record<UserRole, string> = {
+  SuperAdmin: 'bg-status-danger-bg text-status-danger-text',
+  OrganisationAdmin: 'bg-status-amber-bg text-status-amber-text',
+  Staff: 'bg-status-info-bg text-status-info-text',
+  Expat: 'bg-status-neutral-bg text-status-neutral-text',
+};
+
 type StatusBadgeProps =
   | { readonly type: 'rfp'; readonly status: RfpStatus }
   | { readonly type: 'proposal'; readonly status: ProposalStatus }
   | { readonly type: 'visibility'; readonly status: ProposalVisibility }
   | { readonly type: 'eoi'; readonly status: EoiStatus }
-  | { readonly type: 'eoiVisibility'; readonly status: EoiVisibility };
+  | { readonly type: 'eoiVisibility'; readonly status: EoiVisibility }
+  | { readonly type: 'role'; readonly status: UserRole; readonly label: string };
 
 function styleFor(props: StatusBadgeProps): string {
   switch (props.type) {
@@ -51,15 +59,17 @@ function styleFor(props: StatusBadgeProps): string {
       return eoiStatusStyles[props.status];
     case 'eoiVisibility':
       return eoiVisibilityStyles[props.status];
+    case 'role':
+      return roleStyles[props.status];
   }
 }
 
 export default function StatusBadge(props: StatusBadgeProps) {
   return (
     <span
-      className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border border-transparent ${styleFor(props)}`}
+      className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border border-transparent whitespace-nowrap ${styleFor(props)}`}
     >
-      {props.status}
+      {props.type === 'role' ? props.label : props.status}
     </span>
   );
 }
