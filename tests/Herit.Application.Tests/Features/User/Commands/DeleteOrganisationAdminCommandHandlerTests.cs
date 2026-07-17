@@ -12,11 +12,15 @@ public class DeleteOrganisationAdminCommandHandlerTests
 {
     private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
     private readonly IIdentityProviderService _identityProviderService = Substitute.For<IIdentityProviderService>();
+    private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly DeleteOrganisationAdminCommandHandler _handler;
 
     public DeleteOrganisationAdminCommandHandlerTests()
     {
-        _handler = new DeleteOrganisationAdminCommandHandler(_userRepository, _identityProviderService);
+        _handler = new DeleteOrganisationAdminCommandHandler(_userRepository, _identityProviderService, _currentUserService);
+
+        var actingUser = UserEntity.Create(Guid.NewGuid(), "ext-actor", "actor@gov.eg", "Acting Admin", UserRole.SuperAdmin);
+        _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(actingUser);
     }
 
     [Fact]
@@ -24,7 +28,9 @@ public class DeleteOrganisationAdminCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        var otherAdmin = UserEntity.Create(Guid.NewGuid(), "ext-admin-2", "admin2@gov.eg", "Other Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
+        _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns([user, otherAdmin]);
 
         var command = new DeleteOrganisationAdminCommand(userId);
         await _handler.Handle(command, CancellationToken.None);
@@ -61,11 +67,45 @@ public class DeleteOrganisationAdminCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenIdentityProviderDeletionThrows_DoesNotDeleteFromDatabase()
+    public async Task Handle_WhenDeletingSelf_ThrowsForbiddenException()
+    {
+        var userId = Guid.NewGuid();
+        var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        var otherAdmin = UserEntity.Create(Guid.NewGuid(), "ext-admin-2", "admin2@gov.eg", "Other Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
+        _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns([user, otherAdmin]);
+        _currentUserService.GetCurrentUserAsync(Arg.Any<CancellationToken>()).Returns(user);
+
+        var command = new DeleteOrganisationAdminCommand(userId);
+
+        await Assert.ThrowsAsync<ForbiddenException>(() => _handler.Handle(command, CancellationToken.None));
+        await _userRepository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _identityProviderService.DidNotReceive().DeleteUserAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WhenDeletingLastOrganisationAdmin_ThrowsConflictException()
     {
         var userId = Guid.NewGuid();
         var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
+        _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns([user]);
+
+        var command = new DeleteOrganisationAdminCommand(userId);
+
+        await Assert.ThrowsAsync<ConflictException>(() => _handler.Handle(command, CancellationToken.None));
+        await _userRepository.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _identityProviderService.DidNotReceive().DeleteUserAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_WhenIdentityProviderDeletionThrows_DoesNotDeleteFromDatabase()
+    {
+        var userId = Guid.NewGuid();
+        var user = UserEntity.Create(userId, "ext-admin", "admin@gov.eg", "Org Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        var otherAdmin = UserEntity.Create(Guid.NewGuid(), "ext-admin-2", "admin2@gov.eg", "Other Admin", UserRole.OrganisationAdmin, Guid.NewGuid());
+        _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);
+        _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns([user, otherAdmin]);
         _identityProviderService.DeleteUserAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new InvalidOperationException("Identity provider deletion failed"));
 

@@ -26,6 +26,12 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 Title = "Forbidden",
                 Detail = exception.Message
             },
+            ConflictException => new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = "Conflict",
+                Detail = exception.Message
+            },
             InvalidOperationException => new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
