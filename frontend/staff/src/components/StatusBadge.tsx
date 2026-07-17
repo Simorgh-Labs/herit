@@ -1,4 +1,4 @@
-import type { ProposalStatus, ProposalVisibility, RfpStatus } from '../types';
+import type { EoiStatus, EoiVisibility, ProposalStatus, ProposalVisibility, RfpStatus } from '../types';
 
 const rfpStatusStyles: Record<RfpStatus, string> = {
   Draft: 'bg-status-neutral-bg text-status-neutral-text',
@@ -21,10 +21,23 @@ const visibilityStyles: Record<ProposalVisibility, string> = {
   Shared: 'bg-status-info-bg text-status-info-text',
 };
 
+const eoiStatusStyles: Record<EoiStatus, string> = {
+  Pending: 'bg-status-neutral-bg text-status-neutral-text',
+  Approved: 'bg-status-success-bg text-status-success-text',
+  Rejected: 'bg-status-danger-bg text-status-danger-text',
+};
+
+const eoiVisibilityStyles: Record<EoiVisibility, string> = {
+  Private: 'bg-status-neutral-bg text-status-neutral-text',
+  Shared: 'bg-status-info-bg text-status-info-text',
+};
+
 type StatusBadgeProps =
   | { readonly type: 'rfp'; readonly status: RfpStatus }
   | { readonly type: 'proposal'; readonly status: ProposalStatus }
-  | { readonly type: 'visibility'; readonly status: ProposalVisibility };
+  | { readonly type: 'visibility'; readonly status: ProposalVisibility }
+  | { readonly type: 'eoi'; readonly status: EoiStatus }
+  | { readonly type: 'eoiVisibility'; readonly status: EoiVisibility };
 
 function styleFor(props: StatusBadgeProps): string {
   switch (props.type) {
@@ -34,6 +47,10 @@ function styleFor(props: StatusBadgeProps): string {
       return proposalStatusStyles[props.status];
     case 'visibility':
       return visibilityStyles[props.status];
+    case 'eoi':
+      return eoiStatusStyles[props.status];
+    case 'eoiVisibility':
+      return eoiVisibilityStyles[props.status];
   }
 }
 

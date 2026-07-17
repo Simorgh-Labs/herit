@@ -3,3 +3,6 @@ import type { Cfeoi } from '../types';
 
 export const listCfeois = (proposalId: string): Promise<Cfeoi[]> =>
   apiClient.get('/Cfeoi', { params: { proposalId } }).then((r) => r.data);
+
+export const getCfeoiById = (id: string): Promise<Cfeoi> =>
+  apiClient.get(`/Cfeoi/${id}`).then((r) => r.data);

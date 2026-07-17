@@ -53,7 +53,15 @@ const cfeois: Cfeoi[] = [
 ];
 
 const eois: Eoi[] = [
-  { id: 'e1', message: 'msg', status: 'Pending', cfeoiId: 'c1', submittedById: 'u2', submitterName: 'Sara Osei' },
+  {
+    id: 'e1',
+    message: 'msg',
+    status: 'Pending',
+    visibility: 'Shared',
+    cfeoiId: 'c1',
+    submittedById: 'u2',
+    submitterName: 'Sara Osei',
+  },
 ];
 
 function renderPage(proposal: Proposal, initialEntries = ['/proposals/p1']) {
