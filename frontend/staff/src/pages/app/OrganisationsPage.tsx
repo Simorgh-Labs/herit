@@ -20,7 +20,9 @@ interface TreeNode extends Organisation {
 function buildTree(organisations: Organisation[]): TreeNode[] {
   const byParent = new Map<string | undefined, Organisation[]>();
   for (const org of organisations) {
-    const key = org.parentId;
+    // The API serialises the root's parentId as null; normalise to undefined so
+    // the root is keyed under the same value visit() starts the traversal from.
+    const key = org.parentId ?? undefined;
     const siblings = byParent.get(key) ?? [];
     siblings.push(org);
     byParent.set(key, siblings);

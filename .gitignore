@@ -15,6 +15,9 @@ frontend/**/dist/
 frontend/portal/e2e/.state/
 frontend/portal/e2e/.results/
 frontend/portal/e2e/.report/
+frontend/staff/e2e/.state/
+frontend/staff/e2e/.results/
+frontend/staff/e2e/.report/
 
 # Claude Code task/design working files (kept local, not tracked)
 docs/frontend/portal/designs/flow3c-implementation-tasks.md

@@ -72,7 +72,8 @@ export interface Proposal {
 export interface Organisation {
   id: string;
   name: string;
-  parentId?: string;
+  /** The API serialises the root organisation's parent as null (not omitted). */
+  parentId?: string | null;
 }
 
 export type CfeoiStatus = 'Open' | 'Closed';

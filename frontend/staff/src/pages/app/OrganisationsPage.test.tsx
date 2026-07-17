@@ -25,7 +25,7 @@ const adminUser: User = { id: 'u1', email: 'amara@example.com', fullName: 'Amara
 const staffUser: User = { id: 'u2', email: 'jonas@example.com', fullName: 'Jonas Weber', role: 'Staff' };
 
 const organisations: Organisation[] = [
-  { id: 'root', name: 'Republic of Herit Government' },
+  { id: 'root', name: 'Republic of Herit Government', parentId: null },
   { id: 'health', name: 'Ministry of Health', parentId: 'root' },
   { id: 'piv', name: 'Patient Identity Verification Unit', parentId: 'health' },
 ];
