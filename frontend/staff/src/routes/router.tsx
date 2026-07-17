@@ -8,6 +8,7 @@ import RfpsPage from '../pages/app/RfpsPage';
 import RfpEditorPage from '../pages/app/RfpEditorPage';
 import RfpDetailPage from '../pages/app/RfpDetailPage';
 import ProposalsPage from '../pages/app/ProposalsPage';
+import ProposalDetailPage from '../pages/app/ProposalDetailPage';
 import OrganisationsPage from '../pages/app/OrganisationsPage';
 import UsersPage from '../pages/app/UsersPage';
 import AppLayout from '../components/layout/AppLayout';
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: '/rfps/:id', element: <RfpDetailPage /> },
       { path: '/rfps/:id/edit', element: <RfpEditorPage /> },
       { path: '/proposals', element: <ProposalsPage /> },
+      { path: '/proposals/:id', element: <ProposalDetailPage /> },
       { path: '/organisations', element: <OrganisationsPage /> },
       { path: '/users', element: <UsersPage /> },
     ],
