@@ -21,16 +21,21 @@ One-time provisioning of the Microsoft Entra External ID tenant resources requir
 ./scripts/setup-entra-external-id.sh \
   --tenant-id <entra-tenant-id> \
   --google-client-id <google-oauth-client-id> \
-  --google-client-secret <google-oauth-client-secret>
+  --google-client-secret <google-oauth-client-secret> \
+  --spa-redirect-uri https://<portal-app-service-hostname> \
+  --spa-redirect-uri https://<staff-app-service-hostname>
 ```
 
 The script will:
 1. Create the **Herit API** app registration in the Entra External ID tenant (idempotent — safe to re-run).
 2. Generate a client secret and print it to the console.
-3. Register Google as a social identity provider via the Microsoft Graph API.
-4. Print all Key Vault values (see Step 3).
+3. Register any supplied `--spa-redirect-uri` values under the app's **SPA** platform (idempotent — unions with existing URIs).
+4. Register Google as a social identity provider via the Microsoft Graph API.
+5. Print all Key Vault values (see Step 3).
 
 > **Note:** If Google identity provider configuration fails with a 404 or unsupported operation error, configure it manually via the Azure Portal: **Entra External ID → External Identities → All identity providers → Add → Google**.
+
+> **Redirect URIs:** The portal and staff single-page apps share this app registration, so both deployed URLs must be registered as SPA redirect URIs. Their hostnames are only known after `azd provision` provisions the App Services — read them from `azd env get-values` (`SERVICE_WEB_URI` / `SERVICE_STAFF_URI`) or the Azure Portal, then re-run the script with the `--spa-redirect-uri` flags above. Patching the app registration requires `Application.ReadWrite.All`, so a tenant admin must run this step.
 
 ---
 
