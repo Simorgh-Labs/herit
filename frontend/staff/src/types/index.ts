@@ -50,12 +50,15 @@ export type ProposalStatus =
   | 'Approved'
   | 'Withdrawn';
 
+export type ProposalVisibility = 'Private' | 'Shared' | 'Public';
+
 export interface Proposal {
   id: string;
   title: string;
   shortDescription: string;
   longDescription: string;
   status: ProposalStatus;
+  visibility: ProposalVisibility;
   authorId: string;
   organisationId: string;
   rfpId?: string;

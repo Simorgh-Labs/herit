@@ -1,4 +1,4 @@
-import type { RfpStatus } from '../types';
+import type { ProposalStatus, ProposalVisibility, RfpStatus } from '../types';
 
 const rfpStatusStyles: Record<RfpStatus, string> = {
   Draft: 'bg-status-neutral-bg text-status-neutral-text',
@@ -6,17 +6,43 @@ const rfpStatusStyles: Record<RfpStatus, string> = {
   Published: 'bg-status-success-bg text-status-success-text',
 };
 
-interface StatusBadgeProps {
-  readonly type: 'rfp';
-  readonly status: RfpStatus;
+const proposalStatusStyles: Record<ProposalStatus, string> = {
+  Ideation: 'bg-status-neutral-bg text-status-neutral-text',
+  Resourcing: 'bg-status-info-bg text-status-info-text',
+  Submitted: 'bg-status-amber-bg text-status-amber-text',
+  UnderReview: 'bg-status-orange-bg text-status-orange-text',
+  Approved: 'bg-status-success-bg text-status-success-text',
+  Withdrawn: 'bg-status-danger-bg text-status-danger-text',
+};
+
+const visibilityStyles: Record<ProposalVisibility, string> = {
+  Public: 'bg-status-neutral-bg text-status-neutral-text',
+  Private: 'bg-status-neutral-bg text-status-neutral-text',
+  Shared: 'bg-status-info-bg text-status-info-text',
+};
+
+type StatusBadgeProps =
+  | { readonly type: 'rfp'; readonly status: RfpStatus }
+  | { readonly type: 'proposal'; readonly status: ProposalStatus }
+  | { readonly type: 'visibility'; readonly status: ProposalVisibility };
+
+function styleFor(props: StatusBadgeProps): string {
+  switch (props.type) {
+    case 'rfp':
+      return rfpStatusStyles[props.status];
+    case 'proposal':
+      return proposalStatusStyles[props.status];
+    case 'visibility':
+      return visibilityStyles[props.status];
+  }
 }
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
+export default function StatusBadge(props: StatusBadgeProps) {
   return (
     <span
-      className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border border-transparent ${rfpStatusStyles[status]}`}
+      className={`inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded border border-transparent ${styleFor(props)}`}
     >
-      {status}
+      {props.status}
     </span>
   );
 }
