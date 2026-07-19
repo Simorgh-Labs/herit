@@ -9,7 +9,7 @@ namespace Herit.Infrastructure.Services;
 public class EntraExternalIdIdentityProviderService : IIdentityProviderService
 {
     private readonly GraphServiceClient _graphClient;
-    private readonly string _entraTenant;
+    private readonly string _inviteRedirectUrl;
 
     public EntraExternalIdIdentityProviderService(IConfiguration configuration)
     {
@@ -19,8 +19,8 @@ public class EntraExternalIdIdentityProviderService : IIdentityProviderService
             ?? throw new InvalidOperationException("AzureAd:ClientId is not configured.");
         var clientSecret = configuration["AzureAd:ClientSecret"]
             ?? throw new InvalidOperationException("AzureAd:ClientSecret is not configured.");
-        _entraTenant = configuration["AzureAd:Domain"]
-            ?? throw new InvalidOperationException("AzureAd:Domain is not configured.");
+        _inviteRedirectUrl = configuration["AzureAd:InviteRedirectUrl"]
+            ?? throw new InvalidOperationException("AzureAd:InviteRedirectUrl is not configured.");
 
         var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
         _graphClient = new GraphServiceClient(credential);
@@ -28,32 +28,19 @@ public class EntraExternalIdIdentityProviderService : IIdentityProviderService
 
     public async Task<string> CreateUserAsync(string email, string displayName, CancellationToken ct)
     {
-        var user = new User
+        var invitation = new Invitation
         {
-            AccountEnabled = true,
-            DisplayName = displayName,
-            Identities =
-            [
-                new ObjectIdentity
-                {
-                    SignInType = "emailAddress",
-                    Issuer = _entraTenant,
-                    IssuerAssignedId = email,
-                }
-            ],
-            PasswordProfile = new PasswordProfile
-            {
-                ForceChangePasswordNextSignIn = true,
-                Password = Guid.NewGuid().ToString("N") + "Aa1!",
-            },
-            PasswordPolicies = "DisablePasswordExpiration",
+            InvitedUserEmailAddress = email,
+            InvitedUserDisplayName = displayName,
+            InviteRedirectUrl = _inviteRedirectUrl,
+            SendInvitationMessage = true,
         };
 
-        var created = await _graphClient.Users.PostAsync(user, cancellationToken: ct)
-            ?? throw new InvalidOperationException("Graph API returned null when creating user.");
+        var created = await _graphClient.Invitations.PostAsync(invitation, cancellationToken: ct)
+            ?? throw new InvalidOperationException("Graph API returned null when creating the invitation.");
 
-        return created.Id
-            ?? throw new InvalidOperationException("Graph API did not return an object ID for the created user.");
+        return created.InvitedUser?.Id
+            ?? throw new InvalidOperationException("Graph API did not return an object ID for the invited user.");
     }
 
     public async Task DeleteUserAsync(string externalId, CancellationToken ct)

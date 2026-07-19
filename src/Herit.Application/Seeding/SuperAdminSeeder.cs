@@ -34,6 +34,9 @@ public class SuperAdminSeeder
         var user = UserEntity.Create(Guid.NewGuid(), externalId, email, displayName, UserRole.SuperAdmin);
         await _userRepository.AddAsync(user, ct);
 
-        _logger.LogInformation("Super admin created: {Email} (ExternalId: {ExternalId})", email, externalId);
+        _logger.LogInformation(
+            "Super admin created: {Email} (ExternalId: {ExternalId}). An invitation email with the sign-in link has been sent.",
+            email,
+            externalId);
     }
 }
