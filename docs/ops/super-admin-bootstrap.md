@@ -1,6 +1,13 @@
 # Super Admin Bootstrap
 
-One-time CLI command to seed the first super admin user into both Azure AD B2C and the database.
+One-time CLI command to seed the first super admin user into both Entra External ID and the database.
+
+The seeder provisions the Entra account through the Microsoft Graph `/invitations` API:
+Entra emails an invitation with the sign-in link to the provided address, and the user
+redeems it to set up their credentials. No temporary password is involved. The app
+registration must hold the admin-consented `User.Invite.All` application permission, and
+`AzureAd:InviteRedirectUrl` must be configured (the staff app URL; wired automatically in
+Azure via Bicep, set to `http://localhost:5174` in `appsettings.Development.json`).
 
 ## Command
 
@@ -16,7 +23,7 @@ Both `--email` and `--display-name` are required.
 
 ```
 info: Herit.Application.Seeding.SuperAdminSeeder[0]
-      Super admin created: admin@example.com (ExternalId: <b2c-object-id>)
+      Super admin created: admin@example.com (ExternalId: <entra-object-id>). An invitation email with the sign-in link has been sent.
 ```
 
 Process exits with code `0`.
@@ -41,7 +48,10 @@ Process exits with code `1`.
 
 ## Verification
 
-**B2C:** In the Azure portal, navigate to the B2C tenant → Users and confirm the account exists with the email provided.
+**Email:** The invited address receives an Entra invitation email; redeeming it lands the
+user on the staff app URL configured as `AzureAd:InviteRedirectUrl`.
+
+**Entra:** In the Entra admin center, navigate to the tenant → Users and confirm the account exists with the email provided.
 
 **Database:** Run the following query against the application database:
 
