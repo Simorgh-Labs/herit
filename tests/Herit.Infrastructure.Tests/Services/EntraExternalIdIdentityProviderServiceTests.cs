@@ -12,7 +12,7 @@ public class EntraExternalIdIdentityProviderServiceTests
             ["AzureAd:TenantId"] = "00000000-0000-0000-0000-000000000001",
             ["AzureAd:ClientId"] = "00000000-0000-0000-0000-000000000002",
             ["AzureAd:ClientSecret"] = "secret-value",
-            ["AzureAd:InviteRedirectUrl"] = "https://staff.example.com",
+            ["AzureAd:Domain"] = "staff.example.com",
         };
 
         foreach (var key in omittedKeys)
@@ -33,7 +33,7 @@ public class EntraExternalIdIdentityProviderServiceTests
     [InlineData("AzureAd:TenantId")]
     [InlineData("AzureAd:ClientId")]
     [InlineData("AzureAd:ClientSecret")]
-    [InlineData("AzureAd:InviteRedirectUrl")]
+    [InlineData("AzureAd:Domain")]
     public void Constructor_WithMissingSetting_Throws(string omittedKey)
     {
         var configuration = BuildConfiguration(omittedKey);
