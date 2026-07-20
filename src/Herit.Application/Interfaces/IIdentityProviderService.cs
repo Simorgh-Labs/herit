@@ -3,8 +3,10 @@ namespace Herit.Application.Interfaces;
 public interface IIdentityProviderService
 {
     /// <summary>
-    /// Creates an external identity account by inviting the email address and returns its object ID.
-    /// The identity provider sends the invitation email with the sign-in link.
+    /// Creates a local external identity account for the email address and returns its object ID.
+    /// The account is created with a random, unreturned password and
+    /// <c>ForceChangePasswordNextSignIn</c>; the caller is responsible for sending the user an
+    /// invitation to set up their own credentials via SSPR.
     /// </summary>
     Task<string> CreateUserAsync(string email, string displayName, CancellationToken ct);
 

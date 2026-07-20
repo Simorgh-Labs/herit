@@ -2,12 +2,13 @@
 
 One-time CLI command to seed the first super admin user into both Entra External ID and the database.
 
-The seeder provisions the Entra account through the Microsoft Graph `/invitations` API:
-Entra emails an invitation with the sign-in link to the provided address, and the user
-redeems it to set up their credentials. No temporary password is involved. The app
-registration must hold the admin-consented `User.Invite.All` application permission, and
-`AzureAd:InviteRedirectUrl` must be configured (the staff app URL; wired automatically in
-Azure via Bicep, set to `http://localhost:5174` in `appsettings.Development.json`).
+The seeder provisions the Entra account through the Microsoft Graph `/users` API: a local
+account is created with a random password that is discarded immediately and
+`ForceChangePasswordNextSignIn` set, so the account exists but no one knows its password.
+The user sets their own credentials via **Forgot password?** (SSPR) on the sign-in page.
+The app registration must hold the admin-consented `User.ReadWrite.All` application
+permission, and `AzureAd:Domain` must be configured (the tenant domain, used as the local
+sign-in identity issuer).
 
 ## Command
 
@@ -23,7 +24,7 @@ Both `--email` and `--display-name` are required.
 
 ```
 info: Herit.Application.Seeding.SuperAdminSeeder[0]
-      Super admin created: admin@example.com (ExternalId: <entra-object-id>). An invitation email with the sign-in link has been sent.
+      Super admin created: admin@example.com (ExternalId: <entra-object-id>).
 ```
 
 Process exits with code `0`.
@@ -48,9 +49,6 @@ Process exits with code `1`.
 
 ## Verification
 
-**Email:** The invited address receives an Entra invitation email; redeeming it lands the
-user on the staff app URL configured as `AzureAd:InviteRedirectUrl`.
-
 **Entra:** In the Entra admin center, navigate to the tenant → Users and confirm the account exists with the email provided.
 
 **Database:** Run the following query against the application database:
@@ -61,4 +59,4 @@ FROM Users
 WHERE Role = 0; -- 0 = SuperAdmin
 ```
 
-Confirm one row is returned with the expected email and a non-null `ExternalId` matching the B2C object ID.
+Confirm one row is returned with the expected email and a non-null `ExternalId` matching the Entra object ID.

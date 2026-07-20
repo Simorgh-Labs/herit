@@ -35,7 +35,7 @@ public class SuperAdminSeeder
         await _userRepository.AddAsync(user, ct);
 
         _logger.LogInformation(
-            "Super admin created: {Email} (ExternalId: {ExternalId}). An invitation email with the sign-in link has been sent.",
+            "Super admin created: {Email} (ExternalId: {ExternalId}).",
             email,
             externalId);
     }
