@@ -60,6 +60,20 @@ param entraAuthority string
 
 @description('Microsoft Entra External ID tenant domain, e.g. <tenant>.onmicrosoft.com')
 param entraTenant string
+
+@description('Microsoft Entra External ID client ID for the portal SPA app registration')
+param entraPortalSpaClientId string
+
+@description('Microsoft Entra External ID client ID for the staff SPA app registration')
+param entraStaffSpaClientId string
+
+@secure()
+@description('Azure Communication Services connection string used to send invitation emails')
+param emailAcsConnectionString string = ''
+
+@description('Sender (From) address for Azure Communication Services emails')
+param emailSenderAddress string = ''
+
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
@@ -127,7 +141,12 @@ module api './app/api-appservice-avm.bicep' = {
       AzureAd__Domain: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant)'
       AzureAd__TenantId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-tenant-id)'
       AzureAd__ClientId: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-client-id)'
+      // The service reads AzureAd:ClientSecret, but the vault secret is named
+      // entra-client-secret — map it explicitly so Graph provisioning works.
+      AzureAd__ClientSecret: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=entra-client-secret)'
       AzureAd__InviteRedirectUrl: staff.outputs.SERVICE_STAFF_URI
+      Email__AcsConnectionString: '@Microsoft.KeyVault(VaultName=${keyVault.outputs.name};SecretName=email-acs-connection-string)'
+      Email__SenderAddress: emailSenderAddress
       AllowedOrigins__0: web.outputs.SERVICE_WEB_URI
       AllowedOrigins__1: staff.outputs.SERVICE_STAFF_URI
     }
@@ -194,6 +213,18 @@ module accessKeyVault 'br/public:avm/res/key-vault/vault:0.3.5' = {
         {
           name: 'entra-tenant'
           value: entraTenant
+        }
+        {
+          name: 'entra-portal-spa-client-id'
+          value: entraPortalSpaClientId
+        }
+        {
+          name: 'entra-staff-spa-client-id'
+          value: entraStaffSpaClientId
+        }
+        {
+          name: 'email-acs-connection-string'
+          value: emailAcsConnectionString
         }
       ]
     }
@@ -320,17 +351,22 @@ output SERVICE_STAFF_URI string = staff.outputs.SERVICE_STAFF_URI
 output USE_APIM bool = useAPIM
 output SERVICE_API_ENDPOINTS array = useAPIM ? [apimApi.outputs.serviceApiUri, api.outputs.SERVICE_API_URI] : []
 
-// Frontend build-time env vars
+// Frontend build-time env vars shared by both SPAs.
 output VITE_API_BASE_URL string = '${api.outputs.SERVICE_API_URI}/api/v1'
 output VITE_REDIRECT_URI string = web.outputs.SERVICE_WEB_URI
-output VITE_AZURE_CLIENT_ID string = entraClientId
 output VITE_AZURE_TENANT_NAME string = ciamSubdomain
 output VITE_AZURE_AUTHORITY string = '${entraAuthority}/${ciamSubdomain}.onmicrosoft.com/'
-output VITE_API_SCOPE string = 'api://${entraClientId}/access_as_user'
+// The API app registration's client id. Both SPAs build the requested scope in
+// code as api://<VITE_AZURE_API_CLIENT_ID>/access_as_user.
+output VITE_AZURE_API_CLIENT_ID string = entraClientId
 
-// Staff-app build-time env vars. The staff app reuses the portal's Entra app
-// registration (shared VITE_AZURE_* / VITE_API_* outputs above), but its MSAL
-// redirect URI must be its OWN Azure URL — not the portal's VITE_REDIRECT_URI.
-// VITE_PORTAL_URL points sign-in/access-denied links back at the portal.
+// Each SPA has its OWN app registration client id (no longer shared) — azure.yaml
+// maps these to each app's VITE_AZURE_CLIENT_ID build env.
+output VITE_PORTAL_AZURE_CLIENT_ID string = entraPortalSpaClientId
+output VITE_STAFF_AZURE_CLIENT_ID string = entraStaffSpaClientId
+
+// Staff-app build-time env vars. Its MSAL redirect URI must be its OWN Azure URL
+// — not the portal's VITE_REDIRECT_URI. VITE_PORTAL_URL points sign-in/access-denied
+// links back at the portal.
 output VITE_STAFF_REDIRECT_URI string = staff.outputs.SERVICE_STAFF_URI
 output VITE_PORTAL_URL string = web.outputs.SERVICE_WEB_URI
