@@ -247,13 +247,20 @@ jobs:
           ENTRA_TENANT_ID: ${{ secrets.ENTRA_TENANT_ID }}
           ENTRA_AUTHORITY: ${{ secrets.ENTRA_AUTHORITY }}
           ENTRA_TENANT: ${{ secrets.ENTRA_TENANT }}
+          ENTRA_PORTAL_SPA_CLIENT_ID: ${{ secrets.ENTRA_PORTAL_SPA_CLIENT_ID }}
+          ENTRA_STAFF_SPA_CLIENT_ID: ${{ secrets.ENTRA_STAFF_SPA_CLIENT_ID }}
+          EMAIL_ACS_CONNECTION_STRING: ${{ secrets.EMAIL_ACS_CONNECTION_STRING }}
+          EMAIL_SENDER_ADDRESS: ${{ secrets.EMAIL_SENDER_ADDRESS }}
 
       - name: Deploy Application
         run: azd deploy --no-prompt
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_REDIRECT_URI: ${{ secrets.VITE_REDIRECT_URI }}
-          VITE_AZURE_CLIENT_ID: ${{ secrets.VITE_AZURE_CLIENT_ID }}
           VITE_AZURE_AUTHORITY: ${{ secrets.VITE_AZURE_AUTHORITY }}
           VITE_AZURE_TENANT_NAME: ${{ secrets.VITE_AZURE_TENANT_NAME }}
-          VITE_API_SCOPE: ${{ secrets.VITE_API_SCOPE }}
+          # Per-app SPA client ids + the shared API client id (azd maps these to
+          # each SPA's VITE_AZURE_CLIENT_ID / VITE_AZURE_API_CLIENT_ID via azure.yaml).
+          VITE_PORTAL_AZURE_CLIENT_ID: ${{ secrets.VITE_PORTAL_AZURE_CLIENT_ID }}
+          VITE_STAFF_AZURE_CLIENT_ID: ${{ secrets.VITE_STAFF_AZURE_CLIENT_ID }}
+          VITE_AZURE_API_CLIENT_ID: ${{ secrets.VITE_AZURE_API_CLIENT_ID }}

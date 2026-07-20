@@ -37,6 +37,18 @@
     },
     "entraTenant": {
       "value": "${ENTRA_TENANT}"
+    },
+    "entraPortalSpaClientId": {
+      "value": "${ENTRA_PORTAL_SPA_CLIENT_ID}"
+    },
+    "entraStaffSpaClientId": {
+      "value": "${ENTRA_STAFF_SPA_CLIENT_ID}"
+    },
+    "emailAcsConnectionString": {
+      "value": "${EMAIL_ACS_CONNECTION_STRING}"
+    },
+    "emailSenderAddress": {
+      "value": "${EMAIL_SENDER_ADDRESS}"
     }
   }
 }
