@@ -3,6 +3,7 @@ using Herit.Application.Seeding;
 using Herit.Domain.Enums;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using UserEntity = Herit.Domain.Entities.User;
 
 namespace Herit.Application.Tests.Seeding;
@@ -11,11 +12,12 @@ public class SuperAdminSeederTests
 {
     private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
     private readonly IIdentityProviderService _identityProviderService = Substitute.For<IIdentityProviderService>();
+    private readonly IEmailService _emailService = Substitute.For<IEmailService>();
     private readonly SuperAdminSeeder _seeder;
 
     public SuperAdminSeederTests()
     {
-        _seeder = new SuperAdminSeeder(_userRepository, _identityProviderService, NullLogger<SuperAdminSeeder>.Instance);
+        _seeder = new SuperAdminSeeder(_userRepository, _identityProviderService, _emailService, NullLogger<SuperAdminSeeder>.Instance);
     }
 
     [Fact]
@@ -34,6 +36,23 @@ public class SuperAdminSeederTests
                 u.FullName == "Super Admin" &&
                 u.Role == UserRole.SuperAdmin &&
                 u.ExternalId == "ext-super-1"),
+            Arg.Any<CancellationToken>());
+        await _emailService.Received(1).SendInternalUserInvitationAsync("admin@example.com", "Super Admin", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task SeedAsync_WhenEmailServiceThrows_StillCreatesSuperAdmin()
+    {
+        _userRepository.ListAsync(Arg.Any<CancellationToken>()).Returns([]);
+        _identityProviderService.CreateUserAsync("admin@example.com", "Super Admin", Arg.Any<CancellationToken>())
+            .Returns("ext-super-1");
+        _emailService.SendInternalUserInvitationAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ThrowsAsync(new InvalidOperationException("SMTP unavailable"));
+
+        await _seeder.SeedAsync("admin@example.com", "Super Admin");
+
+        await _userRepository.Received(1).AddAsync(
+            Arg.Is<UserEntity>(u => u.Email == "admin@example.com"),
             Arg.Any<CancellationToken>());
     }
 
