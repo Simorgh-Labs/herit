@@ -3,13 +3,14 @@ using Herit.Infrastructure.Persistence;
 using Herit.Infrastructure.Repositories;
 using Herit.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Herit.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString, IConfiguration configuration)
     {
         services.AddDbContext<HeritDbContext>(options =>
             options.UseSqlServer(connectionString));
@@ -21,6 +22,11 @@ public static class DependencyInjection
         services.AddScoped<IEoiRepository, EoiRepository>();
         services.AddScoped<IOrganisationRepository, OrganisationRepository>();
         services.AddScoped<IIdentityProviderService, EntraExternalIdIdentityProviderService>();
+
+        if (!string.IsNullOrEmpty(configuration["Email:AcsConnectionString"]))
+            services.AddScoped<IEmailService, AcsEmailService>();
+        else
+            services.AddScoped<IEmailService, LoggingEmailService>();
 
         return services;
     }

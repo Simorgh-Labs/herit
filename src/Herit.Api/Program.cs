@@ -53,7 +53,7 @@ var connectionString = (!string.IsNullOrEmpty(connectionStringKey)
     : null)
     ?? builder.Configuration.GetConnectionString("DefaultConnection")!;
 
-builder.Services.AddInfrastructure(connectionString);
+builder.Services.AddInfrastructure(connectionString, builder.Configuration);
 
 if (TestAuthentication.IsEnabled(builder.Configuration, builder.Environment))
 {
@@ -138,7 +138,7 @@ static async Task<int> RunSeedSuperAdminAsync(string[] args)
         : null)
         ?? seedBuilder.Configuration.GetConnectionString("DefaultConnection")!;
 
-    seedBuilder.Services.AddInfrastructure(seedConnectionString);
+    seedBuilder.Services.AddInfrastructure(seedConnectionString, seedBuilder.Configuration);
     seedBuilder.Services.AddScoped<SuperAdminSeeder>();
 
     if (TestAuthentication.IsEnabled(seedBuilder.Configuration, seedBuilder.Environment))

@@ -9,15 +9,18 @@ public class SuperAdminSeeder
 {
     private readonly IUserRepository _userRepository;
     private readonly IIdentityProviderService _identityProviderService;
+    private readonly IEmailService _emailService;
     private readonly ILogger<SuperAdminSeeder> _logger;
 
     public SuperAdminSeeder(
         IUserRepository userRepository,
         IIdentityProviderService identityProviderService,
+        IEmailService emailService,
         ILogger<SuperAdminSeeder> logger)
     {
         _userRepository = userRepository;
         _identityProviderService = identityProviderService;
+        _emailService = emailService;
         _logger = logger;
     }
 
@@ -38,5 +41,17 @@ public class SuperAdminSeeder
             "Super admin created: {Email} (ExternalId: {ExternalId}).",
             email,
             externalId);
+
+        try
+        {
+            await _emailService.SendInternalUserInvitationAsync(email, displayName, ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Failed to send invitation email to {Email}. The account was created successfully; manually notify the user or re-trigger the invitation email.",
+                email);
+        }
     }
 }
