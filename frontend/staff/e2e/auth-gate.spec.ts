@@ -21,7 +21,7 @@ test('a provisioned staff member signs in and reaches the dashboard', async ({ b
   const s = await openSession(browser, 'staff', 'staff-staff-pending');
   await s.page.goto(s.url('/sign-in'));
   await expect(s.page.getByRole('heading', { name: 'Sign in to Herit Staff' })).toBeVisible();
-  await s.page.getByRole('button', { name: 'Continue with Google' }).click();
+  await s.page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
   await s.page.goto(s.url('/'));
   await expect(s.page.getByRole('heading', { name: `Welcome back, ${state.identities.staff.name}` })).toBeVisible();
