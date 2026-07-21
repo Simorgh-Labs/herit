@@ -18,6 +18,7 @@ import CompleteProfilePage from '../pages/auth/CompleteProfilePage';
 // App pages (protected)
 import DashboardPage from '../pages/app/DashboardPage';
 import CreateProposalPage from '../pages/app/CreateProposalPage';
+import EditProposalPage from '../pages/app/EditProposalPage';
 import MyProposalsPage from '../pages/app/MyProposalsPage';
 import MyEoisPage from '../pages/app/MyEoisPage';
 import CfeoiEoiInboxPage from '../pages/app/CfeoiEoiInboxPage';
@@ -62,6 +63,7 @@ export const router = createBrowserRouter([
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/my-proposals', element: <MyProposalsPage /> },
       { path: '/proposals/new', element: <CreateProposalPage /> },
+      { path: '/proposals/:proposalId/edit', element: <EditProposalPage /> },
       { path: '/my-eois', element: <MyEoisPage /> },
       { path: '/proposals/:proposalId/cfeois/new', element: <PublishCfeoiPage /> },
       { path: '/cfeois/:cfeoiId/edit', element: <EditCfeoiPage /> },
