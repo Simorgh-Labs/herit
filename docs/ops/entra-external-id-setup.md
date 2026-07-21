@@ -30,7 +30,9 @@ Associate each user flow with its app registration under **User flows → \<flow
 - The signed-in principal must have the following Microsoft Graph API permissions on the tenant:
   - `Application.ReadWrite.All`
   - `IdentityProvider.ReadWrite.All`
-- A Google OAuth 2.0 client ID and secret (created in the Google Cloud Console with the Entra External ID redirect URI whitelisted: `https://<tenant>.ciamlogin.com/<tenant>.onmicrosoft.com/federation/oauth2`).
+- A Google OAuth 2.0 client ID and secret, created in the Google Cloud Console with **both** Entra External ID redirect URI forms whitelisted (Entra may send either, depending on how the authority is referenced; Google matches exactly):
+  - `https://<tenant>.ciamlogin.com/<tenant>.onmicrosoft.com/federation/oauth2`
+  - `https://<tenant>.ciamlogin.com/<tenant-id-GUID>/federation/oauth2`
 
 ---
 
