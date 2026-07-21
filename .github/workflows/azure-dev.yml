@@ -257,6 +257,10 @@ jobs:
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_REDIRECT_URI: ${{ secrets.VITE_REDIRECT_URI }}
+          # Staff app's own redirect URI + link back to the public portal
+          # (referenced by azure.yaml's staff service env block).
+          VITE_STAFF_REDIRECT_URI: ${{ secrets.VITE_STAFF_REDIRECT_URI }}
+          VITE_PORTAL_URL: ${{ secrets.VITE_PORTAL_URL }}
           VITE_AZURE_AUTHORITY: ${{ secrets.VITE_AZURE_AUTHORITY }}
           VITE_AZURE_TENANT_NAME: ${{ secrets.VITE_AZURE_TENANT_NAME }}
           # Per-app SPA client ids + the shared API client id (azd maps these to
