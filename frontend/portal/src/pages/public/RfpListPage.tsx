@@ -29,6 +29,21 @@ export default function RfpListPage() {
 
   const orgMap = Object.fromEntries((orgs ?? []).map((o) => [o.id, o.name]));
 
+  const orgCounts = new Map<string, { name: string; count: number }>();
+  (rfps ?? []).forEach((rfp) => {
+    const name = orgMap[rfp.organisationId];
+    if (!name) return;
+    const existing = orgCounts.get(rfp.organisationId);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      orgCounts.set(rfp.organisationId, { name, count: 1 });
+    }
+  });
+  const orgsWithRfps = Array.from(orgCounts.entries())
+    .map(([id, { name, count }]) => ({ id, name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   const filtered = (rfps ?? []).filter((rfp) => {
     const query = search.toLowerCase();
     const matchesSearch =
@@ -87,15 +102,26 @@ export default function RfpListPage() {
                 <div className="mb-8">
                   <h4 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Organisation</h4>
                   <div className="space-y-3">
-                    {Array.from(new Set(Object.values(orgMap))).map((name) => (
-                      <label key={name} className="flex items-center gap-3 cursor-pointer group">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={selectedOrgs.length === 0}
+                        onChange={() => setSelectedOrgs([])}
+                        className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
+                      />
+                      <span className="text-sm text-gray-600 group-hover:text-gray-900">All Organisations</span>
+                    </label>
+                    {orgsWithRfps.map(({ id, name, count }) => (
+                      <label key={id} className="flex items-center gap-3 cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedOrgs.includes(name)}
                           onChange={() => toggleOrg(name)}
                           className="w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand"
                         />
-                        <span className="text-sm text-gray-600 group-hover:text-gray-900">{name}</span>
+                        <span className="text-sm text-gray-600 group-hover:text-gray-900">
+                          {name} ({count})
+                        </span>
                       </label>
                     ))}
                   </div>
